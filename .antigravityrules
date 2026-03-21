@@ -1,0 +1,12 @@
+# Project Grit: System Instructions
+- Framework: Laravel 13 (Latest 2026 Standards).
+- Language: PHP 8.4.
+- Frontend: TALL Stack (Tailwind, Alpine, Laravel, Livewire).
+- Dashboard: Filament PHP v3.
+- PDF Engine: Spatie PDF-to-Text.
+- PDF Tool: Located at ./bin/pdftotext.exe.
+- Rules:
+  1. Use 'Sequential Thinking' for every major task to plan before coding.
+  2. Use 'GitHub MCP' to save progress after every successful feature.
+  3. Strictly follow the Project Grit Master Plan for database fields.
+  4. Use simple, clean vocabulary in all text and comments.
