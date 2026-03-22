@@ -2,60 +2,56 @@
 
 namespace App\Services;
 
-use App\Models\JobPosting;
 use App\Models\Resume;
+use App\Models\JobPosting;
 
 class MatchAnalysisService
 {
-    /**
-     * Define a list of Technical Keywords for case-insensitive matching.
-     */
-    protected array $technicalKeywords = [
-        'PHP', 'Laravel', 'JavaScript', 'React', 'Vue', 'Tailwind',
-        'SQL', 'MySQL', 'PostgreSQL', 'AWS', 'Python', 'Docker',
-        'Node', 'HTML', 'CSS', 'Git', 'Redis', 'API', 'REST', 'GraphQL'
-    ];
-
     public function analyze(Resume $resume, JobPosting $jobPosting): array
     {
-        $jobText = $jobPosting->description ?? '';
-        $resumeText = $resume->content_raw ?? '';
+        // Convert both texts to lowercase so "React" matches "react"
+        $resumeText = strtolower($resume->content_raw ?? '');
+        $jobText = strtolower($jobPosting->description ?? '');
 
-        $jobKeywordsPresent = [];
+        // 1. Our Master Dictionary of Tech Skills
+        $masterKeywords = [
+            'HTML', 'CSS', 'JavaScript', 'React', 'Vue', 'Angular', 'Node.js', 
+            'Express', 'PHP', 'Laravel', 'Python', 'Java', 'MongoDB', 'MySQL', 
+            'PostgreSQL', 'AWS', 'Docker', 'SEO', 'TypeScript', 'Tailwind', 'APIs'
+        ];
 
-        // 1. Identify which keywords are present in the Job Description
-        foreach ($this->technicalKeywords as $keyword) {
-            if (stripos($jobText, $keyword) !== false) {
-                $jobKeywordsPresent[] = $keyword;
+        $jobRequirements = [];
+        $missingKeywords = [];
+
+        // 2. What does the JOB actually ask for?
+        foreach ($masterKeywords as $keyword) {
+            if (str_contains($jobText, strtolower($keyword))) {
+                $jobRequirements[] = $keyword;
             }
         }
 
-        // If no keywords exist in job, we'll assume a 100% score (or could be 0, but 100 prevents penalizing).
-        if (count($jobKeywordsPresent) === 0) {
+        // If the job description is empty or has no tech words, give a perfect score
+        if (count($jobRequirements) === 0) {
             return [
                 'score' => 100,
                 'missing_keywords' => []
             ];
         }
 
-        $missingKeywords = [];
-        $matchedCount = 0;
-
-        // 2. Check which of those "Job Keywords" are missing from the Resume text
-        foreach ($jobKeywordsPresent as $keyword) {
-            if (stripos($resumeText, $keyword) !== false) {
-                $matchedCount++;
-            } else {
+        // 3. Which of those job requirements are MISSING from the Resume?
+        foreach ($jobRequirements as $keyword) {
+            if (!str_contains($resumeText, strtolower($keyword))) {
                 $missingKeywords[] = $keyword;
             }
         }
 
-        // 3. Calculate score based on percentage
-        $score = (int) round(($matchedCount / count($jobKeywordsPresent)) * 100);
+        // 4. Calculate the real math
+        $matchedCount = count($jobRequirements) - count($missingKeywords);
+        $score = ($matchedCount / count($jobRequirements)) * 100;
 
         return [
-            'score' => $score,
-            'missing_keywords' => $missingKeywords,
+            'score' => round($score),
+            'missing_keywords' => $missingKeywords
         ];
     }
 }
