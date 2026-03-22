@@ -10,7 +10,14 @@ class JobPosting extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'title',
+        'company',
+        'description',
+        'source_url',
+        'status',
+    ];
 
     public function user(): BelongsTo
     {

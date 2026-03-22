@@ -10,8 +10,13 @@ class Resume extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
+    protected $fillable = [
+        'user_id',
+        'label',
+        'file_url',
+        'content_raw',
+        'is_active',
+    ];
     protected function casts(): array
     {
         return [

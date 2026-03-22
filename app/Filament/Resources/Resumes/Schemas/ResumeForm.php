@@ -11,8 +11,15 @@ class ResumeForm
         return $schema
             ->components([
                 \Filament\Forms\Components\TextInput::make('label')->required(),
-                \Filament\Forms\Components\FileUpload::make('file_url')->required(),
-                \Filament\Forms\Components\Textarea::make('content_raw')->nullable(),
+                \Filament\Forms\Components\FileUpload::make('file_url')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->disk('public')
+                    ->directory('resumes')
+                    ->required(),
+                \Filament\Forms\Components\Textarea::make('content_raw')
+                    ->readOnly()
+                    ->columnSpanFull()
+                    ->nullable(),
                 \Filament\Forms\Components\Toggle::make('is_active')->default(false),
             ]);
     }

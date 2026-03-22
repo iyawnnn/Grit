@@ -14,4 +14,20 @@ class CreateMatchReport extends CreateRecord
         $data['user_id'] = auth()->id();
         return $data;
     }
+
+    protected function afterCreate(): void
+    {
+        $record = $this->getRecord();
+        $record->load(['resume', 'jobPosting']);
+
+        if ($record->resume && $record->jobPosting) {
+            $service = new \App\Services\MatchAnalysisService();
+            $analysis = $service->analyze($record->resume, $record->jobPosting);
+
+            $record->update([
+                'score' => $analysis['score'],
+                'missing_keywords' => $analysis['missing_keywords'],
+            ]);
+        }
+    }
 }

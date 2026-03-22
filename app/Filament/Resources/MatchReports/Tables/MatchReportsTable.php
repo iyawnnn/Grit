@@ -13,7 +13,17 @@ class MatchReportsTable
     {
         return $table
             ->columns([
-                //
+                \Filament\Tables\Columns\TextColumn::make('score')
+                    ->badge()
+                    ->color(fn (string|int|null $state): string => match (true) {
+                        (int) $state >= 80 => 'success',
+                        (int) $state >= 50 => '#D97706',
+                        default => 'danger',
+                    })
+                    ->sortable(),
+                \Filament\Tables\Columns\TextColumn::make('missing_keywords')
+                    ->badge()
+                    ->searchable(),
             ])
             ->filters([
                 //

@@ -1,0 +1,12 @@
+﻿
+  Migration name  Batch / Status  
+  0001_01_01_000000_create_users_table  [1] Ran  
+  0001_01_01_000001_create_cache_table  [1] Ran  
+  0001_01_01_000002_create_jobs_table  [1] Ran  
+  2026_03_21_000001_create_resumes_table  [1] Ran  
+  2026_03_21_000002_create_job_postings_table  [1] Ran  
+  2026_03_21_000003_create_match_reports_table  [1] Ran  
+  2026_03_22_034257_make_content_raw_nullable_on_resumes_table  [2] Ran  
+  2026_03_22_035416_add_analysis_columns_to_match_reports_table  Pending  
+  2026_03_22_040548_add_user_id_to_match_reports_table  Pending  
+

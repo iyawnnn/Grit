@@ -18,7 +18,9 @@ class MatchReportForm
                     ->required(),
                 \Filament\Forms\Components\TextInput::make('score')
                     ->numeric()
-                    ->required(),
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->placeholder('Calculated after saving...'),
                 \Filament\Forms\Components\TagsInput::make('missing_keywords')
                     ->separator(','),
             ]);

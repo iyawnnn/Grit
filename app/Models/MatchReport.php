@@ -10,7 +10,13 @@ class MatchReport extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'resume_id',
+        'job_id',
+        'score',
+        'missing_keywords',
+    ];
 
     protected function casts(): array
     {
@@ -27,5 +33,10 @@ class MatchReport extends Model
     public function jobPosting(): BelongsTo
     {
         return $this->belongsTo(JobPosting::class, 'job_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
