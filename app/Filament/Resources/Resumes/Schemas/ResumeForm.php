@@ -21,10 +21,20 @@ class ResumeForm
                         fn ($file): string => (string) str($file->getClientOriginalName())
                             ->prepend(now()->timestamp . '_' . str()->random(8) . '_')
                     )
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state) {
+                            // Initializes the parser and extracts text from the temporary PDF path
+                            $parser = new \App\Services\ResumeParserService();
+                            $text = $parser->parse($state->getRealPath());
+                            $set('content_raw', $text);
+                        }
+                    })
                     ->required(),
                     
                 \Filament\Forms\Components\Textarea::make('content_raw')
                     ->readOnly()
+                    ->dehydrated(true)
                     ->columnSpanFull()
                     ->nullable(),
                     
