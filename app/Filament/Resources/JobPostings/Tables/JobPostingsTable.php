@@ -17,13 +17,21 @@ class JobPostingsTable
                     \Filament\Tables\Columns\TextColumn::make('title')
                         ->weight('bold')
                         ->size('lg'),
-                        
+
                     \Filament\Tables\Columns\TextColumn::make('company')
                         ->color('gray'),
-                        
+
+                    \Filament\Tables\Columns\TextColumn::make('latestMatchScore')
+                        ->badge()
+                        ->state(function (\App\Models\JobPosting $record) {
+                            return $record->matchReports()->latest()->first()?->score;
+                        })
+                        ->formatStateUsing(fn($state) => $state ? $state . '% Match' : 'No Report')
+                        ->color(fn($state) => $state >= 80 ? 'success' : ($state >= 50 ? 'warning' : 'danger')),
+
                     \Filament\Tables\Columns\TextColumn::make('status')
                         ->badge()
-                        ->color(fn (string $state): string => match ($state) {
+                        ->color(fn(string $state): string => match ($state) {
                             'Bookmarked' => 'gray',
                             'Applied' => 'info',
                             'Interviewing' => 'warning',

@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use \Illuminate\Database\Eloquent\Builder;
 
 class ResumeResource extends Resource
 {
@@ -25,6 +26,11 @@ class ResumeResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return ResumeForm::configure($schema);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
     }
 
     public static function table(Table $table): Table
