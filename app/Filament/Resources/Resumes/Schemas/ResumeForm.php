@@ -14,10 +14,10 @@ class ResumeForm
                 
                 \Filament\Forms\Components\FileUpload::make('file_url')
                     ->acceptedFileTypes(['application/pdf'])
-                    ->disk('local') 
+                    ->disk('cloudinary') 
                     ->directory('resumes')
-                    ->visibility('private') 
                     ->getUploadedFileNameForStorageUsing(
+                        // Generates a unique filename to prevent overwriting
                         fn ($file): string => (string) str($file->getClientOriginalName())
                             ->prepend(now()->timestamp . '_' . str()->random(8) . '_')
                     )

@@ -38,6 +38,11 @@ return [
             'report' => false,
         ],
 
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
