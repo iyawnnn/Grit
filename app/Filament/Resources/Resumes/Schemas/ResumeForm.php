@@ -13,18 +13,16 @@ class ResumeForm
                 \Filament\Forms\Components\TextInput::make('label')->required(),
                 
                 \Filament\Forms\Components\FileUpload::make('file_url')
+                    ->label('Resume (PDF)')
                     ->acceptedFileTypes(['application/pdf'])
-                    ->disk('cloudinary') 
+                    ->disk('cloudinary')
                     ->directory('resumes')
                     ->getUploadedFileNameForStorageUsing(
-                        // Generates a unique filename to prevent overwriting
-                        fn ($file): string => (string) str($file->getClientOriginalName())
-                            ->prepend(now()->timestamp . '_' . str()->random(8) . '_')
+                        fn ($file): string => 'resume-' . \Illuminate\Support\Str::random(9) . '-' . time() . '.' . $file->getClientOriginalExtension()
                     )
                     ->live()
                     ->afterStateUpdated(function ($state, $set) {
-                        if ($state) {
-                            // Initializes the parser and extracts text from the temporary PDF path
+                        if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                             $parser = new \App\Services\ResumeParserService();
                             $text = $parser->parse($state->getRealPath());
                             $set('content_raw', $text);

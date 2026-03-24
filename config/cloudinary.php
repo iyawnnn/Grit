@@ -12,7 +12,7 @@ return [
         'api_secret' => env('CLOUDINARY_API_SECRET'),
     ],
 
-    'cloudinary_url' => env('CLOUDINARY_URL'),
+    'cloud_url' => env('CLOUDINARY_URL'),
 
     'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET', 'grit_uploads'),
 ];

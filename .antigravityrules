@@ -1,5 +1,5 @@
 # Project Grit: System Instructions
-- Framework: Laravel 13 (Latest 2026 Standards).
+- Framework: Laravel 12 (Latest 2026 Standards).
 - Language: PHP 8.4.
 - Database: Neon (PostgreSQL) — Ensure all migrations use Postgres-compatible types.
 - Storage: Cloudinary — All PDF and image uploads must use the Cloudinary disk.
