@@ -24,6 +24,11 @@ class Resume extends Model
         ];
     }
 
+    public function matchReports()
+    {
+        return $this->hasMany(MatchReport::class, 'resume_id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

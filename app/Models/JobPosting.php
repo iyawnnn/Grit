@@ -21,7 +21,7 @@ class JobPosting extends Model
 
     public function matchReports()
     {
-        return $this->hasMany(MatchReport::class);
+        return $this->hasMany(MatchReport::class, 'job_id');
     }
 
     public function user(): BelongsTo

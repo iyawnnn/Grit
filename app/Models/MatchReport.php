@@ -27,7 +27,7 @@ class MatchReport extends Model
 
     public function resume(): BelongsTo
     {
-        return $this->belongsTo(Resume::class);
+        return $this->belongsTo(Resume::class, 'resume_id');
     }
 
     public function jobPosting(): BelongsTo
