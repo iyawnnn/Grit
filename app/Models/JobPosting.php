@@ -19,6 +19,11 @@ class JobPosting extends Model
         'status',
     ];
 
+    public function matchReports()
+    {
+        return $this->hasMany(MatchReport::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
