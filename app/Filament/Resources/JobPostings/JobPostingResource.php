@@ -29,14 +29,13 @@ class JobPostingResource extends Resource
 
     public static function table(Table $table): Table
     {
+        // This correctly points to your dedicated Tables folder!
         return JobPostingsTable::configure($table);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
