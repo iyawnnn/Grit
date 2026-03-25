@@ -15,4 +15,5 @@ return [
     'cloud_url' => env('CLOUDINARY_URL'),
 
     'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET', 'grit_uploads'),
+    'folder' => env('CLOUDINARY_FOLDER', 'grit_uploads'),
 ];

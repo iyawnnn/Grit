@@ -16,9 +16,9 @@ class ResumeForm
                     ->label('Resume (PDF)')
                     ->acceptedFileTypes(['application/pdf'])
                     ->disk('cloudinary')
-                    ->directory('resumes')
+                    ->directory('grit_uploads')
                     ->getUploadedFileNameForStorageUsing(
-                        fn ($file): string => 'resume-' . \Illuminate\Support\Str::random(9) . '-' . time() . '.' . $file->getClientOriginalExtension()
+                        fn ($file): string => 'grit_uploads/resume-' . \Illuminate\Support\Str::random(9) . '-' . time() . '.' . $file->getClientOriginalExtension()
                     )
                     ->live()
                     ->afterStateUpdated(function ($state, $set) {
