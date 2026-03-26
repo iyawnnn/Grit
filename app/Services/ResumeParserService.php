@@ -17,9 +17,17 @@ class ResumeParserService
                 throw new Exception("Binary not found at: " . $binaryPath);
             }
 
-            return (new Pdf($binaryPath))
+            // 1. Extract the raw text from the PDF
+            $rawText = (new Pdf($binaryPath))
                 ->setPdf($filePath)
                 ->text();
+
+            // 2. Clean the text to prevent UTF-8 JSON encoding errors
+            // This strips out invisible formatting characters that crash the dashboard
+            $cleanText = mb_convert_encoding($rawText, 'UTF-8', 'UTF-8');
+
+            return $cleanText;
+
         } catch (Exception $e) {
             Log::error('Resume parsing failed: ' . $e->getMessage(), [
                 'file' => $filePath,

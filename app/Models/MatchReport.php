@@ -16,6 +16,7 @@ class MatchReport extends Model
         'job_id',
         'score',
         'missing_keywords',
+        'reasoning',
     ];
 
     protected function casts(): array
