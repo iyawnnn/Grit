@@ -1,7 +1,7 @@
-# 1. Use an official PHP image with Apache
-FROM php:8.3-apache
+# 1. Use an official PHP 8.4 image with Apache (Updated to match your local setup)
+FROM php:8.4-apache
 
-# 2. Install system dependencies for Laravel
+# 2. Install system dependencies for Laravel (Added libicu-dev for the intl extension)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -10,8 +10,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     libpq-dev \
+    libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_pgsql
+    && docker-php-ext-install gd zip pdo pdo_pgsql intl
 
 # 3. Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
