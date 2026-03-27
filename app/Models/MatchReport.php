@@ -17,12 +17,14 @@ class MatchReport extends Model
         'score',
         'missing_keywords',
         'reasoning',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
             'missing_keywords' => 'array',
+            'status' => \App\Enums\ApplicationStatus::class,
         ];
     }
 

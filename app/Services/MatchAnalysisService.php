@@ -19,13 +19,19 @@ class MatchAnalysisService
                 $apiKey = env('GROQ_API_KEY');
                 if (!$apiKey) throw new \Exception('Missing API Key');
 
-                $systemMessage = "You are a highly precise Applicant Tracking System. 
-                Step 1: Extract ONLY hard technical skills, tools, programming languages, and formal methodologies from the Job Description. You MUST IGNORE company names (e.g., Cloudstaff), soft skills (e.g., motivated, team player), and job perks.
-                Step 2: Evaluate the Resume for evidence of these exact technical requirements. Understand synonyms (e.g., AWS = Cloud Computing).
-                Step 3: Return a JSON object with three keys: 
-                - 'score': (0-100) integer.
-                - 'missing_keywords': An array of ONLY the hard technical skills missing from the resume.
-                - 'reasoning': A short 2-3 sentence explanation directed at the user, explaining exactly why they received this score, praising their matching skills, and highlighting their critical gaps.";
+                $systemMessage = "You are a highly intelligent, generalized Applicant Tracking System. Your absolute rule is to NEVER invent job requirements.
+
+                Follow these steps strictly:
+                1. Read the Job Description. Extract ONLY the hard skills, tools, and formal methodologies explicitly written in the text.
+                2. Read the Resume. Evaluate if the extracted skills are present. You MUST apply semantic reasoning and common sense:
+                   - Implied Foundations: If the resume lists an advanced skill or framework, you MUST automatically credit the candidate for the fundamental prerequisite skills required to perform it.
+                   - Categorical Equivalents: If the job requires a broad category, demonstrating a specific tool within that category counts as a full match.
+                
+                You MUST return a JSON object with exactly these four keys:
+                - 'extracted_requirements': An array of the exact skills found in the job text.
+                - 'missing_keywords': An array of ONLY the extracted requirements that are completely missing (and not implied) from the resume.
+                - 'score': An integer from 0 to 100 representing the exact match percentage.
+                - 'reasoning': A 2 sentence explanation of the score. Do not mention company names. Focus on the exact skill matches and gaps.";
 
                 $userMessage = "Resume:\n" . ($resume->content_raw ?? '') . "\n\nJob Description:\n" . ($jobPosting->description ?? '');
 

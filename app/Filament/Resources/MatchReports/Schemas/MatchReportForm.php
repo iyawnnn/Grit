@@ -18,7 +18,7 @@ class MatchReportForm
                     ->relationship('resume', 'label')
                     ->required(),
                 
-                Select::make('job_posting_id') // Fixed from job_id to match your database
+                Select::make('job_id') 
                     ->relationship('jobPosting', 'title')
                     ->required(),
                 
@@ -30,7 +30,7 @@ class MatchReportForm
                 
                 TagsInput::make('missing_keywords')
                     ->separator(',')
-                    ->disabled() // Keeps the AI's findings read-only
+                    ->disabled()
                     ->placeholder('Identified by AI after saving...'),
                     
                 Textarea::make('reasoning')

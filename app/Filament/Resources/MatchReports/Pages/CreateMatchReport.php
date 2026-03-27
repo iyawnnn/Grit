@@ -7,7 +7,7 @@ use Filament\Resources\Pages\CreateRecord;
 use App\Models\Resume;
 use App\Models\JobPosting;
 use App\Services\MatchAnalysisService;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; 
 
 class CreateMatchReport extends CreateRecord
 {
@@ -15,13 +15,13 @@ class CreateMatchReport extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // 1. Assign the user ID to ensure ownership (using Facade for IDE stability)
+        // 1. Assign the user ID 
         $data['user_id'] = Auth::id();
 
         // 2. Fetch the actual Resume and Job models using the IDs from the form
-        // Using job_posting_id to match your database structure
+        // Change this line to use job_id
         $resume = Resume::find($data['resume_id']);
-        $jobPosting = JobPosting::find($data['job_posting_id']);
+        $jobPosting = JobPosting::find($data['job_id']); 
 
         // 3. If both exist, run the AI Brain BEFORE we save to the database
         if ($resume && $jobPosting) {
@@ -33,7 +33,7 @@ class CreateMatchReport extends CreateRecord
             $data['missing_keywords'] = $analysis['missing_keywords'] ?? [];
             $data['reasoning'] = $analysis['reasoning'] ?? 'No reasoning provided.';
         } else {
-            // Safety fallback just in case something goes wrong
+            // Safety fallback 
             $data['score'] = 0;
             $data['missing_keywords'] = [];
             $data['reasoning'] = 'System Error: Could not load Resume or Job Posting.';
