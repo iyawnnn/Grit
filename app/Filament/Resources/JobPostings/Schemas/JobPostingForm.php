@@ -21,7 +21,7 @@ class JobPostingForm
                     ->label('Company Name')
                     ->required(),
 
-                TextInput::make('url')
+                TextInput::make('source_url')
                     ->label('Job URL (Optional - For your reference only)')
                     ->url()
                     ->nullable(),
