@@ -31,8 +31,10 @@ class MatchReportResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Using Auth::id() fixes the IDE warning
-        return parent::getEloquentQuery()->where('user_id', Auth::id());
+        // Eager load the jobPosting relationship
+        return parent::getEloquentQuery()
+            ->where('user_id', Auth::id())
+            ->with('jobPosting');
     }
 
     public static function table(Table $table): Table
