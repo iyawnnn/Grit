@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\JobPostings\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Grid;
 
 class JobPostingForm
 {
@@ -10,18 +13,32 @@ class JobPostingForm
     {
         return $schema
             ->components([
-                \Filament\Forms\Components\TextInput::make('title')->required(),
-                \Filament\Forms\Components\TextInput::make('company')->required(),
-                \Filament\Forms\Components\Textarea::make('description')->required(),
-                \Filament\Forms\Components\TextInput::make('source_url')->url()->required(),
-                \Filament\Forms\Components\Select::make('status')
-                    ->options([
-                        'draft' => 'Draft',
-                        'published' => 'Published',
-                        'closed' => 'Closed',
-                    ])
-                    ->default('draft')
+                TextInput::make('title')
+                    ->label('Job Title')
                     ->required(),
+                    
+                TextInput::make('company')
+                    ->label('Company Name')
+                    ->required(),
+
+                TextInput::make('url')
+                    ->label('Job URL (Optional - For your reference only)')
+                    ->url()
+                    ->nullable(),
+                    
+                // This is the new field where you will paste the text
+                RichEditor::make('description')
+                    ->label('Job Description (Highlight and paste the text from LinkedIn here)')
+                    ->toolbarButtons([
+                        'bold',
+                        'italic',
+                        'bulletList',
+                        'orderedList',
+                        'undo',
+                        'redo',
+                    ])
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 }
