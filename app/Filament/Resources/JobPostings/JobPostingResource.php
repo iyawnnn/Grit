@@ -15,6 +15,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use \Illuminate\Database\Eloquent\Builder;
 use \Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth; 
 
 class JobPostingResource extends Resource
 {
@@ -31,12 +32,14 @@ class JobPostingResource extends Resource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->where('user_id', auth()->id());
+        // 2. Use Auth::id() instead of auth()->id()
+        return parent::getEloquentQuery()
+            ->where('user_id', Auth::id())
+            ->with('matchReports'); 
     }
 
     public static function table(Table $table): Table
     {
-        // This correctly points to your dedicated Tables folder!
         return JobPostingsTable::configure($table);
     }
 

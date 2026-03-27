@@ -1,7 +1,6 @@
-# 1. Use an official PHP 8.4 image with Apache (Updated to match your local setup)
 FROM php:8.4-apache
 
-# 2. Install system dependencies for Laravel (Added libicu-dev for the intl extension)
+# Install system dependencies and Node.js for building assets
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -11,33 +10,51 @@ RUN apt-get update && apt-get install -y \
     git \
     libpq-dev \
     libicu-dev \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_pgsql intl
+    && docker-php-ext-install gd zip pdo pdo_pgsql intl opcache
 
-# 3. Enable Apache mod_rewrite for Laravel routing
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# 4. Set the working directory
+# Configure OPcache for maximum PHP performance
+RUN echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
+    && echo "opcache.interned_strings_buffer=8" >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
+    && echo "opcache.max_accelerated_files=4000" >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
+    && echo "opcache.revalidate_freq=2" >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
+    && echo "opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache-recommended.ini
+
 WORKDIR /var/www/html
 
-# 5. Copy your application code
 COPY . .
 
-# 6. Install Composer
+# Install PHP dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# 7. Set correct permissions for Laravel
+# Install Node dependencies and build production assets
+RUN npm install
+RUN npm run build
+
+# Set correct permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# 8. Update Apache to point to the 'public' folder
+# Update Apache to point to the public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# 9. Expose port 80
 EXPOSE 80
 
-# 10. Run migrations and start Apache
-CMD php artisan migrate --force && apache2-foreground
+# Cache everything for maximum production speed, then start Apache
+CMD php artisan config:cache && \
+    php artisan event:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php artisan filament:cache-components && \
+    php artisan icons:cache && \
+    php artisan migrate --force && \
+    apache2-foreground
