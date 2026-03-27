@@ -12,6 +12,7 @@ class MatchReportsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->poll('3s')
             ->columns([
                 TextColumn::make('jobPosting.title')
                     ->label('Job Title')
@@ -19,13 +20,13 @@ class MatchReportsTable
                 
                 TextColumn::make('score')
                     ->badge()
-                    ->color(fn (string $state): string => match (true) {
+                    ->color(fn ($state) => match (true) {
                         $state >= 85 => 'success',
                         $state >= 70 => 'warning',
+                        $state === 0 => 'gray',
                         default => 'danger',
                     }),
 
-                // Use a simple array instead of the Enum
                 SelectColumn::make('status')
                     ->options([
                         'matched' => '1. Matched',
