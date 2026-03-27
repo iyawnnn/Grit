@@ -24,7 +24,6 @@ class MatchReport extends Model
     {
         return [
             'missing_keywords' => 'array',
-            'status' => \App\Enums\ApplicationStatus::class,
         ];
     }
 
