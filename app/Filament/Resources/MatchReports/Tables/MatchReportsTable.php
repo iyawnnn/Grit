@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources\MatchReports\Tables;
 
+use App\Filament\Resources\MatchReports\MatchReportResource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Grouping\Group;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 
 class MatchReportsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->poll('3s')
             ->columns([
                 TextColumn::make('jobPosting.title')
                     ->label('Job Title')
@@ -19,13 +23,13 @@ class MatchReportsTable
                 
                 TextColumn::make('score')
                     ->badge()
-                    ->color(fn (string $state): string => match (true) {
+                    ->color(fn ($state) => match (true) {
                         $state >= 85 => 'success',
                         $state >= 70 => 'warning',
+                        $state === 0 => 'gray',
                         default => 'danger',
                     }),
 
-                // Use a simple array instead of the Enum
                 SelectColumn::make('status')
                     ->options([
                         'matched' => '1. Matched',
@@ -44,6 +48,14 @@ class MatchReportsTable
             ->defaultGroup(
                 Group::make('status')
                     ->titlePrefixedWithLabel(false)
-            );
+            )
+            ->actions([
+                Action::make('view_report')
+                    ->label('View')
+                    ->icon('heroicon-m-eye')
+                    ->color('gray')
+                    ->url(fn ($record) => MatchReportResource::getUrl('view', ['record' => $record])),
+                DeleteAction::make(),
+            ]);
     }
 }
