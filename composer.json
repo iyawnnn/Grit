@@ -13,6 +13,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.25",
         "laravel/tinker": "^3.0",
+        "smalot/pdfparser": "^2.12",
         "spatie/pdf-to-text": "^1.55"
     },
     "require-dev": {

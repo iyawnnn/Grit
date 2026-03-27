@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\MatchReports\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Grouping\Group;
 
 class MatchReportsTable
 {
@@ -13,28 +13,37 @@ class MatchReportsTable
     {
         return $table
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('score')
-                    ->badge()
-                    ->color(fn (string|int|null $state): string => match (true) {
-                        (int) $state >= 80 => 'success',
-                        (int) $state >= 50 => '#D97706',
-                        default => 'danger',
-                    })
-                    ->sortable(),
-                \Filament\Tables\Columns\TextColumn::make('missing_keywords')
-                    ->badge()
+                TextColumn::make('jobPosting.title')
+                    ->label('Job Title')
                     ->searchable(),
+                
+                TextColumn::make('score')
+                    ->badge()
+                    ->color(fn (string $state): string => match (true) {
+                        $state >= 85 => 'success',
+                        $state >= 70 => 'warning',
+                        default => 'danger',
+                    }),
+
+                // Use a simple array instead of the Enum
+                SelectColumn::make('status')
+                    ->options([
+                        'matched' => '1. Matched',
+                        'applied' => '2. Applied',
+                        'interviewing' => '3. Interviewing',
+                        'offered' => '4. Offer Received',
+                        'hired' => '5. Hired',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->searchable(),
+
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->defaultGroup(
+                Group::make('status')
+                    ->titlePrefixedWithLabel(false)
+            );
     }
 }

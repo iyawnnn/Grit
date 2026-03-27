@@ -6,78 +6,96 @@ use App\Models\Resume;
 use App\Models\JobPosting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class MatchAnalysisService
 {
     public function analyze(Resume $resume, JobPosting $jobPosting): array
     {
-        try {
-            $apiKey = env('GROQ_API_KEY');
-            if (!$apiKey) throw new \Exception('Missing API Key');
+        $cacheKey = 'match_report_' . $resume->id . '_' . $jobPosting->id;
 
-            $systemMessage = "You are a strict applicant tracking system. Step 1: Extract required skills from the Job Description. Step 2: Scan the Resume for these exact skills. Step 3: Return a JSON object with 'score' (0-100) and 'missing_keywords'. The 'missing_keywords' array MUST ONLY contain skills required by the job that are COMPLETELY ABSENT from the resume. If a skill is on the resume, do not list it.";
+        return Cache::remember($cacheKey, now()->addDays(7), function () use ($resume, $jobPosting) {
+            try {
+                $apiKey = env('GROQ_API_KEY');
+                if (!$apiKey) throw new \Exception('Missing API Key');
 
-            $userMessage = "Resume:\n" . ($resume->content_raw ?? '') . "\n\nJob Description:\n" . ($jobPosting->description ?? '');
+                $systemMessage = "You are a highly intelligent, generalized Applicant Tracking System. Your absolute rule is to NEVER invent job requirements.
 
-            $response = Http::withToken($apiKey)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->timeout(10)
-                ->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'llama-3.3-70b-versatile',
-                    'response_format' => ['type' => 'json_object'],
-                    'messages' => [
-                        ['role' => 'system', 'content' => $systemMessage],
-                        ['role' => 'user', 'content' => $userMessage],
-                    ]
-                ]);
+                Follow these steps strictly:
+                1. Read the Job Description. Extract ONLY the hard skills, tools, and formal methodologies explicitly written in the text.
+                2. Read the Resume. Evaluate if the extracted skills are present. You MUST apply semantic reasoning and common sense:
+                   - Implied Foundations: If the resume lists an advanced skill or framework, you MUST automatically credit the candidate for the fundamental prerequisite skills required to perform it.
+                   - Categorical Equivalents: If the job requires a broad category, demonstrating a specific tool within that category counts as a full match.
+                
+                You MUST return a JSON object with exactly these four keys:
+                - 'extracted_requirements': An array of the exact skills found in the job text.
+                - 'missing_keywords': An array of ONLY the extracted requirements that are completely missing (and not implied) from the resume.
+                - 'score': An integer from 0 to 100 representing the exact match percentage.
+                - 'reasoning': A 2 sentence explanation of the score. Do not mention company names. Focus on the exact skill matches and gaps.";
 
-            if ($response->failed()) {
-                throw new \Exception('API Call Failed: ' . $response->body());
+                $userMessage = "Resume:\n" . ($resume->content_raw ?? '') . "\n\nJob Description:\n" . ($jobPosting->description ?? '');
+
+                $response = Http::withToken($apiKey)
+                    ->withHeaders(['Content-Type' => 'application/json'])
+                    ->timeout(15)
+                    ->post('https://api.groq.com/openai/v1/chat/completions', [
+                        'model' => 'llama-3.3-70b-versatile',
+                        'response_format' => ['type' => 'json_object'],
+                        'messages' => [
+                            ['role' => 'system', 'content' => $systemMessage],
+                            ['role' => 'user', 'content' => $userMessage],
+                        ],
+                        'temperature' => 0.1
+                    ]);
+
+                if ($response->failed()) {
+                    throw new \Exception('API Call Failed: ' . $response->body());
+                }
+                $data = json_decode($response->json('choices.0.message.content') ?? '{}', true);
+
+                if (!isset($data['score'])) {
+                    throw new \Exception('Invalid JSON from AI');
+                }
+
+                return [
+                    'score' => (int) $data['score'],
+                    'missing_keywords' => $data['missing_keywords'] ?? [],
+                    'reasoning' => $data['reasoning'] ?? 'No reasoning provided.'
+                ];
+            } catch (\Exception $e) {
+                Log::error('Groq API error. Using offline fallback. Error: ' . $e->getMessage());
+                return $this->offlineFallback($resume, $jobPosting);
             }
-
-            $data = json_decode($response->json('choices.0.message.content') ?? '{}', true);
-            
-            if (!isset($data['score'])) {
-                throw new \Exception('Invalid JSON from AI');
-            }
-
-            return [
-                'score' => (int) $data['score'],
-                'missing_keywords' => $data['missing_keywords'] ?? []
-            ];
-
-        } catch (\Exception $e) {
-            Log::error('Groq API error. Using offline fallback. Error: ' . $e->getMessage());
-            return $this->offlineFallback($resume, $jobPosting);
-        }
+        });
     }
 
-    // THE OFFLINE BACKUP ENGINE
     private function offlineFallback(Resume $resume, JobPosting $jobPosting): array
     {
         $resumeText = strtolower($resume->content_raw ?? '');
         $jobText = strtolower($jobPosting->description ?? '');
 
-        $masterKeywords = ['HTML', 'CSS', 'JavaScript', 'React', 'Vue', 'Angular', 'Node.js', 'Express', 'PHP', 'Laravel', 'Python', 'Java', 'MongoDB', 'MySQL', 'PostgreSQL', 'AWS', 'SEO'];
-        
-        $jobRequirements = [];
+        preg_match_all('/\b[a-zA-Z]{6,}\b/', $jobText, $matches);
+        $jobWords = array_unique($matches[0]);
+
         $missingKeywords = [];
+        $matchCount = 0;
 
-        foreach ($masterKeywords as $keyword) {
-            if (str_contains($jobText, strtolower($keyword))) $jobRequirements[] = $keyword;
+        foreach ($jobWords as $word) {
+            if (str_contains($resumeText, $word)) {
+                $matchCount++;
+            } else {
+                if (count($missingKeywords) < 5) {
+                    $missingKeywords[] = $word;
+                }
+            }
         }
 
-        if (empty($jobRequirements)) return ['score' => 100, 'missing_keywords' => []];
-
-        foreach ($jobRequirements as $keyword) {
-            if (!str_contains($resumeText, strtolower($keyword))) $missingKeywords[] = $keyword;
-        }
-
-        $score = ((count($jobRequirements) - count($missingKeywords)) / count($jobRequirements)) * 100;
+        $totalWords = count($jobWords) > 0 ? count($jobWords) : 1;
+        $score = ($matchCount / $totalWords) * 100;
 
         return [
             'score' => round($score),
-            'missing_keywords' => array_merge(['(Offline Mode)'], $missingKeywords) // Adds a tag so you know it used the backup
+            'missing_keywords' => array_merge(['(Offline Backup)'], $missingKeywords)
         ];
     }
 }

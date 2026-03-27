@@ -13,8 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use \Illuminate\Database\Eloquent\Builder;
-use \Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth; 
 
 class MatchReportResource extends Resource
 {
@@ -29,9 +29,10 @@ class MatchReportResource extends Resource
         return MatchReportForm::configure($schema);
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('user_id', auth()->id());
+        // Using Auth::id() fixes the IDE warning
+        return parent::getEloquentQuery()->where('user_id', Auth::id());
     }
 
     public static function table(Table $table): Table

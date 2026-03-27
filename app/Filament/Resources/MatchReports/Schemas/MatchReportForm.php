@@ -3,6 +3,10 @@
 namespace App\Filament\Resources\MatchReports\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TagsInput;
 
 class MatchReportForm
 {
@@ -10,19 +14,30 @@ class MatchReportForm
     {
         return $schema
             ->components([
-                \Filament\Forms\Components\Select::make('resume_id')
+                Select::make('resume_id')
                     ->relationship('resume', 'label')
                     ->required(),
-                \Filament\Forms\Components\Select::make('job_id')
+                
+                Select::make('job_id') 
                     ->relationship('jobPosting', 'title')
                     ->required(),
-                \Filament\Forms\Components\TextInput::make('score')
+                
+                TextInput::make('score')
                     ->numeric()
                     ->disabled()
                     ->dehydrated(false)
-                    ->placeholder('Calculated after saving...'),
-                \Filament\Forms\Components\TagsInput::make('missing_keywords')
-                    ->separator(','),
+                    ->placeholder('Calculated by AI after saving...'),
+                
+                TagsInput::make('missing_keywords')
+                    ->separator(',')
+                    ->disabled()
+                    ->placeholder('Identified by AI after saving...'),
+                    
+                Textarea::make('reasoning')
+                    ->label('AI Analysis & Reasoning')
+                    ->disabled()
+                    ->columnSpanFull()
+                    ->placeholder('The AI will explain your match score here after you click Create.'),
             ]);
     }
 }
