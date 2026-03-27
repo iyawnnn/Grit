@@ -7,6 +7,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Secure Google OAuth Routes
-Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::prefix('auth/google')->group(function () {
+    Route::get('/login', [GoogleController::class, 'login'])->name('google.login');
+    Route::get('/register', [GoogleController::class, 'register'])->name('google.register');
+    Route::get('/callback', [GoogleController::class, 'callback'])->name('google.callback');
+});
