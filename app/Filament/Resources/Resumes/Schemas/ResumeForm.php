@@ -3,6 +3,13 @@
 namespace App\Filament\Resources\Resumes\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Str;
+use App\Services\ResumeParserService;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ResumeForm
 {
@@ -10,33 +17,41 @@ class ResumeForm
     {
         return $schema
             ->components([
-                \Filament\Forms\Components\TextInput::make('label')->required(),
-                
-                \Filament\Forms\Components\FileUpload::make('file_url')
-                    ->label('Resume (PDF)')
+                TextInput::make('label')
+                    ->label('Resume Title (e.g., Full Stack Developer)')
+                    ->required(),
+                    
+                Toggle::make('is_active')
+                    ->label('Set as Default Resume')
+                    ->default(false)
+                    ->inline(false),
+                    
+                FileUpload::make('file_url')
+                    ->label('Upload Resume (PDF)')
                     ->acceptedFileTypes(['application/pdf'])
                     ->disk('cloudinary')
-                    ->directory('grit_uploads')
+                    ->directory('grit_resumes')
                     ->getUploadedFileNameForStorageUsing(
-                        fn ($file): string => 'grit_uploads/resume-' . \Illuminate\Support\Str::random(9) . '-' . time() . '.' . $file->getClientOriginalExtension()
+                        // Generates a unique filename without nested folders
+                        fn ($file): string => 'resume-' . Str::random(9) . '-' . time() . '.' . $file->getClientOriginalExtension()
                     )
                     ->live()
-                    ->afterStateUpdated(function ($state, $set) {
-                        if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                            $parser = new \App\Services\ResumeParserService();
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state instanceof TemporaryUploadedFile) {
+                            $parser = new ResumeParserService();
                             $text = $parser->parse($state->getRealPath());
                             $set('content_raw', $text);
                         }
                     })
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
                     
-                \Filament\Forms\Components\Textarea::make('content_raw')
-                    ->readOnly()
+                Textarea::make('content_raw')
+                    ->label('Parsed Resume Text (Edit to fix any missing details)')
+                    ->rows(15) 
                     ->dehydrated(true)
                     ->columnSpanFull()
                     ->nullable(),
-                    
-                \Filament\Forms\Components\Toggle::make('is_active')->default(false),
             ]);
     }
 }
