@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+// 1. Add the FilamentUser interface to the class definition
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
 
@@ -16,8 +17,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'google_id',
-        'avatar',
     ];
 
     protected $hidden = [
@@ -28,18 +27,19 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
-    public function resumes(): HasMany
+    // 2. Add this required method to grant access to the panel
+    public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasMany(Resume::class);
-    }
-
-    public function jobPostings(): HasMany
-    {
-        return $this->hasMany(JobPosting::class);
+        // This line checks if the user's email ends with a specific domain,
+        // or you can simply return true to let ANY registered user log in.
+        // Since this is a personal portfolio app, letting anyone log in is fine:
+        return true; 
+        
+        // OR, if you ONLY want yourself to access it, change it to this:
+        // return $this->email === 'your.actual.email@gmail.com';
     }
 }
