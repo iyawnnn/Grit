@@ -15,10 +15,8 @@ class CreateMatchReport extends CreateRecord
     {
         $data['user_id'] = Auth::id();
 
-        // Set temporary values while the background job processes
+        // Required because the score column is not nullable
         $data['score'] = 0;
-        $data['missing_keywords'] = [];
-        $data['reasoning'] = 'AI is currently analyzing this match. This usually takes about 10 to 15 seconds.';
 
         return $data;
     }

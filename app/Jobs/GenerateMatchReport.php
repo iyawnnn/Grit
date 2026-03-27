@@ -26,7 +26,6 @@ class GenerateMatchReport implements ShouldQueue
         if ($resume && $jobPosting) {
             $analysis = $matchService->analyze($resume, $jobPosting);
 
-            // Update the pending record with the actual AI results
             $this->matchReport->update([
                 'score' => $analysis['score'] ?? 0,
                 'missing_keywords' => $analysis['missing_keywords'] ?? [],

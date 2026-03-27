@@ -7,9 +7,8 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Grouping\Group;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\DeleteAction;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 
 class MatchReportsTable
 {
@@ -55,9 +54,7 @@ class MatchReportsTable
                     ->label('View')
                     ->icon('heroicon-m-eye')
                     ->color('gray')
-                    // Dynamically link to your custom view page
                     ->url(fn ($record) => MatchReportResource::getUrl('view', ['record' => $record])),
-                EditAction::make(),
                 DeleteAction::make(),
             ]);
     }

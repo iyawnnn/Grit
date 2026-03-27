@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\MatchReports;
 
 use App\Filament\Resources\MatchReports\Pages\CreateMatchReport;
-use App\Filament\Resources\MatchReports\Pages\EditMatchReport;
 use App\Filament\Resources\MatchReports\Pages\ListMatchReports;
 use App\Filament\Resources\MatchReports\Pages\ViewMatchReport;
 use App\Filament\Resources\MatchReports\Schemas\MatchReportForm;
@@ -17,7 +16,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-// FIXED: Section is now a global Schema layout component
 use Filament\Schemas\Components\Section; 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
@@ -43,7 +41,8 @@ class MatchReportResource extends Resource
                     ->description('Detailed breakdown of your resume against the job description.')
                     ->schema([
                         ViewEntry::make('score')
-                            ->view('infolists.components.circular-score')
+                            // Updated the path to match resources/views/components/circular-score.blade.php
+                            ->view('components.circular-score')
                             ->columnSpanFull(),
                             
                         TextEntry::make('jobPosting.title')
@@ -83,7 +82,6 @@ class MatchReportResource extends Resource
             'index' => ListMatchReports::route('/'),
             'create' => CreateMatchReport::route('/create'),
             'view' => ViewMatchReport::route('/{record}'),
-            'edit' => EditMatchReport::route('/{record}/edit'),
         ];
     }
-}  
+}
