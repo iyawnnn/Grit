@@ -2,10 +2,14 @@
 
 namespace App\Filament\Resources\MatchReports\Tables;
 
+use App\Filament\Resources\MatchReports\MatchReportResource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Grouping\Group;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\DeleteAction;
 
 class MatchReportsTable
 {
@@ -45,6 +49,16 @@ class MatchReportsTable
             ->defaultGroup(
                 Group::make('status')
                     ->titlePrefixedWithLabel(false)
-            );
+            )
+            ->actions([
+                Action::make('view_report')
+                    ->label('View')
+                    ->icon('heroicon-m-eye')
+                    ->color('gray')
+                    // Dynamically link to your custom view page
+                    ->url(fn ($record) => MatchReportResource::getUrl('view', ['record' => $record])),
+                EditAction::make(),
+                DeleteAction::make(),
+            ]);
     }
 }

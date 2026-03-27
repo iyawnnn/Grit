@@ -14,7 +14,7 @@ class CreateMatchReport extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = Auth::id();
-        
+
         // Set temporary values while the background job processes
         $data['score'] = 0;
         $data['missing_keywords'] = [];
@@ -32,6 +32,6 @@ class CreateMatchReport extends CreateRecord
     // Add this method to change where the user goes after clicking save
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return $this->getResource()::getUrl('view', ['record' => $this->record]);
     }
 }
