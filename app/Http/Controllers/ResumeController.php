@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Resume;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Services\ResumeParserService;
 
 class ResumeController extends Controller
 {
@@ -19,27 +20,32 @@ class ResumeController extends Controller
         return view('resumes.index', compact('resumes'));
     }
 
-    public function store(Request $request)
+    // We inject your ResumeParserService here
+    public function store(Request $request, ResumeParserService $parser)
     {
         $request->validate([
             'label' => 'required|string|max:255',
             'file' => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        // Use the native Upload API directly. This guarantees the upload works.
+        // 1. Upload to Cloudinary securely
         $response = cloudinary()->uploadApi()->upload($request->file('file')->getRealPath(), [
             'folder' => 'grit_uploads'
         ]);
 
+        // 2. Parse the PDF to extract the raw text
+        $rawText = $parser->parse($request->file('file')->getRealPath());
+
+        // 3. Save everything to the database
         Resume::create([
             'user_id' => auth()->id(),
             'label' => $request->label,
-            'file_url' => $response['secure_url'], // Get the secure URL from the API response
-            'content_raw' => null,
+            'file_url' => $response['secure_url'],
+            'content_raw' => $rawText, // The scraped text is saved here
             'is_active' => true,
         ]);
 
-        return redirect()->route('resumes.index')->with('success', 'Resume uploaded successfully.');
+        return redirect()->route('resumes.index')->with('success', 'Resume uploaded and parsed successfully.');
     }
 
     public function show(Resume $resume)
@@ -57,7 +63,6 @@ class ResumeController extends Controller
             abort(403);
         }
 
-        // Use the native Upload API to delete the file
         if (preg_match('/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z]+$/', $resume->file_url, $matches)) {
             $publicId = $matches[1];
             cloudinary()->uploadApi()->destroy($publicId);

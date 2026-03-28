@@ -12,18 +12,21 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    // Application & Match Report Routes
+
+    // 1. Applications (Job Postings Only)
     Route::get('/dashboard/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/dashboard/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
     Route::post('/dashboard/applications', [ApplicationController::class, 'store'])->name('applications.store');
 
-    Route::get('/dashboard/applications/{matchReport}', [ApplicationController::class, 'show'])->name('applications.show');
+    // 2. Match Reports (AI Analysis Only)
+    Route::get('/dashboard/matches', [MatchReportController::class, 'index'])->name('matches.index');
+    Route::get('/dashboard/matches/create', [MatchReportController::class, 'create'])->name('matches.create');
+    Route::post('/dashboard/matches', [MatchReportController::class, 'store'])->name('matches.store');
+    Route::get('/dashboard/matches/{matchReport}', [MatchReportController::class, 'show'])->name('matches.show');
 
-    // Resume Routes
+    // 3. Resumes
     Route::get('/dashboard/resumes', [ResumeController::class, 'index'])->name('resumes.index');
     Route::post('/dashboard/resumes', [ResumeController::class, 'store'])->name('resumes.store');
-
-    // Add these two new routes
     Route::get('/dashboard/resumes/{resume}', [ResumeController::class, 'show'])->name('resumes.show');
     Route::delete('/dashboard/resumes/{resume}', [ResumeController::class, 'destroy'])->name('resumes.destroy');
 });
