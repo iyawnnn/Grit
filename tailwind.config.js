@@ -12,8 +12,21 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['"Instrument Sans"', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                brand: {
+                    'orange': '#F1804E',
+                    'orange-light': '#FFF0E9',
+                    'orange-soft': '#FBF6F1',
+                    'dark': '#1A1A1A',
+                }
+            },
+            borderRadius: {
+                'xl': '12px',
+                '2xl': '16px',
+                '3xl': '24px',
+            }
         },
     },
 

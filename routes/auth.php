@@ -10,50 +10,65 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
 
-Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
+Route::prefix('dashboard')->group(function () {
+    
+    Route::middleware('guest')->group(function () {
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+        Route::get('auth/google/login', [GoogleController::class, 'login'])
+            ->name('google.login');
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+        Route::get('auth/google/register', [GoogleController::class, 'register'])
+            ->name('google.register');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+        Route::get('auth/google/callback', [GoogleController::class, 'callback'])
+            ->name('google.callback');
 
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
+        Route::get('register', [RegisteredUserController::class, 'create'])
+            ->name('register');
 
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
+        Route::post('register', [RegisteredUserController::class, 'store']);
 
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
+        Route::get('login', [AuthenticatedSessionController::class, 'create'])
+            ->name('login');
 
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
-});
+        Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
+        Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+            ->name('password.request');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
+        Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+            ->name('password.email');
 
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
+        Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+            ->name('password.reset');
 
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
+        Route::post('reset-password', [NewPasswordController::class, 'store'])
+            ->name('password.store');
+    });
 
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::middleware('auth')->group(function () {
+        Route::get('verify-email', EmailVerificationPromptController::class)
+            ->name('verification.notice');
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+        Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+            ->middleware(['signed', 'throttle:6,1'])
+            ->name('verification.verify');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+        Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+            ->middleware('throttle:6,1')
+            ->name('verification.send');
+
+        Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+            ->name('password.confirm');
+
+        Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+
+        Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
+    });
+    
 });

@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    /* Soften default form inputs for a friendly feel */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        @apply transition-all duration-150 rounded-xl border border-slate-200 placeholder-slate-400 font-medium;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        @apply border-[#F1804E] ring-[#F1804E]/20;
+    }
+}
