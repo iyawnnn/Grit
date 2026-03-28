@@ -1,11 +1,18 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@layer base {
+    /* Soften default form inputs for a friendly feel */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        @apply transition-all duration-150 rounded-xl border border-slate-200 placeholder-slate-400 font-medium;
+    }
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        @apply border-[#F1804E] ring-[#F1804E]/20;
+    }
 }

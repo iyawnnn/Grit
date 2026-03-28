@@ -27,7 +27,7 @@
     <div class="flex flex-col items-center justify-center space-y-4">
         <div class="relative inline-flex items-center justify-center">
             <svg class="w-40 h-40 transform -rotate-90" aria-label="Circular Match Score">
-                <circle cx="80" cy="80" r="{{ $radius }}" stroke="currentColor" stroke-width="12" fill="transparent" class="text-gray-100 dark:text-gray-800" />
+                <circle cx="80" cy="80" r="{{ $radius }}" stroke="currentColor" stroke-width="12" fill="transparent" class="text-gray-100" />
                 
                 <circle cx="80" cy="80" r="{{ $radius }}" stroke="currentColor" stroke-width="12" fill="transparent"
                         stroke-dasharray="{{ $circumference }}"
@@ -41,7 +41,7 @@
             </div>
         </div>
         
-        <span class="text-lg font-medium text-gray-500 dark:text-gray-400">
+        <span class="text-lg font-medium text-gray-500">
             {{ $isPending ? 'AI is analyzing...' : 'Overall Match Score' }}
         </span>
     </div>
