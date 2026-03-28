@@ -1,34 +1,44 @@
 <x-guest-layout>
-    <div class="flex h-screen w-full bg-white">
+    <div class="flex h-screen w-full bg-white overflow-hidden">
         
         <div class="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 xl:px-20 bg-white overflow-y-auto">
-            <div class="w-full max-w-[360px] mx-auto my-auto py-8">
+            <div class="w-full max-w-[360px] mx-auto my-auto py-4 lg:py-6">
                 
-                <div class="flex justify-center mb-8">
-                    <img src="/images/grit-logo.svg" alt="Grit application tracker logo" class="h-8 w-auto">
+                <div class="flex justify-center mb-5 lg:mb-6">
+                    <img src="/images/grit-logo.svg" alt="Grit application tracker logo" class="h-6 lg:h-8 w-auto">
                 </div>
 
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-semibold tracking-tight text-brand-dark mb-1.5">Welcome back</h1>
-                    <p class="text-sm text-gray-500 font-medium tracking-tight">Enter your details to sign in.</p>
+                <div class="text-center mb-5 lg:mb-6">
+                    <h1 class="text-2xl font-semibold tracking-tight text-brand-dark mb-1">Welcome back!</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-tight">Ready to conquer your goals? Let's get you back on track.</p>
                 </div>
 
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                <form method="POST" action="{{ route('login') }}" class="space-y-3">
                     @csrf
 
-                    <div>
+                    <div class="relative">
                         <label for="email" class="sr-only">Email address</label>
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg>
+                        </div>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" 
-                            class="w-full px-4 py-3 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all" placeholder="hello@example.com">
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                            class="w-full pl-10 pr-4 py-2.5 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all" placeholder="hello@example.com">
+                        <x-input-error :messages="$errors->get('email')" class="mt-1" />
                     </div>
 
                     <div x-data="{ show: false }" class="relative">
                         <label for="password" class="sr-only">Password</label>
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                        </div>
                         <input id="password" :type="show ? 'text' : 'password'" name="password" required autocomplete="current-password" 
-                            class="w-full pl-4 pr-12 py-3 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all" placeholder="••••••••">
+                            class="w-full pl-10 pr-12 py-2.5 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all" placeholder="••••••••">
                         
                         <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
                             <svg x-show="!show" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -40,7 +50,7 @@
                             </svg>
                         </button>
                     </div>
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('password')" class="mt-1" />
 
                     <div class="flex items-center justify-between pt-1">
                         <label for="remember_me" class="inline-flex items-center cursor-pointer group">
@@ -55,30 +65,28 @@
                         @endif
                     </div>
 
-                    <button type="submit" class="w-full bg-brand-orange text-white py-3 rounded-xl font-semibold text-sm tracking-tight hover:bg-[#e26a35] transition-colors duration-200 mt-2 shadow-sm">
+                    <button type="submit" class="w-full bg-brand-orange text-white py-2.5 rounded-xl font-semibold text-sm tracking-tight hover:bg-[#e26a35] transition-colors duration-200 mt-2 shadow-sm">
                         Sign in
                     </button>
                 </form>
 
                 @include('components.google-auth-button', ['action' => 'login'])
 
-                <p class="mt-10 text-center text-sm text-gray-500 font-medium tracking-tight">
+                <p class="mt-6 lg:mt-8 text-center text-xs lg:text-sm text-gray-500 font-medium tracking-tight">
                     Don't have an account? 
-                    <a href="{{ route('register') }}" class="text-brand-dark hover:text-brand-orange font-semibold transition-colors underline decoration-2 underline-offset-4">Sign up for free</a>
+                    <a href="{{ route('register') }}" class="text-brand-orange font-semibold relative inline-block after:block after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:bg-brand-orange after:transition-all after:duration-300 after:ease-in-out">Sign up for free</a>
                 </p>
             </div>
         </div>
 
-        <div class="hidden lg:block lg:w-1/2 p-4 lg:p-6 bg-white">
+        <div class="hidden lg:block lg:w-1/2 p-4 bg-white">
             <div class="relative w-full h-full rounded-3xl overflow-hidden bg-brand-orange-light shadow-lg">
                 <img src="/images/auth-visual-friendly.jpg" alt="Career growth illustration for job seekers" class="absolute inset-0 w-full h-full object-cover">
                 
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-
-                <div class="absolute bottom-0 left-0 w-full p-12 xl:p-16 z-10 flex flex-col items-center text-center">
-                    <h2 class="text-3xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-4 text-white">The best way to predict the <br>future is to create it.</h2>
-                    <p class="text-white text-base font-medium tracking-tight opacity-80 max-w-md leading-relaxed">
-                        Map out your career trajectory, track your success journey, and analyze your performance.
+                <div class="absolute bottom-0 left-0 w-full p-8 xl:p-12 z-10 flex flex-col items-center text-center bg-gradient-to-t from-white/90 via-white/50 to-transparent">
+                    <h2 class="text-2xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-2 xl:mb-3 text-black">Welcome back to your<br>success journey.</h2>
+                    <p class="text-gray-800 text-sm xl:text-base font-medium tracking-tight max-w-md leading-relaxed">
+                        Pick up right where you left off. Your next big career move is waiting.
                     </p>
                 </div>
             </div>
