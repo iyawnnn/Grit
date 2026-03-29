@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\MatchReportController; // This line fixes the error
 use App\Http\Controllers\ResumeController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,12 +18,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/dashboard/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
     Route::post('/dashboard/applications', [ApplicationController::class, 'store'])->name('applications.store');
+    Route::delete('/dashboard/applications/{jobPosting}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
 
     // 2. Match Reports (AI Analysis Only)
     Route::get('/dashboard/matches', [MatchReportController::class, 'index'])->name('matches.index');
     Route::get('/dashboard/matches/create', [MatchReportController::class, 'create'])->name('matches.create');
     Route::post('/dashboard/matches', [MatchReportController::class, 'store'])->name('matches.store');
     Route::get('/dashboard/matches/{matchReport}', [MatchReportController::class, 'show'])->name('matches.show');
+
+    Route::patch('/dashboard/matches/{matchReport}/status', [MatchReportController::class, 'updateStatus'])->name('matches.updateStatus');
+    Route::delete('/dashboard/matches/{matchReport}', [MatchReportController::class, 'destroy'])->name('matches.destroy');
 
     // 3. Resumes
     Route::get('/dashboard/resumes', [ResumeController::class, 'index'])->name('resumes.index');

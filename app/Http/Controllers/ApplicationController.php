@@ -37,4 +37,13 @@ class ApplicationController extends Controller
 
         return redirect()->route('applications.index')->with('success', 'Job posting saved successfully.');
     }
+
+    public function destroy(JobPosting $jobPosting)
+    {
+        // This will delete the job posting.
+        // Note: You should also ensure that deleting a job cascades to delete its related match reports in your database migration.
+        $jobPosting->delete();
+
+        return redirect()->route('applications.index')->with('success', 'Job posting deleted successfully.');
+    }
 }

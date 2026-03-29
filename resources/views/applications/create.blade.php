@@ -11,12 +11,9 @@
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight text-gray-900">Step 1: Job Details</h1>
-                    <p class="text-sm text-gray-500 mt-1">Paste the job description you want to target.</p>
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900">Track New Job</h1>
+                    <p class="text-sm text-gray-500 mt-1">Save a job posting to your applications list.</p>
                 </div>
-            </div>
-            <div class="text-sm font-medium text-gray-400">
-                1 of 2
             </div>
         </div>
 
@@ -56,12 +53,13 @@
 
                 <div class="pt-4 border-t border-gray-100 flex justify-end">
                     <button type="submit"
-                        class="px-5 py-2.5 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition-colors shadow-sm flex items-center gap-2">
-                        Next Step
+                        class="px-5 py-2.5 bg-[#e26a35] text-white rounded-md text-sm font-medium hover:bg-[#cf5b29] transition-colors shadow-sm flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                            </path>
                         </svg>
+                        Save Job Posting
                     </button>
                 </div>
             </form>

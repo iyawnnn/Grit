@@ -45,15 +45,16 @@ class MatchReportController extends Controller
 
         $matchReport = MatchReport::create([
             'user_id' => auth()->id(),
-            'job_posting_id' => $request->job_posting_id,
+            'job_id' => $request->job_posting_id,
             'resume_id' => $request->resume_id,
             'status' => 'pending',
-            'match_score' => 0,
+            'score' => 0,
         ]);
 
-        GenerateMatchReport::dispatch($matchReport);
+        // Dispatch background AI Job
+        \App\Jobs\GenerateMatchReport::dispatch($matchReport);
 
-        return redirect()->route('matches.show', $matchReport)->with('success', 'Generating report...');
+        return redirect()->route('matches.show', $matchReport)->with('success', 'Generating AI report...');
     }
 
     public function show(MatchReport $matchReport)
@@ -65,5 +66,33 @@ class MatchReportController extends Controller
         $matchReport->load(['jobPosting', 'resume']);
 
         return view('matches.show', compact('matchReport')); // Use the show.blade.php we made earlier
+    }
+
+    // Add this to update the application status
+    public function updateStatus(Request $request, MatchReport $matchReport)
+    {
+        if ($matchReport->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'status' => 'required|string|in:pending,applied,interviewing,offered,rejected'
+        ]);
+
+        $matchReport->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status updated successfully.');
+    }
+
+    // Add this to delete the report
+    public function destroy(MatchReport $matchReport)
+    {
+        if ($matchReport->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $matchReport->delete();
+
+        return redirect()->route('matches.index')->with('success', 'Match report deleted successfully.');
     }
 }

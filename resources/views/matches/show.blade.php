@@ -1,9 +1,9 @@
 <x-app-layout>
     <div class="max-w-6xl mx-auto flex flex-col h-full gap-6">
 
-        <div class="flex items-center justify-between shrink-0">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between shrink-0 gap-4">
             <div class="flex items-center gap-4">
-                <a href="{{ route('applications.index') }}"
+                <a href="{{ route('matches.index') }}"
                     class="p-2 text-gray-400 hover:text-gray-900 bg-white border border-gray-200 rounded-md transition-colors shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -12,22 +12,31 @@
                 </a>
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-gray-900">
-                        {{ $matchReport->jobPosting->title ?? 'Untitled Role' }}</h1>
+                        {{ $matchReport->jobPosting->title ?? 'Untitled Role' }}
+                    </h1>
                     <p class="text-sm text-gray-500 mt-1">{{ $matchReport->jobPosting->company ?? 'Unknown Company' }}
                     </p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <span
-                    class="px-3 py-1.5 bg-gray-100 text-gray-700 border border-gray-200 rounded-md text-sm font-medium flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-gray-400"></span>
-                    {{ ucfirst($matchReport->status ?? 'pending') }}
-                </span>
-                <button
-                    class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
-                    Update Status
-                </button>
+                <form action="{{ route('matches.updateStatus', $matchReport) }}" method="POST" class="m-0">
+                    @csrf
+                    @method('PATCH')
+                    <select name="status" onchange="this.form.submit()"
+                        class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm cursor-pointer focus:ring-[#e26a35] focus:border-[#e26a35]">
+                        <option value="pending" {{ $matchReport->status === 'pending' ? 'selected' : '' }}>⚪ Pending
+                        </option>
+                        <option value="applied" {{ $matchReport->status === 'applied' ? 'selected' : '' }}>🔵 Applied
+                        </option>
+                        <option value="interviewing" {{ $matchReport->status === 'interviewing' ? 'selected' : '' }}>🟡
+                            Interviewing</option>
+                        <option value="offered" {{ $matchReport->status === 'offered' ? 'selected' : '' }}>🟢 Offered
+                        </option>
+                        <option value="rejected" {{ $matchReport->status === 'rejected' ? 'selected' : '' }}>🔴 Rejected
+                        </option>
+                    </select>
+                </form>
             </div>
         </div>
 
@@ -48,7 +57,7 @@
                         @if($matchReport->reasoning)
                             {!! nl2br(e($matchReport->reasoning)) !!}
                         @else
-                            <p class="text-gray-500 italic">No detailed reasoning was generated for this report.</p>
+                            <p class="text-gray-500 italic">Analysis pending or unavailable.</p>
                         @endif
                     </div>
                 </div>
@@ -56,8 +65,10 @@
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <h2 class="text-base font-semibold text-gray-900 mb-4">Original Job Description</h2>
                     <div
-                        class="bg-gray-50 rounded-lg p-4 border border-gray-100 max-h-96 overflow-y-auto custom-scrollbar text-sm text-gray-600 whitespace-pre-wrap">
-                        {{ $matchReport->jobPosting->description ?? 'No description provided.' }}
+                        class="bg-gray-50 rounded-lg p-5 border border-gray-100 max-h-[500px] overflow-y-auto custom-scrollbar">
+                        <div class="prose prose-sm prose-gray max-w-none">
+                            {!! $matchReport->jobPosting->description ?? 'No description provided.' !!}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,12 +83,12 @@
                         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                             <path class="text-gray-100" stroke-width="3" stroke="currentColor" fill="none"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="text-[#e26a35]" stroke-dasharray="{{ $matchReport->match_score ?? 0 }}, 100"
+                            <path class="text-[#e26a35]" stroke-dasharray="{{ $matchReport->score ?? 0 }}, 100"
                                 stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-4xl font-bold text-gray-900">{{ $matchReport->match_score ?? 0 }}</span>
+                            <span class="text-4xl font-bold text-gray-900">{{ $matchReport->score ?? 0 }}</span>
                             <span class="text-xs font-medium text-gray-500 uppercase tracking-wide mt-1">Match</span>
                         </div>
                     </div>
@@ -114,7 +125,8 @@
                 </div>
 
                 <div class="pt-4">
-                    <form action="#" method="POST" onsubmit="return confirm('Delete this match report?');">
+                    <form action="{{ route('matches.destroy', $matchReport) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete this match report? This cannot be undone.');">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
