@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-6xl mx-auto flex flex-col h-full gap-6">
+    <div class="max-w-6xl mx-auto flex flex-col gap-6 pb-12">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-gray-900">Match Reports</h1>

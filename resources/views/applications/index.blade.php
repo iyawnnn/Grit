@@ -43,6 +43,16 @@
                                                 Job Link
                                             </a>
 
+                                            <a href="{{ route('applications.show', $job) }}"
+                                                class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                                                View
+                                            </a>
+
+                                            <a href="{{ route('applications.edit', $job) }}"
+                                                class="text-sm font-medium text-emerald-600 hover:text-emerald-800 transition-colors">
+                                                Edit
+                                            </a>
+
                                             <form action="{{ route('applications.destroy', $job) }}" method="POST"
                                                 class="m-0 p-0"
                                                 onsubmit="return confirm('Are you sure you want to delete this job posting?');">

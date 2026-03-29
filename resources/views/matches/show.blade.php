@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-6xl mx-auto flex flex-col h-full gap-6">
+    <div class="max-w-6xl mx-auto flex flex-col gap-6 pb-12">
 
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between shrink-0 gap-4">
             <div class="flex items-center gap-4">
@@ -25,15 +25,15 @@
                     @method('PATCH')
                     <select name="status" onchange="this.form.submit()"
                         class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm cursor-pointer focus:ring-[#e26a35] focus:border-[#e26a35]">
-                        <option value="pending" {{ $matchReport->status === 'pending' ? 'selected' : '' }}>⚪ Pending
+                        <option value="pending" {{ $matchReport->status === 'pending' ? 'selected' : '' }}>⏳ Pending
                         </option>
-                        <option value="applied" {{ $matchReport->status === 'applied' ? 'selected' : '' }}>🔵 Applied
+                        <option value="applied" {{ $matchReport->status === 'applied' ? 'selected' : '' }}>✅ Applied
                         </option>
-                        <option value="interviewing" {{ $matchReport->status === 'interviewing' ? 'selected' : '' }}>🟡
+                        <option value="interviewing" {{ $matchReport->status === 'interviewing' ? 'selected' : '' }}>💬
                             Interviewing</option>
-                        <option value="offered" {{ $matchReport->status === 'offered' ? 'selected' : '' }}>🟢 Offered
+                        <option value="offered" {{ $matchReport->status === 'offered' ? 'selected' : '' }}>🎉 Offered
                         </option>
-                        <option value="rejected" {{ $matchReport->status === 'rejected' ? 'selected' : '' }}>🔴 Rejected
+                        <option value="rejected" {{ $matchReport->status === 'rejected' ? 'selected' : '' }}>❌ Rejected
                         </option>
                     </select>
                 </form>
@@ -55,7 +55,7 @@
 
                     <div class="prose prose-sm max-w-none text-gray-600">
                         @if($matchReport->reasoning)
-                            {!! nl2br(e($matchReport->reasoning)) !!}
+                            {!! Str::markdown($matchReport->reasoning) !!}
                         @else
                             <p class="text-gray-500 italic">Analysis pending or unavailable.</p>
                         @endif
@@ -111,7 +111,7 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-medium text-gray-900 truncate">{{ $matchReport->resume->label }}</p>
-                                <p class="text-xs text-gray-500 truncate">PDF Document</p>
+                                <p class="text-xs text-gray-500 truncate">Document ID: {{ $matchReport->resume->id }}</p>
                             </div>
                         </div>
 
@@ -126,12 +126,16 @@
 
                 <div class="pt-4">
                     <form action="{{ route('matches.destroy', $matchReport) }}" method="POST"
-                        onsubmit="return confirm('Are you sure you want to delete this match report? This cannot be undone.');">
+                        x-data="{ isDeleting: false }"
+                        @submit="isDeleting = true; return confirm('Are you sure you want to delete this match report? This cannot be undone.');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit"
-                            class="w-full text-center text-sm font-medium text-red-500 hover:text-red-700 transition-colors">
-                            Delete Report
+                        <button type="submit" x-bind:disabled="isDeleting"
+                            x-bind:class="{ 'opacity-50 cursor-not-allowed': isDeleting }"
+                            class="w-full flex items-center justify-center gap-2 text-sm font-medium text-red-500 hover:text-red-700 transition-colors">
+
+                            <span x-show="!isDeleting">Delete Report</span>
+                            <span x-show="isDeleting" x-cloak>Deleting...</span>
                         </button>
                     </form>
                 </div>
@@ -139,4 +143,9 @@
             </div>
         </div>
     </div>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </x-app-layout>
