@@ -8,22 +8,17 @@ use App\Models\Resume;
 use App\Models\JobPosting;
 use App\Jobs\GenerateMatchReport;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class MatchReportController extends Controller
 {
     public function index()
     {
-        $cacheKey = 'user_' . auth()->id() . '_matches_page_' . request('page', 1);
+        $matches = MatchReport::with(['resume', 'jobPosting'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10);
 
-        // Changed variable name from $matchReports to $matches
-        $matches = Cache::remember($cacheKey, 3600, function () {
-            return MatchReport::with(['resume', 'jobPosting'])
-                ->where('user_id', auth()->id())
-                ->latest()
-                ->paginate(10);
-        });
-
-        // Compact now sends 'matches' to the view
         return view('matches.index', compact('matches'));
     }
 
@@ -45,12 +40,10 @@ class MatchReportController extends Controller
         $resume = Resume::findOrFail($request->resume_id);
         $jobPosting = JobPosting::findOrFail($request->job_posting_id);
 
-        // Create a unique SHA-256 fingerprint from the combined text content
         $contentToHash = $resume->content . $jobPosting->description;
         $fingerprint = hash('sha256', $contentToHash);
         $cacheKey = 'match_report_hash_' . $fingerprint;
 
-        // Check if this exact analysis has already been completed
         if (Cache::has($cacheKey)) {
             $existingReportId = Cache::get($cacheKey);
             $existingReport = MatchReport::find($existingReportId);
@@ -68,9 +61,7 @@ class MatchReportController extends Controller
             'status' => 'processing',
         ]);
 
-        // Save the fingerprint mapping to the cache for 30 days
         Cache::put($cacheKey, $matchReport->id, now()->addDays(30));
-        $this->clearMatchesCache();
 
         GenerateMatchReport::dispatch($matchReport);
 
@@ -80,31 +71,30 @@ class MatchReportController extends Controller
 
     public function show(MatchReport $matchReport)
     {
-        if ($matchReport->user_id !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('view', $matchReport);
 
         return view('matches.show', compact('matchReport'));
     }
 
-    public function destroy(MatchReport $matchReport)
+    public function updateStatus(Request $request, MatchReport $matchReport)
     {
-        if ($matchReport->user_id !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('update', $matchReport);
 
-        $matchReport->delete();
-        $this->clearMatchesCache();
+        $request->validate([
+            'status' => 'required|in:pending,applied,interviewing,offered,rejected',
+        ]);
 
-        return redirect()->route('matches.index')->with('success', 'Report deleted successfully.');
+        $matchReport->update(['status' => $request->status]);
+
+        return redirect()->back()->with('success', 'Status updated successfully.');
     }
 
-    private function clearMatchesCache()
+    public function destroy(MatchReport $matchReport)
     {
-        $userId = auth()->id();
+        Gate::authorize('delete', $matchReport);
 
-        for ($i = 1; $i <= 10; $i++) {
-            Cache::forget('user_' . $userId . '_matches_page_' . $i);
-        }
+        $matchReport->delete();
+
+        return redirect()->route('matches.index')->with('success', 'Report deleted successfully.');
     }
 }
