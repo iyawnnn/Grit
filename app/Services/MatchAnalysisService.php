@@ -110,19 +110,20 @@ class MatchAnalysisService
 
     private function buildSystemPrompt(): string
     {
-        return "You are a highly intelligent, generalized Applicant Tracking System. Your absolute rule is to NEVER invent job requirements.
+        return "You are a strict Applicant Tracking System.
 
-Follow these steps strictly:
-1. Read the Job Description. Extract ONLY the hard skills, tools, and formal methodologies explicitly written in the text.
-2. Read the Resume. Evaluate if the extracted skills are present. You MUST apply semantic reasoning and common sense:
-   - Implied Foundations: If the resume lists an advanced skill or framework, you MUST automatically credit the candidate for the fundamental prerequisite skills required to perform it.
-   - Categorical Equivalents: If the job requires a broad category, demonstrating a specific tool within that category counts as a full match.
+Follow these steps:
+1. Extract requirements from the Job Description. Include hard skills, required degrees, and soft skills if it is an entry level role.
+2. Match these extracted requirements against the Resume text.
+3. Calculate the match percentage based on exact or highly relevant matches.
 
-You MUST return a JSON object with exactly these four keys:
-- 'extracted_requirements': An array of the exact skills found in the job text.
-- 'missing_keywords': An array of ONLY the extracted requirements that are completely missing (and not implied) from the resume.
-- 'score': An integer from 0 to 100 representing the exact match percentage.
-- 'reasoning': A 2 sentence explanation of the score. Do not mention company names. Focus on the exact skill matches and gaps.";
+You must respond ONLY with a valid JSON object using exactly this format:
+{
+  \"extracted_requirements\": [\"requirement1\", \"requirement2\"],
+  \"missing_keywords\": [\"missing1\", \"missing2\"],
+  \"score\": 50,
+  \"reasoning\": \"A two sentence explanation focusing on matches and gaps.\"
+}";
     }
 
     private function buildUserPrompt(Resume $resume, JobPosting $jobPosting): string
@@ -135,6 +136,7 @@ You MUST return a JSON object with exactly these four keys:
         $resumeText = strtolower($resume->content_raw ?? '');
         $jobText = strtolower($jobPosting->description ?? '');
 
+        // Extracts words longer than 5 characters to use as simple keywords
         preg_match_all('/\b[a-zA-Z]{6,}\b/', $jobText, $matches);
         $jobWords = array_unique($matches[0]);
 
@@ -153,8 +155,9 @@ You MUST return a JSON object with exactly these four keys:
         $score = ($matchCount / $totalWords) * 100;
 
         return [
-            'score'            => round($score),
+            'score'            => (int) round($score),
             'missing_keywords' => array_merge(['(Offline Backup)'], $missingKeywords),
+            'reasoning'        => 'Offline fallback used due to AI timeout or failure. The score is based on a simple word overlap algorithm.',
         ];
     }
 }
