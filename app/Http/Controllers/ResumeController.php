@@ -11,13 +11,7 @@ class ResumeController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-
-        $resumes = Resume::where('user_id', $user->id)
-            ->latest()
-            ->paginate(10);
-
-        return view('resumes.index', compact('resumes'));
+        return view('resumes.index');
     }
 
     // We inject your ResumeParserService here

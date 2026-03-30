@@ -14,20 +14,12 @@ class MatchReportController extends Controller
 {
     public function index()
     {
-        $matches = MatchReport::with(['resume', 'jobPosting'])
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->paginate(10);
-
-        return view('matches.index', compact('matches'));
+        return view('matches.index');
     }
 
     public function create()
     {
-        $resumes = Resume::where('user_id', auth()->id())->get();
-        $jobPostings = JobPosting::latest()->get();
-
-        return view('matches.create', compact('resumes', 'jobPostings'));
+        return view('matches.create');
     }
 
     public function store(Request $request)

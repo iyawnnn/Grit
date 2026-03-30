@@ -9,10 +9,8 @@ class ApplicationController extends Controller
 {
     public function index()
     {
-        // Fetch jobs directly from the database. It is fast and prevents pagination errors.
-        $jobs = JobPosting::latest()->paginate(10);
-
-        return view('applications.index', compact('jobs'));
+        // Data is now handled by the Livewire component
+        return view('applications.index');
     }
 
     public function create()

@@ -14,82 +14,13 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden p-6">
-            <form action="{{ route('applications.store') }}" method="POST" class="space-y-6"
-                x-data="{ isSubmitting: false }" @submit="isSubmitting = true">
-                @csrf
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700">Job Title</label>
-                        <input type="text" name="title" id="title" required value="{{ old('title') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#e26a35] focus:ring-[#e26a35] sm:text-sm">
-                        @error('title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="company" class="block text-sm font-medium text-gray-700">Company Name</label>
-                        <input type="text" name="company" id="company" required value="{{ old('company') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#e26a35] focus:ring-[#e26a35] sm:text-sm">
-                        @error('company')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div>
-                    <label for="url" class="block text-sm font-medium text-gray-700">Job Posting URL (Optional)</label>
-                    <input type="url" name="url" id="url" value="{{ old('url') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#e26a35] focus:ring-[#e26a35] sm:text-sm">
-                    @error('url')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Job
-                        Description</label>
-                    <input id="description" type="hidden" name="description" value="{{ old('description') }}">
-                    <trix-editor input="description"
-                        class="bg-white rounded-md border-gray-300 shadow-sm focus:border-[#e26a35] focus:ring-[#e26a35] sm:text-sm min-h-[250px]"></trix-editor>
-                    @error('description')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="flex justify-end pt-4">
-                    <button type="submit" x-bind:disabled="isSubmitting"
-                        x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting }"
-                        class="px-6 py-2 bg-[#e26a35] text-white rounded-md text-sm font-medium hover:bg-[#cf5b29] transition-colors shadow-sm flex items-center gap-2">
-
-                        <span x-show="!isSubmitting">Save Job Posting</span>
-
-                        <span x-show="isSubmitting" class="flex items-center gap-2" x-cloak>
-                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                            Saving...
-                        </span>
-                    </button>
-                </div>
-            </form>
-        </div>
+        <livewire:create-application />
+        
     </div>
 
     <style>
         trix-toolbar [data-trix-button-group="file-tools"] {
             display: none;
-        }
-
-        [x-cloak] {
-            display: none !important;
         }
     </style>
 </x-app-layout>
