@@ -16,3 +16,27 @@
         @apply border-[#F1804E] ring-[#F1804E]/20;
     }
 }
+
+/* Force override Laravel's hardcoded Indigo/Blue utility classes */
+.custom-pagination .bg-indigo-600,
+.custom-pagination .bg-blue-600 {
+    background-color: #F1804E !important; /* Your brand-orange */
+    border-color: #F1804E !important;
+}
+
+.custom-pagination .text-indigo-600,
+.custom-pagination .text-blue-600 {
+    color: #F1804E !important;
+}
+
+.custom-pagination .bg-indigo-50:hover,
+.custom-pagination .bg-blue-50:hover,
+.custom-pagination a:hover {
+    background-color: #FFF0E9 !important; /* Your brand-orange-light */
+    color: #F1804E !important;
+}
+
+.custom-pagination .ring-indigo-500:focus,
+.custom-pagination .ring-blue-500:focus {
+    --tw-ring-color: #F1804E !important;
+}

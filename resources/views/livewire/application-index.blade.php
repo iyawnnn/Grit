@@ -1,41 +1,26 @@
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative"
-    x-data="{ showToast: false, toastMessage: '' }"
-    @notify.window="showToast = true; toastMessage = $event.detail.message; setTimeout(() => showToast = false, 4000)">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative" x-data="{ showDeleteModal: false }">
 
-    <div x-show="showToast"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-4"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-4"
-        class="fixed bottom-6 right-6 z-[100] bg-white border-l-4 border-[#e26a35] shadow-2xl text-gray-800 px-6 py-4 rounded-r-xl flex items-center gap-3 font-semibold text-sm"
-        style="display: none;">
-        <div class="p-1 bg-[#fff5f0] rounded-full">
-            <x-heroicon-o-check-circle class="w-5 h-5 text-[#e26a35]" />
-        </div>
-        <span x-text="toastMessage"></span>
-    </div>
-
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
-        <div>
-            <div class="flex items-center gap-3 mb-1">
+    <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-6 mb-10">
+        <div class="flex flex-col items-center md:items-start w-full md:w-auto">
+            <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
                 <div class="p-2 bg-[#fff5f0] rounded-lg border border-[#e26a35]/20">
                     <x-heroicon-o-briefcase class="w-6 h-6 text-[#e26a35]" />
                 </div>
                 <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Your Career Pipeline</h1>
             </div>
-            <p class="text-base font-medium text-gray-500">Track your applications and manage your progress towards your next role.</p>
+            <p class="text-base font-medium text-gray-500 max-w-sm mx-auto md:mx-0">Track your applications and manage
+                your progress towards your next role.</p>
         </div>
         <a href="{{ route('applications.create') }}"
-            class="px-6 py-3 bg-[#e26a35] text-white rounded-xl text-sm font-bold tracking-tight hover:bg-[#cf5b29] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 inline-flex items-center gap-2">
+            class="w-full md:w-auto justify-center px-6 py-3 bg-[#e26a35] text-white rounded-xl text-sm font-bold tracking-tight hover:bg-[#cf5b29] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 inline-flex items-center gap-2">
             <x-heroicon-o-rocket-launch class="w-5 h-5" />
             Launch Application
         </a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:border-[#e26a35]/40 transition-colors flex items-center gap-4">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        <div
+            class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:border-[#e26a35]/40 transition-colors flex items-center gap-4">
             <div class="p-3 bg-[#fff5f0] rounded-xl">
                 <x-heroicon-o-document-duplicate class="w-6 h-6 text-[#e26a35]" />
             </div>
@@ -44,7 +29,8 @@
                 <p class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ $totalJobs }}</p>
             </div>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:border-[#e26a35]/40 transition-colors flex items-center gap-4">
+        <div
+            class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:border-[#e26a35]/40 transition-colors flex items-center gap-4">
             <div class="p-3 bg-[#fff5f0] rounded-xl">
                 <x-heroicon-o-chat-bubble-left-right class="w-6 h-6 text-[#e26a35]" />
             </div>
@@ -53,7 +39,8 @@
                 <p class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ $interviewingCount }}</p>
             </div>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:border-[#e26a35]/40 transition-colors flex items-center gap-4">
+        <div
+            class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:border-[#e26a35]/40 transition-colors flex items-center gap-4">
             <div class="p-3 bg-[#fff5f0] rounded-xl">
                 <x-heroicon-o-star class="w-6 h-6 text-[#e26a35]" />
             </div>
@@ -64,8 +51,8 @@
         </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row gap-4 mb-8 z-30 relative">
-        <div class="relative w-full sm:flex-1">
+    <div class="flex flex-col md:flex-row gap-4 mb-8 z-30 relative">
+        <div class="relative w-full md:flex-1">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <x-heroicon-o-magnifying-glass class="h-5 w-5 text-gray-400" />
             </div>
@@ -73,178 +60,191 @@
                 class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm font-medium focus:border-[#e26a35] focus:ring-1 focus:ring-[#e26a35] transition-all shadow-sm outline-none text-gray-900 placeholder-gray-400">
         </div>
 
-        <div x-data="{ open: false, currentStatus: @entangle('status').live }" class="relative w-full sm:w-64 shrink-0">
+        <div x-data="{ open: false, currentStatus: @entangle('status').live }" class="relative w-full md:w-64 shrink-0">
             <button type="button" @click="open = !open" @click.outside="open = false"
                 class="w-full flex justify-between items-center px-4 py-3.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-sm focus:border-[#e26a35] focus:ring-1 focus:ring-[#e26a35] transition-all shadow-sm outline-none cursor-pointer">
                 <div class="flex items-center gap-2">
                     <x-heroicon-o-funnel class="w-4 h-4 text-gray-400" />
-                    <span class="font-bold text-gray-700" x-text="currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) : 'Filter by Status'"></span>
+                    <span class="font-bold text-gray-700"
+                        x-text="currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) : 'Filter by Status'"></span>
                 </div>
-                <x-heroicon-o-chevron-down class="h-4 w-4 text-gray-400 transition-transform duration-200" x-bind:class="open ? 'rotate-180' : ''" />
+                <x-heroicon-o-chevron-down class="h-4 w-4 text-gray-400 transition-transform duration-200"
+                    x-bind:class="open ? 'rotate-180' : ''" />
             </button>
 
             <div x-show="open" x-cloak x-transition.opacity style="display: none;"
                 class="absolute right-0 mt-2 w-full rounded-xl bg-white shadow-xl border border-gray-100 overflow-hidden py-2 z-50">
-                <button type="button" wire:click.stop="$set('status', '')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors">All Statuses</button>
-                <button type="button" wire:click.stop="$set('status', 'matched')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Matched</button>
-                <button type="button" wire:click.stop="$set('status', 'applied')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Applied</button>
-                <button type="button" wire:click.stop="$set('status', 'interviewing')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-bold text-yellow-600 bg-yellow-50 hover:bg-yellow-100 transition-colors">Interviewing</button>
-                <button type="button" wire:click.stop="$set('status', 'offered')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-bold text-[#e26a35] bg-[#fff5f0] hover:bg-[#ffece0] transition-colors">Offered</button>
-                <button type="button" wire:click.stop="$set('status', 'hired')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-bold text-green-600 hover:bg-green-50 transition-colors">Hired</button>
-                <button type="button" wire:click.stop="$set('status', 'rejected')" @click="open = false" class="w-full text-left px-5 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors">Rejected</button>
+                <button type="button" wire:click.prevent="$set('status', '')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-bold text-gray-900 hover:bg-gray-50 transition-colors">All
+                    Statuses</button>
+                <button type="button" wire:click.prevent="$set('status', 'matched')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Matched</button>
+                <button type="button" wire:click.prevent="$set('status', 'applied')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Applied</button>
+                <button type="button" wire:click.prevent="$set('status', 'interviewing')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Interviewing</button>
+                <button type="button" wire:click.prevent="$set('status', 'offered')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Offered</button>
+                <button type="button" wire:click.prevent="$set('status', 'hired')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Hired</button>
+                <button type="button" wire:click.prevent="$set('status', 'rejected')" @click="open = false"
+                    class="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Rejected</button>
             </div>
         </div>
     </div>
 
     <div class="relative min-h-[400px] z-10">
 
-        <div wire:loading.grid wire:target="search, status, gotoPage" class="absolute inset-0 z-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[#f9fafb]">
+        <div wire:loading.grid wire:target="search, status, gotoPage"
+            class="absolute inset-0 z-10 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 bg-[#f9fafb]">
             @for ($i = 0; $i < 6; $i++)
                 <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full animate-pulse">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="h-7 w-24 bg-gray-200 rounded-full"></div>
-                    <div class="h-4 w-16 bg-gray-100 rounded-md"></div>
-                </div>
-                <div class="mb-8 flex-1">
-                    <div class="h-6 w-3/4 bg-gray-200 rounded-md mb-4"></div>
-                    <div class="h-4 w-1/2 bg-gray-100 rounded-md"></div>
-                </div>
-                <div class="pt-5 border-t border-gray-50 flex items-center justify-between">
-                    <div class="h-4 w-24 bg-gray-200 rounded-md"></div>
-                    <div class="flex gap-3">
-                        <div class="h-6 w-6 bg-gray-200 rounded-md"></div>
-                        <div class="h-6 w-6 bg-gray-200 rounded-md"></div>
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="h-7 w-24 bg-gray-200 rounded-full"></div>
+                        <div class="h-4 w-16 bg-gray-100 rounded-md"></div>
                     </div>
-                </div>
-        </div>
-        @endfor
-    </div>
-
-    <div wire:loading.remove wire:target="search, status, gotoPage">
-        @if($jobs->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($jobs as $job)
-            <div wire:key="job-card-{{ $job->id }}" class="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#e26a35]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col p-6 group h-full">
-
-                <div class="flex justify-between items-start mb-6 shrink-0">
-                    <div x-data="{ open: false }" wire:key="status-dropdown-{{ $job->id }}" class="relative">
-                        <button type="button" @click="open = !open" @click.outside="open = false"
-                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border
-                                            {{ $job->status === 'offered' || $job->status === 'hired' ? 'bg-[#fff5f0] text-[#e26a35] border-[#e26a35]/30' : 
-                                              ($job->status === 'interviewing' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : 
-                                              ($job->status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' : 
-                                              ($job->status === 'applied' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'))) }}">
-                            {{ $job->status ?? 'matched' }}
-                            <x-heroicon-o-chevron-down class="w-3 h-3 opacity-70" />
-                        </button>
-
-                        <div x-show="open" x-cloak x-transition.opacity style="display: none;"
-                            class="absolute left-0 mt-2 w-40 rounded-xl bg-white shadow-xl border border-gray-100 z-50 overflow-hidden py-1">
-                            <button type="button" wire:click.stop="updateStatus({{ $job->id }}, 'matched')" @click="open = false" class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 w-full">Matched</button>
-                            <button type="button" wire:click.stop="updateStatus({{ $job->id }}, 'applied')" @click="open = false" class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 w-full">Applied</button>
-                            <button type="button" wire:click.stop="updateStatus({{ $job->id }}, 'interviewing')" @click="open = false" class="text-left px-4 py-2 text-sm font-bold text-gray-900 hover:bg-gray-50 w-full">Interviewing</button>
-                            <button type="button" wire:click.stop="updateStatus({{ $job->id }}, 'offered')" @click="open = false" class="text-left px-4 py-2 text-sm font-bold text-[#e26a35] hover:bg-[#fff5f0] w-full">Offered</button>
-                            <button type="button" wire:click.stop="updateStatus({{ $job->id }}, 'hired')" @click="open = false" class="text-left px-4 py-2 text-sm font-bold text-green-600 hover:bg-green-50 w-full">Hired</button>
-                            <button type="button" wire:click.stop="updateStatus({{ $job->id }}, 'rejected')" @click="open = false" class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 w-full">Rejected</button>
+                    <div class="mb-8 flex-1">
+                        <div class="h-6 w-3/4 bg-gray-200 rounded-md mb-4"></div>
+                        <div class="h-4 w-1/2 bg-gray-100 rounded-md"></div>
+                    </div>
+                    <div class="pt-5 border-t border-gray-50 flex items-center justify-between">
+                        <div class="h-4 w-24 bg-gray-200 rounded-md"></div>
+                        <div class="flex gap-3">
+                            <div class="h-6 w-6 bg-gray-200 rounded-md"></div>
+                            <div class="h-6 w-6 bg-gray-200 rounded-md"></div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-1.5 text-xs font-bold text-gray-400 bg-gray-50 px-2.5 py-1.5 rounded-lg border border-gray-100">
-                        <x-heroicon-o-calendar class="w-3.5 h-3.5" />
-                        {{ $job->created_at->format('M d') }}
-                    </div>
+                </div>
+            @endfor
+        </div>
+
+        <div wire:loading.remove wire:target="search, status, gotoPage">
+            @if($jobs->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    @foreach($jobs as $job)
+                        <div wire:key="job-card-{{ $job->id }}"
+                            class="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#e26a35]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col p-6 group h-full">
+
+                            <div class="flex justify-between items-start mb-6 shrink-0">
+                                <div x-data="{ open: false }" wire:key="status-dropdown-{{ $job->id }}" class="relative">
+                                    <button type="button" @click="open = !open" @click.outside="open = false"
+                                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100">
+                                        {{ $job->status ?? 'matched' }}
+                                        <x-heroicon-o-chevron-down class="w-3 h-3 opacity-70" />
+                                    </button>
+
+                                    <div x-show="open" x-cloak x-transition.opacity style="display: none;"
+                                        class="absolute left-0 mt-2 w-40 rounded-xl bg-white shadow-xl border border-gray-100 z-50 overflow-hidden py-1">
+                                        <button type="button" wire:click.prevent="updateStatus({{ $job->id }}, 'matched')"
+                                            @click="open = false"
+                                            class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full">Matched</button>
+                                        <button type="button" wire:click.prevent="updateStatus({{ $job->id }}, 'applied')"
+                                            @click="open = false"
+                                            class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full">Applied</button>
+                                        <button type="button" wire:click.prevent="updateStatus({{ $job->id }}, 'interviewing')"
+                                            @click="open = false"
+                                            class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full">Interviewing</button>
+                                        <button type="button" wire:click.prevent="updateStatus({{ $job->id }}, 'offered')"
+                                            @click="open = false"
+                                            class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full">Offered</button>
+                                        <button type="button" wire:click.prevent="updateStatus({{ $job->id }}, 'hired')"
+                                            @click="open = false"
+                                            class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full">Hired</button>
+                                        <button type="button" wire:click.prevent="updateStatus({{ $job->id }}, 'rejected')"
+                                            @click="open = false"
+                                            class="text-left px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full">Rejected</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center gap-1.5 text-xs font-bold text-gray-400 bg-gray-50 px-2.5 py-1.5 rounded-lg border border-gray-100">
+                                    <x-heroicon-o-calendar class="w-3.5 h-3.5" />
+                                    {{ $job->created_at->format('M d') }}
+                                </div>
+                            </div>
+
+                            <div class="mb-6 flex-1">
+                                <h3
+                                    class="text-xl font-extrabold text-gray-900 leading-tight mb-2 group-hover:text-[#e26a35] transition-colors">
+                                    {{ $job->title }}
+                                </h3>
+                                <div class="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                                    <x-heroicon-o-building-office-2 class="w-4 h-4 opacity-70" />
+                                    {{ $job->company }}
+                                </div>
+                            </div>
+
+                            <div class="pt-5 border-t border-gray-100 flex items-center justify-between mt-auto shrink-0">
+                                <a href="{{ route('applications.show', $job) }}"
+                                    class="text-sm font-bold text-gray-600 hover:text-[#e26a35] transition-colors flex items-center gap-1.5 group/link">
+                                    View Details
+                                    <x-heroicon-o-arrow-up-right
+                                        class="w-4 h-4 opacity-0 -translate-y-1 translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-y-0 group-hover/link:translate-x-0 transition-all duration-300" />
+                                </a>
+
+                                <div class="flex items-center gap-3">
+                                    <a href="{{ route('applications.edit', $job) }}"
+                                        class="p-1.5 text-gray-400 hover:text-[#e26a35] hover:bg-[#fff5f0] rounded-lg transition-colors"
+                                        title="Edit">
+                                        <x-heroicon-o-pencil-square class="w-5 h-5" />
+                                    </a>
+                                    <button type="button" @click="$wire.confirmDelete({{ $job->id }}); showDeleteModal = true"
+                                        class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        title="Delete">
+                                        <x-heroicon-o-trash class="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
 
-                <div class="mb-6 flex-1">
-                    <h3 class="text-xl font-extrabold text-gray-900 leading-tight mb-2 group-hover:text-[#e26a35] transition-colors">
-                        {{ $job->title }}
-                    </h3>
-                    <div class="flex items-center gap-2 text-sm font-semibold text-gray-500">
-                        <x-heroicon-o-building-office-2 class="w-4 h-4 opacity-70" />
-                        {{ $job->company }}
+                @if($jobs->hasPages())
+                    <div class="mt-10 custom-pagination">
+                        {{ $jobs->links() }}
                     </div>
-                </div>
-
-                <div class="pt-5 border-t border-gray-100 flex items-center justify-between mt-auto shrink-0">
-                    <a href="{{ route('applications.show', $job) }}"
-                        class="text-sm font-bold text-gray-600 hover:text-[#e26a35] transition-colors flex items-center gap-1.5 group/link">
-                        View Details
-                        <x-heroicon-o-arrow-up-right class="w-4 h-4 opacity-0 -translate-y-1 translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-y-0 group-hover/link:translate-x-0 transition-all duration-300" />
-                    </a>
-
-                    <div class="flex items-center gap-3">
-                        <a href="{{ route('applications.edit', $job) }}" class="p-1.5 text-gray-400 hover:text-[#e26a35] hover:bg-[#fff5f0] rounded-lg transition-colors" title="Edit">
-                            <x-heroicon-o-pencil-square class="w-5 h-5" />
+                @endif
+            @else
+                @if(!$hasAnyJobs)
+                    <div
+                        class="w-full bg-white rounded-3xl border border-gray-200 flex flex-col items-center justify-center text-center p-16 sm:p-24 shadow-sm">
+                        <div
+                            class="w-20 h-20 bg-[#fff5f0] rounded-2xl flex items-center justify-center mb-6 shadow-inner border border-[#e26a35]/10">
+                            <x-heroicon-o-rocket-launch class="w-10 h-10 text-[#e26a35]" />
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-gray-900 mb-3 tracking-tight">Your pipeline is empty</h3>
+                        <p class="text-base font-medium text-gray-500 max-w-md mx-auto mb-8">
+                            You haven't tracked any job applications yet. Launch your first application to start staying
+                            organized!
+                        </p>
+                        <a href="{{ route('applications.create') }}"
+                            class="px-6 py-3 bg-[#e26a35] text-white rounded-xl text-sm font-bold tracking-tight hover:bg-[#cf5b29] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 inline-flex items-center gap-2">
+                            <x-heroicon-o-plus class="w-5 h-5" />
+                            Add First Application
                         </a>
-                        <button type="button" wire:click.stop="confirmDelete({{ $job->id }})" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                            <x-heroicon-o-trash class="w-5 h-5" />
+                    </div>
+                @else
+                    <div
+                        class="w-full bg-white rounded-3xl border border-gray-200 flex flex-col items-center justify-center text-center p-16 sm:p-24 shadow-sm">
+                        <div
+                            class="w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 shadow-inner border border-gray-200">
+                            <x-heroicon-o-magnifying-glass class="w-10 h-10 text-gray-400" />
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-gray-900 mb-3 tracking-tight">No matching roles</h3>
+                        <p class="text-base font-medium text-gray-500 max-w-md mx-auto mb-8">
+                            We couldn't find any applications matching your current search or filters.
+                        </p>
+                        <button type="button" wire:click.prevent="resetFilters"
+                            class="px-6 py-3 bg-white text-gray-900 border border-gray-300 rounded-xl text-sm font-bold hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm flex items-center gap-2">
+                            <x-heroicon-m-arrow-path class="w-5 h-5 text-gray-500" />
+                            Clear Filters
                         </button>
                     </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-
-        @if($jobs->hasPages())
-        <div class="mt-10">
-            {{ $jobs->links() }}
-        </div>
-        @endif
-        @else
-        <div class="w-full bg-white rounded-3xl border border-gray-200 flex flex-col items-center justify-center text-center p-16 sm:p-24 shadow-sm">
-            <div class="w-20 h-20 bg-[#fff5f0] rounded-2xl flex items-center justify-center mb-6 shadow-inner border border-[#e26a35]/10">
-                <x-heroicon-o-face-frown class="w-10 h-10 text-[#e26a35]" />
-            </div>
-            <h3 class="text-2xl font-extrabold text-gray-900 mb-3 tracking-tight">No roles found</h3>
-            <p class="text-base font-medium text-gray-500 max-w-md mx-auto mb-8">
-                We scanned your pipeline but could not find any job postings matching your current search.
-            </p>
-            <button type="button" wire:click="resetFilters"
-                class="px-6 py-3 bg-white text-gray-900 border border-gray-300 rounded-xl text-sm font-bold hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm flex items-center gap-2">
-                <x-heroicon-o-x-mark class="w-4 h-4" />
-                Clear Filters
-            </button>
-        </div>
-        @endif
-    </div>
-</div>
-
-@if($jobToDelete)
-<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/30 backdrop-blur-sm"
-    x-data="{ show: true }"
-    x-show="show"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0">
-
-    <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-gray-100"
-        @click.away="show = false; $wire.cancelDelete()"
-        x-show="show"
-        x-transition:enter="transition ease-out duration-300 delay-75"
-        x-transition:enter-start="opacity-0 translate-y-8 scale-95"
-        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-        x-transition:leave-end="opacity-0 translate-y-8 scale-95">
-
-        <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 border border-red-100">
-            <x-heroicon-o-exclamation-triangle class="w-7 h-7 text-red-500" />
-        </div>
-        <h3 class="text-xl font-extrabold text-center text-gray-900 tracking-tight mb-2">Delete Application</h3>
-        <p class="text-sm text-center font-medium text-gray-500 mb-8">Are you sure you want to remove this role? This action cannot be undone.</p>
-        <div class="flex gap-4">
-            <button type="button" wire:click.stop="cancelDelete"
-                class="flex-1 px-4 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors">
-                Cancel
-            </button>
-            <button type="button" wire:click.stop="executeDelete"
-                class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-sm">
-                Yes, Delete
-            </button>
+                @endif
+            @endif
         </div>
     </div>
-</div>
-@endif
+
+    <x-delete-modal show="showDeleteModal" title="Delete Application"
+        description="Are you sure you want to remove this role? This action cannot be undone."
+        on-confirm="executeDelete" on-cancel="cancelDelete" />
 </div>
