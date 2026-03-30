@@ -1,0 +1,49 @@
+﻿
+   FAIL  Tests\Feature\GenerateMatchReportJobTest
+  Γ£ô job updates reΓÇª 0.38s  
+  Γ¿» job sets statuΓÇª 0.02s  
+  Γ¿» job sets statuΓÇª 0.02s  
+  ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ  
+   FAILΓÇª  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed (Connection: sqlite, Database: :memory:, SQL: update "match_reports" set "resume_id" = 99999 where "id" = 1)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834Γûò             $exceptionType = $this->isUniqueConstraintError($e)
+    835Γûò                 ? UniqueConstraintViolationException::class
+    836Γûò                 : QueryException::class;
+    837Γûò 
+  Γ₧£ 838Γûò             throw new $exceptionType(
+    839Γûò                 $this->getNameWithReadWriteType(),
+    840Γûò                 $query,
+    841Γûò                 $this->prepareBindings($bindings),
+    842Γûò                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:609
+      NunoMaduro\Collision\Exceptions\TestException::("SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed")
+
+  ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ  
+   FAILΓÇª  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed (Connection: sqlite, Database: :memory:, SQL: update "match_reports" set "job_id" = 99999 where "id" = 1)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834Γûò             $exceptionType = $this->isUniqueConstraintError($e)
+    835Γûò                 ? UniqueConstraintViolationException::class
+    836Γûò                 : QueryException::class;
+    837Γûò 
+  Γ₧£ 838Γûò             throw new $exceptionType(
+    839Γûò                 $this->getNameWithReadWriteType(),
+    840Γûò                 $query,
+    841Γûò                 $this->prepareBindings($bindings),
+    842Γûò                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:609
+      NunoMaduro\Collision\Exceptions\TestException::("SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed")
+
+
+  Tests:    2 failed, 1 passed (5 assertions)
+  Duration: 0.76s
+

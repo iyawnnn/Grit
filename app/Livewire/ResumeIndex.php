@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -23,24 +25,16 @@ class ResumeIndex extends Component
     {
         $this->validate();
 
-        // 1. Upload to Cloudinary securely using Livewire's temporary file path
-        $response = cloudinary()->uploadApi()->upload($this->file->getRealPath(), [
-            'folder' => 'grit_uploads'
-        ]);
+        $uploadResult = $parser->processUpload($this->file);
 
-        // 2. Parse the PDF to extract the raw text
-        $rawText = $parser->parse($this->file->getRealPath());
-
-        // 3. Save everything to the database
         Resume::create([
-            'user_id' => auth()->id(),
-            'label' => $this->label,
-            'file_url' => $response['secure_url'],
-            'content_raw' => $rawText,
-            'is_active' => true,
+            'user_id'     => auth()->id(),
+            'label'       => $this->label,
+            'file_url'    => $uploadResult['file_url'],
+            'content_raw' => $uploadResult['content_raw'],
+            'is_active'   => true,
         ]);
 
-        // 4. Reset the form and show success message
         $this->reset(['label', 'file']);
         session()->flash('success', 'Resume uploaded and parsed successfully.');
     }
@@ -49,7 +43,6 @@ class ResumeIndex extends Component
     {
         $resume = Resume::where('user_id', auth()->id())->findOrFail($id);
 
-        // Delete from Cloudinary
         if (preg_match('/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z]+$/', $resume->file_url, $matches)) {
             $publicId = $matches[1];
             cloudinary()->uploadApi()->destroy($publicId);
@@ -66,7 +59,7 @@ class ResumeIndex extends Component
             ->paginate(10);
 
         return view('livewire.resume-index', [
-            'resumes' => $resumes
+            'resumes' => $resumes,
         ]);
     }
 }
