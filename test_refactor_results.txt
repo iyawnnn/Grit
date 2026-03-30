@@ -1,0 +1,92 @@
+﻿
+   PASS  Tests\Unit\ExampleTest
+  Γ£ô that true is true
+
+   PASS  Tests\Unit\MatchAnalysisServiceTest
+  Γ£ô analyze returnΓÇª 0.42s  
+  Γ£ô analyze fallsΓÇª  0.03s  
+  Γ£ô analyze cachesΓÇª 0.02s  
+
+   PASS  Tests\Unit\ResumeParserServiceTest
+  Γ£ô parse returnsΓÇª  0.03s  
+  Γ£ô parse returnsΓÇª  0.02s  
+  Γ£ô parse handlesΓÇª  0.01s  
+
+   PASS  Tests\Feature\Auth\AuthenticationTest
+  Γ£ô login screen cΓÇª 0.06s  
+  Γ£ô users can authΓÇª 0.04s  
+  Γ£ô users can notΓÇª  0.24s  
+  Γ£ô users can logoΓÇª 0.03s  
+
+   PASS  Tests\Feature\Auth\PasswordConfirmationTest
+  Γ£ô confirm passwoΓÇª 0.03s  
+  Γ£ô password can bΓÇª 0.02s  
+  Γ£ô password is noΓÇª 0.23s  
+
+   PASS  Tests\Feature\Auth\PasswordUpdateTest
+  Γ£ô password can bΓÇª 0.03s  
+  Γ£ô correct passwoΓÇª 0.02s  
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  Γ£ô registration sΓÇª 0.03s  
+  Γ£ô new users canΓÇª  0.02s  
+
+   PASS  Tests\Feature\ExampleTest
+  Γ£ô the applicatioΓÇª 0.02s  
+
+   FAIL  Tests\Feature\GenerateMatchReportJobTest
+  Γ£ô job updates reΓÇª 0.03s  
+  Γ¿» job sets statuΓÇª 0.02s  
+  Γ¿» job sets statuΓÇª 0.02s  
+
+   PASS  Tests\Feature\ProfileTest
+  Γ£ô profile page iΓÇª 0.05s  
+  Γ£ô profile informΓÇª 0.02s  
+  Γ£ô user can deletΓÇª 0.02s  
+  Γ£ô correct passwoΓÇª 0.02s  
+
+   PASS  Tests\Feature\ResumeUploadTest
+  Γ£ô resume uploadΓÇª  0.03s  
+  Γ£ô resume uploadΓÇª  0.02s  
+  Γ£ô resume uploadΓÇª  0.03s  
+  Γ£ô resume uploadΓÇª  0.02s  
+  ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ  
+   FAILED  Tests\Feature\GenerateMatchReportJobTest > job sets status to failed when resume not found  ModelNotFoundException   
+  No query results for model [App\Models\MatchReport].
+
+  at vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php:780
+    776Γûò         if (! is_null($model = $this->first($columns))) {
+    777Γûò             return $model;
+    778Γûò         }
+    779Γûò 
+  Γ₧£ 780Γûò         throw (new ModelNotFoundException)->setModel(get_class($this->model));
+    781Γûò     }
+    782Γûò 
+    783Γûò     /**
+    784Γûò      * Execute the query and get the first result or call a callback.
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php:780
+  2   vendor\laravel\framework\src\Illuminate\Database\Eloquent\Model.php:1860
+
+  ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ  
+   FAILED  Tests\Feature\GenerateMatchReportJobTest > job sets status to failed when job posting not found  ModelNotFoundException   
+  No query results for model [App\Models\MatchReport].
+
+  at vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php:780
+    776Γûò         if (! is_null($model = $this->first($columns))) {
+    777Γûò             return $model;
+    778Γûò         }
+    779Γûò 
+  Γ₧£ 780Γûò         throw (new ModelNotFoundException)->setModel(get_class($this->model));
+    781Γûò     }
+    782Γûò 
+    783Γûò     /**
+    784Γûò      * Execute the query and get the first result or call a callback.
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php:780
+  2   vendor\laravel\framework\src\Illuminate\Database\Eloquent\Model.php:1860
+
+
+  Tests:    2 failed, 28 passed (85 assertions)
+  Duration: 1.97s
+

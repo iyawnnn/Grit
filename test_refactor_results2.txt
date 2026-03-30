@@ -1,0 +1,96 @@
+﻿
+   PASS  Tests\Unit\ExampleTest
+  Γ£ô that true is true
+
+   PASS  Tests\Unit\MatchAnalysisServiceTest
+  Γ£ô analyze returnΓÇª 0.40s  
+  Γ£ô analyze fallsΓÇª  0.03s  
+  Γ£ô analyze cachesΓÇª 0.02s  
+
+   PASS  Tests\Unit\ResumeParserServiceTest
+  Γ£ô parse returnsΓÇª  0.02s  
+  Γ£ô parse returnsΓÇª  0.02s  
+  Γ£ô parse handlesΓÇª  0.01s  
+
+   PASS  Tests\Feature\Auth\AuthenticationTest
+  Γ£ô login screen cΓÇª 0.06s  
+  Γ£ô users can authΓÇª 0.04s  
+  Γ£ô users can notΓÇª  0.24s  
+  Γ£ô users can logoΓÇª 0.02s  
+
+   PASS  Tests\Feature\Auth\PasswordConfirmationTest
+  Γ£ô confirm passwoΓÇª 0.03s  
+  Γ£ô password can bΓÇª 0.02s  
+  Γ£ô password is noΓÇª 0.23s  
+
+   PASS  Tests\Feature\Auth\PasswordUpdateTest
+  Γ£ô password can bΓÇª 0.04s  
+  Γ£ô correct passwoΓÇª 0.02s  
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  Γ£ô registration sΓÇª 0.03s  
+  Γ£ô new users canΓÇª  0.02s  
+
+   PASS  Tests\Feature\ExampleTest
+  Γ£ô the applicatioΓÇª 0.02s  
+
+   FAIL  Tests\Feature\GenerateMatchReportJobTest
+  Γ£ô job updates reΓÇª 0.02s  
+  Γ¿» job sets statuΓÇª 0.03s  
+  Γ¿» job sets statuΓÇª 0.02s  
+
+   PASS  Tests\Feature\ProfileTest
+  Γ£ô profile page iΓÇª 0.04s  
+  Γ£ô profile informΓÇª 0.02s  
+  Γ£ô user can deletΓÇª 0.02s  
+  Γ£ô correct passwoΓÇª 0.02s  
+
+   PASS  Tests\Feature\ResumeUploadTest
+  Γ£ô resume uploadΓÇª  0.03s  
+  Γ£ô resume uploadΓÇª  0.02s  
+  Γ£ô resume uploadΓÇª  0.02s  
+  Γ£ô resume uploadΓÇª  0.02s  
+  ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ  
+   FAILΓÇª  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed (Connection: sqlite, Database: :memory:, SQL: update "match_reports" set "resume_id" = 99999, "updated_at" = 2026-03-30 07:03:13 where "id" = 1)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834Γûò             $exceptionType = $this->isUniqueConstraintError($e)
+    835Γûò                 ? UniqueConstraintViolationException::class
+    836Γûò                 : QueryException::class;
+    837Γûò 
+  Γ₧£ 838Γûò             throw new $exceptionType(
+    839Γûò                 $this->getNameWithReadWriteType(),
+    840Γûò                 $query,
+    841Γûò                 $this->prepareBindings($bindings),
+    842Γûò                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:609
+      NunoMaduro\Collision\Exceptions\TestException::("SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed")
+
+  ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ  
+   FAILΓÇª  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed (Connection: sqlite, Database: :memory:, SQL: update "match_reports" set "job_id" = 99999, "updated_at" = 2026-03-30 07:03:13 where "id" = 1)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834Γûò             $exceptionType = $this->isUniqueConstraintError($e)
+    835Γûò                 ? UniqueConstraintViolationException::class
+    836Γûò                 : QueryException::class;
+    837Γûò 
+  Γ₧£ 838Γûò             throw new $exceptionType(
+    839Γûò                 $this->getNameWithReadWriteType(),
+    840Γûò                 $query,
+    841Γûò                 $this->prepareBindings($bindings),
+    842Γûò                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:609
+      NunoMaduro\Collision\Exceptions\TestException::("SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed")
+
+
+  Tests:    2 failed, 28 passed (83 assertions)
+  Duration: 1.88s
+

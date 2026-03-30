@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Resume;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Services\ResumeParserService;
 
 class ResumeController extends Controller
@@ -14,29 +15,21 @@ class ResumeController extends Controller
         return view('resumes.index');
     }
 
-    // We inject your ResumeParserService here
     public function store(Request $request, ResumeParserService $parser)
     {
         $request->validate([
             'label' => 'required|string|max:255',
-            'file' => 'required|file|mimes:pdf|max:5120',
+            'file'  => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        // 1. Upload to Cloudinary securely
-        $response = cloudinary()->uploadApi()->upload($request->file('file')->getRealPath(), [
-            'folder' => 'grit_uploads'
-        ]);
+        $uploadResult = $parser->processUpload($request->file('file'));
 
-        // 2. Parse the PDF to extract the raw text
-        $rawText = $parser->parse($request->file('file')->getRealPath());
-
-        // 3. Save everything to the database
         Resume::create([
-            'user_id' => auth()->id(),
-            'label' => $request->label,
-            'file_url' => $response['secure_url'],
-            'content_raw' => $rawText, // The scraped text is saved here
-            'is_active' => true,
+            'user_id'     => auth()->id(),
+            'label'       => $request->label,
+            'file_url'    => $uploadResult['file_url'],
+            'content_raw' => $uploadResult['content_raw'],
+            'is_active'   => true,
         ]);
 
         return redirect()->route('resumes.index')->with('success', 'Resume uploaded and parsed successfully.');
