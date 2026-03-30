@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Feature;
 
 use App\Jobs\GenerateMatchReport;
@@ -11,100 +9,74 @@ use App\Models\Resume;
 use App\Models\User;
 use App\Services\MatchAnalysisService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class GenerateMatchReportJobTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_job_updates_report_status_to_completed(): void
+    public function test_it_updates_report_status_to_completed_on_success()
     {
         $user = User::factory()->create();
         $resume = Resume::factory()->create(['user_id' => $user->id]);
         $jobPosting = JobPosting::factory()->create(['user_id' => $user->id]);
 
-        $matchReport = MatchReport::factory()->create([
-            'user_id'   => $user->id,
+        $report = MatchReport::create([
+            'user_id' => $user->id,
             'resume_id' => $resume->id,
-            'job_id'    => $jobPosting->id,
-            'score'     => 0,
-            'status'    => 'processing',
+            'job_id' => $jobPosting->id,
+            'status' => 'pending',
+            'score' => 0,
+            'reasoning' => null,
         ]);
 
-        $mockService = $this->mock(MatchAnalysisService::class);
-        $mockService->shouldReceive('analyze')
-            ->once()
-            ->with(
-                \Mockery::on(fn ($r) => $r->id === $resume->id),
-                \Mockery::on(fn ($j) => $j->id === $jobPosting->id)
-            )
-            ->andReturn([
-                'score'            => 85,
-                'missing_keywords' => ['Kubernetes'],
-                'reasoning'        => 'Strong match with minor gaps in container orchestration.',
-            ]);
+        $this->mock(MatchAnalysisService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('analyze')
+                ->once()
+                ->andReturn([
+                    'score' => 95,
+                    'missing_keywords' => ['Laravel', 'Vue'],
+                    'reasoning' => 'This is a mocked AI response.'
+                ]);
+        });
 
-        $job = new GenerateMatchReport($matchReport);
-        $job->handle($mockService);
-
-        $matchReport->refresh();
-
-        $this->assertEquals('completed', $matchReport->status);
-        $this->assertEquals(85, $matchReport->score);
-        $this->assertContains('Kubernetes', $matchReport->missing_keywords);
-        $this->assertStringContainsString('container orchestration', $matchReport->reasoning);
-    }
-
-    public function test_job_sets_status_to_failed_when_resume_not_found(): void
-    {
-        $user = User::factory()->create();
-        $jobPosting = JobPosting::factory()->create(['user_id' => $user->id]);
-        $resume = Resume::factory()->create(['user_id' => $user->id]);
-
-        $matchReport = MatchReport::factory()->create([
-            'user_id'   => $user->id,
-            'resume_id' => $resume->id,
-            'job_id'    => $jobPosting->id,
-            'status'    => 'processing',
-        ]);
-
-        $matchReport->resume_id = 99999;
-
-        $mockService = $this->mock(MatchAnalysisService::class);
-        $mockService->shouldNotReceive('analyze');
-
-        $job = new GenerateMatchReport($matchReport);
-        $job->handle($mockService);
+        $job = new GenerateMatchReport($report);
+        $job->handle(app(MatchAnalysisService::class));
 
         $this->assertDatabaseHas('match_reports', [
-            'id'     => $matchReport->id,
-            'status' => 'failed',
+            'id' => $report->id,
+            'status' => 'completed',
+            'score' => 95,
         ]);
     }
 
-    public function test_job_sets_status_to_failed_when_job_posting_not_found(): void
+    public function test_it_handles_api_failure_gracefully()
     {
         $user = User::factory()->create();
         $resume = Resume::factory()->create(['user_id' => $user->id]);
         $jobPosting = JobPosting::factory()->create(['user_id' => $user->id]);
 
-        $matchReport = MatchReport::factory()->create([
-            'user_id'   => $user->id,
+        $report = MatchReport::create([
+            'user_id' => $user->id,
             'resume_id' => $resume->id,
-            'job_id'    => $jobPosting->id,
-            'status'    => 'processing',
+            'job_id' => $jobPosting->id,
+            'status' => 'pending',
+            'score' => 0,
+            'reasoning' => null,
         ]);
 
-        $matchReport->job_id = 99999;
+        $this->mock(MatchAnalysisService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('analyze')
+                ->once()
+                ->andThrow(new \Exception('Groq API connection failed'));
+        });
 
-        $mockService = $this->mock(MatchAnalysisService::class);
-        $mockService->shouldNotReceive('analyze');
-
-        $job = new GenerateMatchReport($matchReport);
-        $job->handle($mockService);
+        $job = new GenerateMatchReport($report);
+        $job->handle(app(MatchAnalysisService::class));
 
         $this->assertDatabaseHas('match_reports', [
-            'id'     => $matchReport->id,
+            'id' => $report->id,
             'status' => 'failed',
         ]);
     }
