@@ -13,8 +13,7 @@
         "laravel/socialite": "^5.26",
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.2",
-        "smalot/pdfparser": "^2.12",
-        "spatie/pdf-to-text": "^1.55"
+        "smalot/pdfparser": "^2.12"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.1",
