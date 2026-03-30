@@ -8,6 +8,7 @@ use App\Models\MatchReport;
 use App\Models\Resume;
 use App\Models\JobPosting;
 use App\Services\MatchAnalysisService;
+use App\Events\MatchReportUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
@@ -16,10 +17,11 @@ class GenerateMatchReport implements ShouldQueue
 {
     use Queueable;
 
+    public int $tries = 3;
+
     public function __construct(
         public MatchReport $matchReport
-    ) {
-    }
+    ) {}
 
     public function handle(MatchAnalysisService $matchService): void
     {
@@ -27,29 +29,37 @@ class GenerateMatchReport implements ShouldQueue
         $jobPosting = JobPosting::find($this->matchReport->job_id);
 
         if (!$resume || !$jobPosting) {
-            $this->matchReport->update(['status' => 'failed']);
+            $this->updateStatus('failed', 'System Error: Missing records.');
             return;
         }
 
-        // The try block attempts the dangerous API call
         try {
             $analysis = $matchService->analyze($resume, $jobPosting);
 
             $this->matchReport->update([
-                'score' => $analysis['score'] ?? 0,
+                'score'            => $analysis['score'] ?? 0,
                 'missing_keywords' => $analysis['missing_keywords'] ?? [],
-                'reasoning' => $analysis['reasoning'] ?? 'System Error: No reasoning provided by AI.',
-                'status' => 'completed',
+                'reasoning'        => $analysis['reasoning'] ?? 'Analysis complete.',
             ]);
 
-            // The catch block safely handles any crashes
+            $this->updateStatus('completed');
+
         } catch (\Throwable $e) {
             Log::error('Match Report Generation Failed: ' . $e->getMessage());
-
-            $this->matchReport->update([
-                'status' => 'failed',
-                'reasoning' => 'An error occurred during analysis.',
-            ]);
+            $this->updateStatus('failed', 'An error occurred during analysis.');
         }
+    }
+
+    private function updateStatus(string $status, string $reasoning = null): void
+    {
+        $data = ['status' => $status];
+        
+        if ($reasoning) {
+            $data['reasoning'] = $reasoning;
+        }
+
+        $this->matchReport->update($data);
+        
+        event(new MatchReportUpdated($this->matchReport));
     }
 }

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot:title>Resume</x-slot:title>
     <div class="max-w-5xl mx-auto flex flex-col gap-6 pb-12">
         <div>
             <h1 class="text-2xl font-bold tracking-tight text-gray-900">Resumes</h1>
@@ -6,6 +7,6 @@
         </div>
 
         <livewire:resume-index />
-        
+
     </div>
 </x-app-layout>
