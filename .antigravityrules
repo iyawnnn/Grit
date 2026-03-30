@@ -1,17 +1,8 @@
-# Project Grit: System Instructions
-- Framework: Laravel 12 (Latest 2026 Standards).
-- Language: PHP 8.4.
-- Database: Neon (PostgreSQL) — Ensure all migrations use Postgres-compatible types.
-- Storage: Cloudinary — All PDF and image uploads must use the Cloudinary disk.
-- Auth: Laravel Socialite (Google OAuth) and Laravel Sanctum (Extension API).
-- Frontend: TALL Stack (Tailwind, Alpine, Laravel, Livewire).
-- Dashboard: Filament PHP v3.
-- PDF Engine: Spatie PDF-to-Text (Binary at ./bin/pdftotext.exe).
-- Writing Style: Use simple, clean vocabulary. Strictly avoid em dashes in all text, comments, and UI strings.
-- Naming Override: For Laravel-specific files (Models, Controllers, Migrations), follow standard Laravel naming conventions (PascalCase/snake_case) to ensure the autoloader works.
-- Always refer to master-plan.md for database table names and fields.
-- Implementation Rules:
-  1. Use 'Sequential Thinking' to plan every major task before writing code.
-  2. Use 'GitHub MCP' to commit progress after every successful feature.
-  3. Strictly follow the Project Grit Master Plan for database fields and table names.
-  4. DO NOT implement AI SDK features yet. Focus on logic-based string matching for the MVP.
+# Backend and Security Rules
+- Apply Laravel 12 and PHP 8.4 standards. Use strict typing for all files.
+- Secure all API routes using Laravel Sanctum.
+- Manage Google OAuth logins using Laravel Socialite.
+- Use PascalCase for classes, camelCase for methods, and snake_case for database columns.
+- Keep controllers thin. Move all business logic into Service classes.
+- Keep code comments minimal and only explain complex logic.
+- Always recommend the best libraries for new features.
