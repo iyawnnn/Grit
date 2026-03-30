@@ -16,7 +16,7 @@ class ApplicationIndex extends Component
     public $search = '';
 
     #[Url(history: true)]
-    public $status = ''; 
+    public $status = '';
 
     public $jobToDelete = null;
 
@@ -41,7 +41,7 @@ class ApplicationIndex extends Component
     public function updateStatus($id, $newStatus)
     {
         $job = JobPosting::where('user_id', auth()->id())->find($id);
-        
+
         if ($job) {
             $job->update(['status' => $newStatus]);
             $this->dispatch('notify', message: 'Status updated to ' . ucfirst($newStatus) . '.');
@@ -62,11 +62,11 @@ class ApplicationIndex extends Component
     {
         if ($this->jobToDelete) {
             $job = JobPosting::where('user_id', auth()->id())->find($this->jobToDelete);
-            
+
             if ($job) {
                 $job->delete();
             }
-            
+
             $this->jobToDelete = null;
             $this->dispatch('notify', message: 'Role permanently removed.');
         }
@@ -75,6 +75,9 @@ class ApplicationIndex extends Component
     public function render()
     {
         $baseQuery = JobPosting::where('user_id', auth()->id());
+
+        // Check if the user has ANY jobs in the database, ignoring current search filters
+        $hasAnyJobs = (clone $baseQuery)->exists();
 
         $totalJobs = (clone $baseQuery)->count();
         $interviewingCount = (clone $baseQuery)->where('status', 'interviewing')->count();
@@ -85,20 +88,22 @@ class ApplicationIndex extends Component
                 $searchTerm = '%' . trim($this->search) . '%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('company', 'like', $searchTerm)
-                      ->orWhere('title', 'like', $searchTerm);
+                        ->orWhere('title', 'like', $searchTerm);
                 });
             })
             ->when($this->status, function ($query) {
-                $query->where('status', $this->status); 
+                $query->where('status', $this->status);
             })
             ->latest()
-            ->paginate(9);
+            // Updated pagination to 6 per page
+            ->paginate(6);
 
         return view('livewire.application-index', [
             'jobs' => $jobs,
             'totalJobs' => $totalJobs,
             'interviewingCount' => $interviewingCount,
             'offeredCount' => $offeredCount,
+            'hasAnyJobs' => $hasAnyJobs,
         ]);
     }
 }

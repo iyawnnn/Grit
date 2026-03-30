@@ -16,3 +16,33 @@
         @apply border-[#F1804E] ring-[#F1804E]/20;
     }
 }
+
+/* Force Override Laravel/Livewire Navy Blue Pagination */
+
+/* 1. Active State (Brand Orange Background, White Text) */
+.custom-pagination nav span[aria-current="page"] > span,
+.custom-pagination nav span[aria-current="page"] > button {
+    background-color: #e26a35 !important;
+    color: #ffffff !important;
+    border-color: #e26a35 !important;
+}
+
+/* 2. Hover Effects (Light Orange Background, Orange Text) */
+.custom-pagination nav a:hover,
+.custom-pagination nav button:hover {
+    color: #e26a35 !important;
+    background-color: #fff5f0 !important;
+}
+
+/* 3. Focus Rings */
+.custom-pagination nav a:focus,
+.custom-pagination nav button:focus {
+    outline: none !important;
+    border-color: #e26a35 !important;
+    box-shadow: 0 0 0 1px #e26a35 !important;
+}
+
+/* 4. Fix Default Arrows */
+.custom-pagination nav a:hover svg {
+    color: #e26a35 !important;
+}
