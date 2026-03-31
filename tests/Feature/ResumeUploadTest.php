@@ -43,7 +43,7 @@ class ResumeUploadTest extends TestCase
             'label'       => 'My Test Resume',
             'file_url'    => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/mock-resume.pdf',
             'content_raw' => 'Experienced Laravel developer with PHP and MySQL skills.',
-            'is_active'   => true,
+            'is_primary'  => false,
         ]);
     }
 

@@ -32,7 +32,7 @@
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition-opacity ease-in duration-200" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-40 bg-gray-900/40 backdrop-blur-sm lg:hidden transform-gpu will-change-opacity"
+            class="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-sm lg:hidden transform-gpu will-change-opacity"
             @click="sidebarOpen = false" style="display: none;"></div>
 
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-[150%] lg:translate-x-0'"
@@ -147,13 +147,13 @@
 
                 <div class="flex items-center gap-3 px-2">
                     @if(auth()->user()->avatar)
-                        <img src="{{ auth()->user()->avatar }}" alt="Profile" width="36" height="36"
-                            class="h-9 w-9 rounded-full object-cover border border-gray-200 shrink-0">
+                    <img src="{{ auth()->user()->avatar }}" alt="Profile" width="36" height="36"
+                        class="h-9 w-9 rounded-full object-cover border border-gray-200 shrink-0">
                     @else
-                        <div
-                            class="h-9 w-9 rounded-full bg-[#e26a35]/10 border border-[#e26a35]/20 flex items-center justify-center text-sm font-bold text-[#e26a35] shrink-0">
-                            {{ substr(auth()->user()->name, 0, 1) }}
-                        </div>
+                    <div
+                        class="h-9 w-9 rounded-full bg-[#e26a35]/10 border border-[#e26a35]/20 flex items-center justify-center text-sm font-bold text-[#e26a35] shrink-0">
+                        {{ substr(auth()->user()->name, 0, 1) }}
+                    </div>
                     @endif
                     <div class="flex flex-col min-w-0 flex-1">
                         <span class="text-sm font-bold text-gray-900 truncate">{{ auth()->user()->name }}</span>
@@ -164,26 +164,29 @@
         </aside>
 
         <div class="flex-1 h-screen overflow-y-auto scroll-smooth">
-            <div class="flex flex-col min-h-full p-3 sm:p-4 lg:p-6 gap-4 lg:gap-6">
+            <div class="flex flex-col min-h-full px-0 pb-0 sm:p-4 lg:p-6 gap-0 sm:gap-4 lg:gap-6">
 
-                <div
-                    class="lg:hidden flex items-center justify-between mb-2 shrink-0 bg-white p-3 rounded-2xl shadow-sm border border-gray-200">
+                <div class="sticky top-0 z-40 lg:hidden pt-4 pb-2 px-3 bg-gray-100">
+                    
+                    <div class="flex items-center justify-between shrink-0 bg-white/80 backdrop-blur-md p-3 rounded-2xl shadow-sm border border-gray-200/80 transition-all duration-300">
+                        <button @click="sidebarOpen = true" aria-label="Open menu"
+                            class="p-2 text-gray-600 rounded-xl hover:bg-gray-50 hover:text-[#e26a35] transition-colors focus:outline-none focus:ring-2 focus:ring-[#e26a35]/50">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+                                stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"></path>
+                            </svg>
+                        </button>
 
-                    <button @click="sidebarOpen = true" aria-label="Open menu"
-                        class="p-2 text-gray-600 rounded-xl hover:bg-gray-50 hover:text-[#e26a35] transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
-                            stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"></path>
-                        </svg>
-                    </button>
+                        <div class="flex items-center gap-2">
+                            <img src="{{ asset('images/grit-logo.svg') }}" alt="Grit Logo" width="24" height="24"
+                                class="w-6 h-6 object-contain">
+                            <span class="font-bold tracking-tight text-gray-900 text-lg">Grit</span>
+                        </div>
 
-                    <div class="flex items-center gap-2">
-                        <img src="{{ asset('images/grit-logo.svg') }}" alt="Grit Logo" width="24" height="24"
-                            class="w-6 h-6 object-contain">
-                        <span class="font-bold tracking-tight text-gray-900 text-lg">Grit</span>
+                        <div class="w-10"></div>
                     </div>
-                    <div class="w-10"></div>
+
                 </div>
 
                 <main class="flex-1 pb-10 lg:pb-0">
