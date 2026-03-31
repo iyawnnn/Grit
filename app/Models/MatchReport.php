@@ -18,6 +18,7 @@ class MatchReport extends Model
         'missing_keywords',
         'reasoning',
         'status',
+        'action_plan',
     ];
 
     protected function casts(): array
