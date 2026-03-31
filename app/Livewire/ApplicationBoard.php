@@ -24,7 +24,6 @@ class ApplicationBoard extends Component
             if (in_array($newStatus, $validStatuses)) {
                 $job->update(['status' => $newStatus]);
                 
-                // Get the readable label from our Enum for the toast notification
                 $statusEnum = ApplicationStatus::tryFrom($newStatus);
                 $this->dispatch('notify', message: "Moved to {$statusEnum->getLabel()}");
             }
@@ -33,7 +32,7 @@ class ApplicationBoard extends Component
 
     public function render()
     {
-        // Optimized query: We only select the fields we actually need for the board
+        // PERFORMANCE BOOST: Only select the 5 columns needed for the board
         $jobs = JobPosting::select('id', 'title', 'company', 'status', 'updated_at')
             ->where('user_id', auth()->id())
             ->when($this->search, function ($query) {

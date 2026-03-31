@@ -28,7 +28,7 @@
                 $columnJobs = $jobs->filter(fn($j) => $j->status === $status || $j->status === $status->value);
             @endphp
 
-            <div wire:key="column-{{ $status->value }}" class="flex-shrink-0 w-80 sm:w-80 w-[85vw] bg-gray-50/80 rounded-2xl border border-gray-200 flex flex-col snap-center h-full overflow-hidden relative">
+            <div wire:key="col-{{ $status->value }}" class="flex-shrink-0 w-80 sm:w-80 w-[85vw] bg-gray-50/80 rounded-2xl border border-gray-200 flex flex-col snap-center h-full overflow-hidden relative">
                 
                 <div class="p-4 border-b border-gray-200/70 flex justify-between items-center bg-white shadow-sm z-20">
                     <h3 class="font-extrabold text-gray-900 uppercase tracking-wide text-xs">
@@ -39,10 +39,10 @@
                     </span>
                 </div>
 
-                <div wire:loading wire:target="updateStatus, search" class="absolute inset-0 top-[60px] bg-gray-50/50 backdrop-blur-[2px] z-10 flex flex-col gap-3 p-3">
-                    <div class="h-28 bg-gray-200/80 animate-pulse rounded-xl border border-gray-100"></div>
-                    <div class="h-28 bg-gray-200/80 animate-pulse rounded-xl border border-gray-100 opacity-70"></div>
-                    <div class="h-28 bg-gray-200/80 animate-pulse rounded-xl border border-gray-100 opacity-40"></div>
+                <div wire:loading wire:target="updateStatus, search" class="absolute inset-0 top-[60px] bg-gray-50/60 backdrop-blur-sm z-10 p-3 flex flex-col gap-3">
+                    <div class="h-28 bg-gray-200 animate-pulse rounded-xl"></div>
+                    <div class="h-28 bg-gray-200 animate-pulse rounded-xl opacity-70"></div>
+                    <div class="h-28 bg-gray-200 animate-pulse rounded-xl opacity-40"></div>
                 </div>
 
                 <div class="p-3 flex-1 overflow-y-auto space-y-3 custom-scrollbar transition-all duration-200"
@@ -52,12 +52,11 @@
                      @drop="isDroppable = false; $wire.updateStatus(event.dataTransfer.getData('jobId'), '{{ $status->value }}')"
                      :class="isDroppable ? 'bg-[#fff5f0] border-2 border-dashed border-[#e26a35]/50 rounded-xl' : 'border-2 border-transparent'"
                 >
-                    
                     @foreach($columnJobs as $job)
                         <div wire:key="job-{{ $job->id }}" draggable="true"
                              @dragstart="event.dataTransfer.setData('jobId', {{ $job->id }}); event.dataTransfer.effectAllowed = 'move'; $el.classList.add('opacity-50', 'scale-95');"
                              @dragend="$el.classList.remove('opacity-50', 'scale-95');"
-                             class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm sm:cursor-grab active:cursor-grabbing hover:border-[#e26a35]/50 hover:shadow-md transition-all relative flex flex-col gap-2">
+                             class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm sm:cursor-grab active:cursor-grabbing hover:border-[#e26a35]/50 transition-all relative flex flex-col gap-2">
                             
                             <div class="flex justify-between items-start">
                                 <h4 class="font-bold text-gray-900 text-sm leading-tight pr-6">{{ $job->title }}</h4>
