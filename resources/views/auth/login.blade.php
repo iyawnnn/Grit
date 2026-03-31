@@ -5,7 +5,7 @@
             <div class="w-full max-w-[360px] mx-auto my-auto py-4 lg:py-6">
 
                 <div class="flex justify-center mb-6 lg:mb-8">
-                    <img src="{{ asset('images/grit-logo.svg') }}" alt="Grit application tracker logo"
+                    <img src="{{ asset('images/grit-logo.svg') }}" alt="Grit career tracker platform logo"
                         class="h-12 lg:h-16 w-auto">
                 </div>
 
@@ -14,8 +14,6 @@
                     <p class="text-xs text-gray-500 font-medium tracking-tight">Ready to conquer your goals? Let's get
                         you back on track.</p>
                 </div>
-
-                <x-auth-session-status class="mb-4" :status="session('status')" />
 
                 <form method="POST" action="{{ route('login') }}" class="space-y-3">
                     @csrf
@@ -33,7 +31,6 @@
                             autocomplete="username"
                             class="w-full pl-10 pr-4 py-2.5 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all"
                             placeholder="hello@example.com">
-                        <x-input-error :messages="$errors->get('email')" class="mt-1" />
                     </div>
 
                     <div x-data="{ show: false }" class="relative">
@@ -66,7 +63,6 @@
                             </svg>
                         </button>
                     </div>
-                    <x-input-error :messages="$errors->get('password')" class="mt-1" />
 
                     <div class="flex items-center justify-between pt-1">
                         <label for="remember_me" class="inline-flex items-center cursor-pointer group">
@@ -102,22 +98,22 @@
             </div>
         </div>
 
-        <div class="hidden lg:block lg:w-1/2 p-4 bg-white">
-            <div
-                class="relative w-full h-full rounded-3xl overflow-hidden bg-[#fff5f0] border border-brand-orange/10 shadow-lg">
+        <div class="hidden lg:flex lg:w-1/2 p-4 bg-white">
+            <div class="relative w-full h-full rounded-3xl overflow-hidden bg-[#fff5f0] border border-brand-orange/10 shadow-lg">
+                
                 <img src="{{ asset('images/auth-visual-friendly.webp') }}"
-                    alt="Career growth sketch illustration for job seekers managing applications"
-                    class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-90">
+                    alt="Illustration of career growth and path planning"
+                    class="absolute inset-0 w-full h-full object-cover object-center mix-blend-multiply opacity-90">
 
-                <div
-                    class="absolute bottom-0 left-0 w-full p-8 xl:p-12 z-10 flex flex-col items-center text-center bg-gradient-to-t from-[#fff5f0] via-[#fff5f0]/80 to-transparent pt-24">
-                    <h2
-                        class="text-2xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-2 xl:mb-3 text-black">
-                        Welcome back to your<br>success journey.</h2>
-                    <p class="text-gray-800 text-sm xl:text-base font-medium tracking-tight max-w-md leading-relaxed">
+                <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center text-center bg-gradient-to-t from-[#fff5f0] via-[#fff5f0]/95 to-transparent pt-32 pb-12 px-8 xl:pb-16 xl:px-12">
+                    <h2 class="text-3xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-3 text-black">
+                        Welcome back to your<br>success journey.
+                    </h2>
+                    <p class="text-gray-800 text-base font-medium tracking-tight max-w-md">
                         Pick up right where you left off. Your next big career move is waiting.
                     </p>
                 </div>
+                
             </div>
         </div>
 
