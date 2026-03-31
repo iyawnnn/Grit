@@ -22,6 +22,9 @@
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    @livewireStyles
+    @livewireScripts
 </head>
 
 <body class="font-sans antialiased text-gray-900 bg-gray-100">
@@ -36,7 +39,7 @@
             @click="sidebarOpen = false" style="display: none;"></div>
 
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-[150%] lg:translate-x-0'"
-            class="fixed lg:relative z-50 my-3 ml-3 sm:my-4 sm:ml-4 lg:my-6 lg:ml-6 w-64 h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] bg-white rounded-2xl border border-gray-200/60 shadow-lg flex flex-col transition-transform duration-300 ease-out shrink-0 transform-gpu will-change-transform">
+            class="-translate-x-[150%] lg:translate-x-0 fixed lg:relative z-50 my-3 ml-3 sm:my-4 sm:ml-4 lg:my-6 lg:ml-6 w-64 h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] bg-white rounded-2xl border border-gray-200/60 shadow-lg flex flex-col transition-transform duration-300 ease-out shrink-0 transform-gpu will-change-transform">
 
             <div class="flex items-center justify-between mt-3 mx-3 mb-2 shrink-0">
                 <div
