@@ -82,14 +82,27 @@
                 </a>
 
                 <a href="{{ route('applications.index') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    <svg class="w-5 h-5 {{ request()->routeIs('applications.*') ? 'text-[#e26a35]' : 'text-gray-400 group-hover:text-gray-600' }} transition-colors"
+                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.index', 'applications.create', 'applications.show', 'applications.edit') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('applications.index', 'applications.create', 'applications.show', 'applications.edit') ? 'text-[#e26a35]' : 'text-gray-400 group-hover:text-gray-600' }} transition-colors"
                         fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M20.25 14.15v4.25c0 1.084-.816 1.954-1.875 2.102a48.667 48.667 0 01-12.75 0c-1.059-.148-1.875-1.018-1.875-2.102v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
                     </svg>
                     Applications
                 </a>
+
+                <a href="{{ route('resumes.index') }}" @click="sidebarOpen = false"
+                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('resumes.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('resumes.*') ? 'text-[#e26a35]' : 'text-gray-400 group-hover:text-gray-600' }} transition-colors"
+                        aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z">
+                        </path>
+                    </svg>
+                    Resumes
+                </a>
+
+                <div class="text-[11px] font-semibold text-gray-500 mb-3 mt-6 px-3 tracking-wider uppercase pt-2">Analysis & Tracking</div>
 
                 <a href="{{ route('matches.index') }}" @click="sidebarOpen = false"
                     class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('matches.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
@@ -103,15 +116,16 @@
                     Match Reports
                 </a>
 
-                <a href="{{ route('resumes.index') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('resumes.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    <svg class="w-5 h-5 {{ request()->routeIs('resumes.*') ? 'text-[#e26a35]' : 'text-gray-400 group-hover:text-gray-600' }} transition-colors"
+                <a href="{{ route('applications.board') }}" @click="sidebarOpen = false"
+                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.board') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    
+                    <svg class="w-5 h-5 {{ request()->routeIs('applications.board') ? 'text-[#e26a35]' : 'text-gray-400 group-hover:text-gray-600' }} transition-colors"
                         aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h12A2.25 2.25 0 0120.25 6v12A2.25 2.25 0 0118 20.25H6A2.25 2.25 0 013.75 18V6z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.75v16.5M14.25 3.75v16.5" />
                     </svg>
-                    Resumes
+                    
+                    Job Board
                 </a>
             </nav>
 
