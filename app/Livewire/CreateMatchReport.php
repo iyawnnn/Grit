@@ -13,6 +13,8 @@ class CreateMatchReport extends Component
 {
     public $resume_id = '';
     public $job_posting_id = '';
+    public $searchJob = '';
+    public $searchResume = '';
 
     public function generate(MatchAnalysisService $matchService)
     {
@@ -28,17 +30,35 @@ class CreateMatchReport extends Component
         );
 
         $message = $result['is_cached']
-            ? 'We loaded your previously generated report to save time.'
-            : 'Your match report has been successfully generated.';
+            ? 'Loaded your previously generated report to save time.'
+            : 'Match report successfully generated.';
 
-        return redirect()->route('matches.show', $result['report'])->with('success', $message);
+        session()->flash('success', $message);
+        
+        return redirect()->route('matches.show', $result['report']);
     }
 
     public function render()
     {
+        $jobs = JobPosting::query()
+            ->when($this->searchJob, function ($q) {
+                $q->where('title', 'like', '%' . $this->searchJob . '%')
+                  ->orWhere('company', 'like', '%' . $this->searchJob . '%');
+            })
+            ->latest()
+            ->get();
+
+        $resumes = Resume::where('user_id', auth()->id())
+            ->when($this->searchResume, function ($q) {
+                $q->where('label', 'like', '%' . $this->searchResume . '%');
+            })
+            ->orderByDesc('is_primary') // Puts Primary Resume at the very top
+            ->latest()
+            ->get();
+
         return view('livewire.create-match-report', [
-            'resumes' => Resume::where('user_id', auth()->id())->get(),
-            'jobs'    => JobPosting::latest()->get(),
+            'resumes' => $resumes,
+            'jobs'    => $jobs,
         ]);
     }
 }

@@ -11,25 +11,55 @@ class MatchReportIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $sort = 'newest';
+    public $reportToDelete = null;
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function deleteReport($id)
+    public function updatingSort()
     {
-        $report = MatchReport::where('user_id', auth()->id())->findOrFail($id);
-        $report->delete();
+        $this->resetPage();
+    }
 
-        session()->flash('success', 'Report deleted successfully.');
+    public function confirmDelete($id)
+    {
+        $this->reportToDelete = $id;
+    }
+
+    public function executeDelete()
+    {
+        if ($this->reportToDelete) {
+            $report = MatchReport::where('user_id', auth()->id())->findOrFail($this->reportToDelete);
+            $report->delete();
+            
+            $this->reportToDelete = null;
+            
+            // Standard session flash
+            session()->flash('success', 'Match report deleted successfully.');
+            
+            // Dispatch browser event to ensure toast components catch it immediately
+            $this->dispatch('notify', message: 'Match report deleted successfully.');
+        }
+    }
+
+    public function cancelDelete()
+    {
+        $this->reportToDelete = null;
     }
 
     public function render()
     {
-        // Query related models to allow searching by job title, company, or resume label
+        $userId = auth()->id();
+
+        $totalReports = MatchReport::where('user_id', $userId)->count();
+        $processingCount = MatchReport::where('user_id', $userId)->where('status', 'processing')->count();
+        $highestScore = MatchReport::where('user_id', $userId)->where('status', '!=', 'processing')->max('score') ?? 0;
+
         $matches = MatchReport::with(['resume', 'jobPosting'])
-            ->where('user_id', auth()->id())
+            ->where('user_id', $userId)
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->whereHas('jobPosting', function ($subQuery) {
@@ -40,11 +70,17 @@ class MatchReportIndex extends Component
                     });
                 });
             })
-            ->latest()
-            ->paginate(10);
+            ->when($this->sort === 'newest', fn($q) => $q->latest())
+            ->when($this->sort === 'oldest', fn($q) => $q->oldest())
+            ->when($this->sort === 'score_high', fn($q) => $q->orderByDesc('score'))
+            ->when($this->sort === 'score_low', fn($q) => $q->orderBy('score'))
+            ->paginate(9);
 
         return view('livewire.match-report-index', [
-            'matches' => $matches
+            'matches' => $matches,
+            'totalReports' => $totalReports,
+            'processingCount' => $processingCount,
+            'highestScore' => $highestScore,
         ]);
     }
 }
