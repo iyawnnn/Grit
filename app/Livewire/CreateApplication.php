@@ -25,14 +25,16 @@ class CreateApplication extends Component
         $this->validate();
 
         JobPosting::create([
-            'user_id' => auth()->id(), // Binds the job to the logged-in user
+            'user_id' => auth()->id(),
             'title' => $this->title,
             'company' => $this->company,
-            'source_url' => $this->url, // Changed to match your database column
+            'source_url' => $this->url, 
             'description' => $this->description,
         ]);
 
-        return redirect()->route('applications.index')->with('success', 'Job posting saved successfully.');
+        session()->flash('success', 'Job posting saved successfully.');
+
+        return redirect()->route('applications.index');
     }
 
     public function render()

@@ -1,64 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\MatchReport;
 use App\Models\Resume;
 use App\Models\JobPosting;
-use App\Jobs\GenerateMatchReport;
-use Illuminate\Support\Facades\Cache;
+use App\Services\MatchAnalysisService;
 
 class CreateMatchReport extends Component
 {
     public $resume_id = '';
     public $job_posting_id = '';
+    public $searchJob = '';
+    public $searchResume = '';
 
-    public function generate()
+    public function generate(MatchAnalysisService $matchService)
     {
         $this->validate([
-            'resume_id' => 'required|exists:resumes,id',
+            'resume_id'      => 'required|exists:resumes,id',
             'job_posting_id' => 'required|exists:job_postings,id',
         ]);
 
-        $resume = Resume::where('user_id', auth()->id())->findOrFail($this->resume_id);
-        $jobPosting = JobPosting::findOrFail($this->job_posting_id);
+        $result = $matchService->findOrCreateReport(
+            (int) $this->resume_id,
+            (int) $this->job_posting_id,
+            (int) auth()->id()
+        );
 
-        $contentToHash = $resume->content_raw . $jobPosting->description;
-        $fingerprint = hash('sha256', $contentToHash);
-        $cacheKey = 'match_report_hash_' . $fingerprint;
+        $message = $result['is_cached']
+            ? 'Loaded your previously generated report to save time.'
+            : 'Match report successfully generated.';
 
-        if (Cache::has($cacheKey)) {
-            $existingReportId = Cache::get($cacheKey);
-            $existingReport = MatchReport::find($existingReportId);
-
-            if ($existingReport) {
-                return redirect()->route('matches.show', $existingReport)
-                    ->with('success', 'We loaded your previously generated report to save time.');
-            }
-        }
-
-        $matchReport = MatchReport::create([
-            'user_id' => auth()->id(),
-            'resume_id' => $resume->id,
-            'job_id' => $jobPosting->id,
-            'score' => 0, // Added default score to satisfy database constraints
-            'status' => 'processing',
-        ]);
-
-        Cache::put($cacheKey, $matchReport->id, now()->addDays(30));
-
-        GenerateMatchReport::dispatchSync($matchReport);
-
-        return redirect()->route('matches.show', $matchReport)
-            ->with('success', 'Your match report has been successfully generated.');
+        session()->flash('success', $message);
+        
+        return redirect()->route('matches.show', $result['report']);
     }
 
     public function render()
     {
+        $jobs = JobPosting::query()
+            ->when($this->searchJob, function ($q) {
+                $q->where('title', 'like', '%' . $this->searchJob . '%')
+                  ->orWhere('company', 'like', '%' . $this->searchJob . '%');
+            })
+            ->latest()
+            ->get();
+
+        $resumes = Resume::where('user_id', auth()->id())
+            ->when($this->searchResume, function ($q) {
+                $q->where('label', 'like', '%' . $this->searchResume . '%');
+            })
+            ->orderByDesc('is_primary') // Puts Primary Resume at the very top
+            ->latest()
+            ->get();
+
         return view('livewire.create-match-report', [
-            'resumes' => Resume::where('user_id', auth()->id())->get(),
-            'jobs' => JobPosting::latest()->get()
+            'resumes' => $resumes,
+            'jobs'    => $jobs,
         ]);
     }
 }

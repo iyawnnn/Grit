@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MatchReport;
-use App\Models\Resume;
-use App\Models\JobPosting;
-use App\Jobs\GenerateMatchReport;
-use Illuminate\Support\Facades\Cache;
+use App\Services\MatchAnalysisService;
 use Illuminate\Support\Facades\Gate;
 
 class MatchReportController extends Controller
@@ -22,43 +21,24 @@ class MatchReportController extends Controller
         return view('matches.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, MatchAnalysisService $matchService)
     {
         $request->validate([
-            'resume_id' => 'required|exists:resumes,id',
+            'resume_id'      => 'required|exists:resumes,id',
             'job_posting_id' => 'required|exists:job_postings,id',
         ]);
 
-        $resume = Resume::findOrFail($request->resume_id);
-        $jobPosting = JobPosting::findOrFail($request->job_posting_id);
+        $result = $matchService->findOrCreateReport(
+            (int) $request->resume_id,
+            (int) $request->job_posting_id,
+            (int) auth()->id()
+        );
 
-        $contentToHash = $resume->content . $jobPosting->description;
-        $fingerprint = hash('sha256', $contentToHash);
-        $cacheKey = 'match_report_hash_' . $fingerprint;
+        $message = $result['is_cached']
+            ? 'We loaded your previously generated report to save time.'
+            : 'Your match report is being generated.';
 
-        if (Cache::has($cacheKey)) {
-            $existingReportId = Cache::get($cacheKey);
-            $existingReport = MatchReport::find($existingReportId);
-
-            if ($existingReport) {
-                return redirect()->route('matches.show', $existingReport)
-                    ->with('success', 'We loaded your previously generated report to save time.');
-            }
-        }
-
-        $matchReport = MatchReport::create([
-            'user_id' => auth()->id(),
-            'resume_id' => $resume->id,
-            'job_posting_id' => $jobPosting->id,
-            'status' => 'processing',
-        ]);
-
-        Cache::put($cacheKey, $matchReport->id, now()->addDays(30));
-
-        GenerateMatchReport::dispatch($matchReport);
-
-        return redirect()->route('matches.show', $matchReport)
-            ->with('success', 'Your match report is being generated.');
+        return redirect()->route('matches.show', $result['report'])->with('success', $message);
     }
 
     public function show(MatchReport $matchReport)

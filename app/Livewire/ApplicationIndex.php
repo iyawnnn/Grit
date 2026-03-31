@@ -5,39 +5,47 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\JobPosting;
+use Livewire\Attributes\Url;
 
 class ApplicationIndex extends Component
 {
     use WithPagination;
 
+    // The #[Url] attribute keeps your search and filter in the browser URL
+    #[Url(history: true)]
     public $search = '';
-    public $status = ''; 
+
+    #[Url(history: true)]
+    public $status = '';
+
     public $jobToDelete = null;
 
-    public function updatingSearch()
+    // This forces the page to reset to 1 when you type in the search bar
+    public function updatedSearch()
     {
         $this->resetPage();
     }
 
-    public function updatingStatus()
+    // This forces the page to reset to 1 when you change the filter
+    public function updatedStatus()
     {
         $this->resetPage();
     }
 
-    // New: Instantly clears all active filters
     public function resetFilters()
     {
         $this->reset(['search', 'status']);
         $this->resetPage();
     }
 
-    // New: Instantly changes the status of a job
     public function updateStatus($id, $newStatus)
     {
-        $job = JobPosting::where('user_id', auth()->id())->findOrFail($id);
-        $job->update(['status' => $newStatus]);
-        
-        session()->flash('success', 'Application status updated.');
+        $job = JobPosting::where('user_id', auth()->id())->find($id);
+
+        if ($job) {
+            $job->update(['status' => $newStatus]);
+            $this->dispatch('notify', message: 'Status updated to ' . ucfirst($newStatus) . '.');
+        }
     }
 
     public function confirmDelete($id)
@@ -53,11 +61,14 @@ class ApplicationIndex extends Component
     public function executeDelete()
     {
         if ($this->jobToDelete) {
-            $job = JobPosting::where('user_id', auth()->id())->findOrFail($this->jobToDelete);
-            $job->delete();
-            
+            $job = JobPosting::where('user_id', auth()->id())->find($this->jobToDelete);
+
+            if ($job) {
+                $job->delete();
+            }
+
             $this->jobToDelete = null;
-            session()->flash('success', 'Job posting deleted successfully.');
+            $this->dispatch('notify', message: 'Role permanently removed.');
         }
     }
 
@@ -65,28 +76,34 @@ class ApplicationIndex extends Component
     {
         $baseQuery = JobPosting::where('user_id', auth()->id());
 
+        // Check if the user has ANY jobs in the database, ignoring current search filters
+        $hasAnyJobs = (clone $baseQuery)->exists();
+
         $totalJobs = (clone $baseQuery)->count();
         $interviewingCount = (clone $baseQuery)->where('status', 'interviewing')->count();
-        $offeredCount = (clone $baseQuery)->where('status', 'offered')->count();
+        $offeredCount = (clone $baseQuery)->whereIn('status', ['offered', 'hired'])->count();
 
         $jobs = (clone $baseQuery)
             ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('company', 'like', '%' . $this->search . '%')
-                      ->orWhere('title', 'like', '%' . $this->search . '%');
+                $searchTerm = '%' . trim($this->search) . '%';
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('company', 'like', $searchTerm)
+                        ->orWhere('title', 'like', $searchTerm);
                 });
             })
             ->when($this->status, function ($query) {
-                $query->where('status', $this->status); 
+                $query->where('status', $this->status);
             })
             ->latest()
-            ->paginate(9);
+            // Updated pagination to 6 per page
+            ->paginate(6);
 
         return view('livewire.application-index', [
             'jobs' => $jobs,
             'totalJobs' => $totalJobs,
             'interviewingCount' => $interviewingCount,
             'offeredCount' => $offeredCount,
+            'hasAnyJobs' => $hasAnyJobs,
         ]);
     }
 }

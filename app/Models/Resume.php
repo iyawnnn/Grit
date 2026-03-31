@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Resume extends Model
 {
@@ -15,21 +14,10 @@ class Resume extends Model
         'label',
         'file_url',
         'content_raw',
-        'is_active',
+        'is_primary',
     ];
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-        ];
-    }
 
-    public function matchReports()
-    {
-        return $this->hasMany(MatchReport::class, 'resume_id');
-    }
-
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

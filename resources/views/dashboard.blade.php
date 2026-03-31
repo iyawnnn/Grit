@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot:title>Dashboard</x-slot:title>
     <div class="max-w-6xl mx-auto flex flex-col h-full gap-6">
 
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">

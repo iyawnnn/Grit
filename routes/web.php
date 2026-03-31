@@ -11,56 +11,56 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
 
-    // 1. Applications (Job Postings Only)
-    Route::get('/dashboard/applications', [ApplicationController::class, 'index'])->name('applications.index');
-    Route::get('/dashboard/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
-    Route::post('/dashboard/applications', [ApplicationController::class, 'store'])
-        ->name('applications.store')
-        ->middleware('throttle:10,1');
-
-    Route::get('/dashboard/applications/{jobPosting}', [ApplicationController::class, 'show'])->name('applications.show');
-    Route::get('/dashboard/applications/{jobPosting}/edit', [ApplicationController::class, 'edit'])->name('applications.edit');
-    Route::put('/dashboard/applications/{jobPosting}', [ApplicationController::class, 'update'])
-        ->name('applications.update')
-        ->middleware('throttle:10,1');
-
-    Route::delete('/dashboard/applications/{jobPosting}', [ApplicationController::class, 'destroy'])
-        ->name('applications.destroy')
-        ->middleware('throttle:10,1');
-
-    // 2. Match Reports (AI Analysis Only)
-    Route::get('/dashboard/matches', [MatchReportController::class, 'index'])->name('matches.index');
-    Route::get('/dashboard/matches/create', [MatchReportController::class, 'create'])->name('matches.create');
-    Route::post('/dashboard/matches', [MatchReportController::class, 'store'])
-        ->name('matches.store')
-        ->middleware('throttle:10,1');
-    Route::get('/dashboard/matches/{matchReport}', [MatchReportController::class, 'show'])->name('matches.show');
-
-    Route::patch('/dashboard/matches/{matchReport}/status', [MatchReportController::class, 'updateStatus'])
-        ->name('matches.updateStatus')
-        ->middleware('throttle:10,1');
-    Route::delete('/dashboard/matches/{matchReport}', [MatchReportController::class, 'destroy'])
-        ->name('matches.destroy')
-        ->middleware('throttle:10,1');
-
-    // 3. Resumes
-    Route::get('/dashboard/resumes', [ResumeController::class, 'index'])->name('resumes.index');
-    Route::post('/dashboard/resumes', [ResumeController::class, 'store'])
-        ->name('resumes.store')
-        ->middleware('throttle:10,1');
-    Route::get('/dashboard/resumes/{resume}', [ResumeController::class, 'show'])->name('resumes.show');
-    Route::delete('/dashboard/resumes/{resume}', [ResumeController::class, 'destroy'])
-        ->name('resumes.destroy')
-        ->middleware('throttle:10,1');
-});
-
-Route::middleware('auth')->group(function () {
+    // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Dashboard Routes
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Applications
+        Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+        Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
+        Route::post('/applications', [ApplicationController::class, 'store'])
+            ->name('applications.store')
+            ->middleware('throttle:10,1');
+        Route::get('/applications/{jobPosting}', [ApplicationController::class, 'show'])->name('applications.show');
+        Route::get('/applications/{jobPosting}/edit', [ApplicationController::class, 'edit'])->name('applications.edit');
+        Route::put('/applications/{jobPosting}', [ApplicationController::class, 'update'])
+            ->name('applications.update')
+            ->middleware('throttle:10,1');
+        Route::delete('/applications/{jobPosting}', [ApplicationController::class, 'destroy'])
+            ->name('applications.destroy')
+            ->middleware('throttle:10,1');
+
+        // Match Reports
+        Route::get('/matches', [MatchReportController::class, 'index'])->name('matches.index');
+        Route::get('/matches/create', [MatchReportController::class, 'create'])->name('matches.create');
+        Route::post('/matches', [MatchReportController::class, 'store'])
+            ->name('matches.store')
+            ->middleware('throttle:10,1');
+        Route::get('/matches/{matchReport}', [MatchReportController::class, 'show'])->name('matches.show');
+        Route::patch('/matches/{matchReport}/status', [MatchReportController::class, 'updateStatus'])
+            ->name('matches.updateStatus')
+            ->middleware('throttle:10,1');
+        Route::delete('/matches/{matchReport}', [MatchReportController::class, 'destroy'])
+            ->name('matches.destroy')
+            ->middleware('throttle:10,1');
+
+        // Resumes
+        Route::get('/resumes', [ResumeController::class, 'index'])->name('resumes.index');
+        Route::post('/resumes', [ResumeController::class, 'store'])
+            ->name('resumes.store')
+            ->middleware('throttle:10,1');
+        Route::get('/resumes/{resume}', [ResumeController::class, 'show'])->name('resumes.show');
+        Route::delete('/resumes/{resume}', [ResumeController::class, 'destroy'])
+            ->name('resumes.destroy')
+            ->middleware('throttle:10,1');
+    });
 });
 
 require __DIR__ . '/auth.php';
