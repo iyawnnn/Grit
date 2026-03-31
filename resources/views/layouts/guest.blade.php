@@ -15,11 +15,18 @@
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    @livewireStyles
 </head>
 
 <body
     class="font-sans text-brand-dark antialiased h-screen w-screen overflow-hidden bg-white selection:bg-brand-orange selection:text-white">
+    
     {{ $slot }}
+
+    <x-toast />
+
+    @livewireScripts
 </body>
 
 </html>

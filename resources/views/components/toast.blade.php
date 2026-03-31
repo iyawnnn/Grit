@@ -1,15 +1,26 @@
+@php
+    $initialMessage = session('success') ?? session('status') ?? session('error') ?? '';
+    $isError = session('error') || $errors->any();
+    
+    if (!$initialMessage && $errors->any()) {
+        $initialMessage = $errors->first();
+    }
+@endphp
+
 <div x-data="{ 
         show: false, 
-        message: '{{ session('success') ?? '' }}' 
+        message: @js($initialMessage),
+        isError: @js($isError)
     }" x-init="
-        if (message) { 
+        if (message !== '') { 
             show = true; 
-            setTimeout(() => show = false, 4000); 
+            setTimeout(() => show = false, 5000); 
         }
     " @notify.window="
         message = $event.detail.message; 
+        isError = $event.detail.isError ?? false;
         show = true; 
-        setTimeout(() => show = false, 4000);
+        setTimeout(() => show = false, 5000);
     " x-show="show" x-cloak x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="transition ease-in duration-200"
@@ -18,11 +29,17 @@
     class="fixed bottom-6 right-6 z-[100] flex items-center p-4 text-gray-800 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100"
     role="alert" style="display: none;">
 
-    <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-[#e26a35] bg-[#e26a35]/10 rounded-lg">
+    <div x-show="!isError" class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-[#e26a35] bg-[#e26a35]/10 rounded-lg">
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
             viewBox="0 0 20 20">
             <path
                 d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+        </svg>
+    </div>
+
+    <div x-show="isError" class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.5 11.5a1 1 0 0 1-1.414 1.414L10 11.414l-2.086 2.086a1 1 0 0 1-1.414-1.414L8.586 10 6.5 7.914A1 1 0 0 1 7.914 6.5L10 8.586l2.086-2.086a1 1 0 0 1 1.414 1.414L11.414 10l2.086 2.086Z"/>
         </svg>
     </div>
 
