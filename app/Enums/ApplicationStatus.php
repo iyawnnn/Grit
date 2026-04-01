@@ -2,27 +2,21 @@
 
 namespace App\Enums;
 
-use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasIcon;
-use Filament\Support\Contracts\HasLabel;
-
-enum ApplicationStatus: string implements HasColor, HasIcon, HasLabel
+enum ApplicationStatus: string
 {
-    case Matched = 'matched';
+    case Saved = 'saved';
     case Applied = 'applied';
     case Interviewing = 'interviewing';
     case Offered = 'offered';
-    case Hired = 'hired';
     case Rejected = 'rejected';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Matched => '1. Matched',
-            self::Applied => '2. Applied',
-            self::Interviewing => '3. Interviewing',
-            self::Offered => '4. Offer Received',
-            self::Hired => '5. Hired',
+            self::Saved => 'Wishlist',
+            self::Applied => 'Applied',
+            self::Interviewing => 'Interviewing',
+            self::Offered => 'Offer Received',
             self::Rejected => 'Rejected',
         };
     }
@@ -30,11 +24,10 @@ enum ApplicationStatus: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string | array | null
     {
         return match ($this) {
-            self::Matched => 'gray',
+            self::Saved => 'gray',
             self::Applied => 'info',
             self::Interviewing => 'warning',
             self::Offered => 'success',
-            self::Hired => 'success',
             self::Rejected => 'danger',
         };
     }
@@ -42,11 +35,10 @@ enum ApplicationStatus: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::Matched => 'heroicon-m-sparkles',
+            self::Saved => 'heroicon-m-bookmark',
             self::Applied => 'heroicon-m-paper-airplane',
             self::Interviewing => 'heroicon-m-chat-bubble-left-right',
             self::Offered => 'heroicon-m-star',
-            self::Hired => 'heroicon-m-check-badge',
             self::Rejected => 'heroicon-m-x-circle',
         };
     }

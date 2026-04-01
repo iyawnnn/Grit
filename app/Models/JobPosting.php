@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\ApplicationStatus;
 
 class JobPosting extends Model
 {
@@ -17,6 +18,10 @@ class JobPosting extends Model
         'description',
         'source_url',
         'status',
+    ];
+
+    protected $casts = [
+        'status' => ApplicationStatus::class,
     ];
 
     public function matchReports()

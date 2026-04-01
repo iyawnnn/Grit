@@ -75,6 +75,8 @@
                         </div>
                     </div>
 
+                    <livewire:action-plan-widget :matchReport="$matchReport" />
+
                     <div class="hidden xl:block bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                         <div class="p-6 sm:p-8 border-b border-gray-100">
                             <div class="flex items-center gap-3">

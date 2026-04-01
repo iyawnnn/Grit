@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* REQUIRED FOR ALPINE: Hides elements before JS loads to prevent duplicate icons */
+[x-cloak] {
+    display: none !important;
+}
+
 @layer base {
-    /* Soften default form inputs for a friendly feel */
     input[type="text"],
     input[type="email"],
     input[type="password"] {
@@ -15,11 +19,16 @@
     input[type="password"]:focus {
         @apply border-[#F1804E] ring-[#F1804E]/20;
     }
+
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear,
+    input[type="password"]::-webkit-contacts-auto-fill-button,
+    input[type="password"]::-webkit-credentials-auto-fill-button {
+        display: none !important;
+        appearance: none !important;
+    }
 }
 
-/* Force Override Laravel/Livewire Navy Blue Pagination */
-
-/* 1. Active State (Brand Orange Background, White Text) */
 .custom-pagination nav span[aria-current="page"] > span,
 .custom-pagination nav span[aria-current="page"] > button {
     background-color: #e26a35 !important;
@@ -27,14 +36,12 @@
     border-color: #e26a35 !important;
 }
 
-/* 2. Hover Effects (Light Orange Background, Orange Text) */
 .custom-pagination nav a:hover,
 .custom-pagination nav button:hover {
     color: #e26a35 !important;
     background-color: #fff5f0 !important;
 }
 
-/* 3. Focus Rings */
 .custom-pagination nav a:focus,
 .custom-pagination nav button:focus {
     outline: none !important;
@@ -42,7 +49,6 @@
     box-shadow: 0 0 0 1px #e26a35 !important;
 }
 
-/* 4. Fix Default Arrows */
 .custom-pagination nav a:hover svg {
     color: #e26a35 !important;
 }

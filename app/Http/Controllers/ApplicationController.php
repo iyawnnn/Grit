@@ -39,7 +39,10 @@ class ApplicationController extends Controller
 
     public function show(JobPosting $jobPosting)
     {
-        return view('applications.show', compact('jobPosting'));
+        // FIX: Pass the $jobPosting model to the view as 'application'
+        return view('applications.show', [
+            'application' => $jobPosting
+        ]);
     }
 
     public function edit(JobPosting $jobPosting)

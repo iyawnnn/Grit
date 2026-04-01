@@ -5,7 +5,7 @@
             <div class="w-full max-w-[360px] mx-auto my-auto py-4 lg:py-6">
 
                 <div class="flex justify-center mb-6 lg:mb-8">
-                    <img src="{{ asset('images/grit-logo.svg') }}" alt="Grit application tracker logo"
+                    <img src="{{ asset('images/grit-logo.svg') }}" alt="Grit career tracker platform logo"
                         class="h-12 lg:h-16 w-auto">
                 </div>
 
@@ -31,7 +31,6 @@
                             autocomplete="name"
                             class="w-full pl-10 pr-4 py-2.5 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all"
                             placeholder="Jordan Lee">
-                        <x-input-error :messages="$errors->get('name')" class="mt-1" />
                     </div>
 
                     <div class="relative">
@@ -47,7 +46,6 @@
                             autocomplete="username"
                             class="w-full pl-10 pr-4 py-2.5 rounded-xl border-0 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-brand-orange text-sm font-medium transition-all"
                             placeholder="hello@example.com">
-                        <x-input-error :messages="$errors->get('email')" class="mt-1" />
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -113,8 +111,6 @@
                             </button>
                         </div>
                     </div>
-                    <x-input-error :messages="$errors->get('password')" class="mt-1" />
-                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
 
                     <button type="submit"
                         class="w-full bg-brand-orange text-white py-2.5 rounded-xl font-semibold text-sm tracking-tight hover:bg-[#e26a35] transition-colors duration-200 mt-4 shadow-sm">
@@ -133,23 +129,21 @@
             </div>
         </div>
 
-        <div class="hidden lg:block lg:w-1/2 p-4 bg-white">
-            <div
-                class="relative w-full h-full rounded-3xl overflow-hidden bg-[#fff5f0] border border-brand-orange/10 shadow-lg">
-                <img src="{{ asset('images/auth-visual-friendly.webp') }}"
-                    alt="Career growth sketch illustration for job seekers managing applications"
-                    class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-90">
+        <div class="hidden lg:flex lg:w-1/2 relative bg-[#fff5f0] overflow-hidden">
+            
+            <img src="{{ asset('images/auth-visual-friendly.webp') }}"
+                alt="Illustration of career growth and path planning"
+                class="absolute inset-0 w-full h-full object-cover object-center mix-blend-multiply opacity-90">
 
-                <div
-                    class="absolute bottom-0 left-0 w-full p-8 xl:p-12 z-10 flex flex-col items-center text-center bg-gradient-to-t from-[#fff5f0] via-[#fff5f0]/80 to-transparent pt-24">
-                    <h2
-                        class="text-2xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-2 xl:mb-3 text-black">
-                        The best way to predict the <br>future is to create it.</h2>
-                    <p class="text-gray-800 text-sm xl:text-base font-medium tracking-tight max-w-md leading-relaxed">
-                        Map out your career trajectory, track your success journey, and analyze your performance.
-                    </p>
-                </div>
+            <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center text-center bg-gradient-to-t from-[#fff5f0] via-[#fff5f0]/95 to-transparent pt-32 pb-12 px-8 xl:pb-16 xl:px-12">
+                <h2 class="text-3xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-3 text-black">
+                    The best way to predict the <br>future is to create it.
+                </h2>
+                <p class="text-gray-800 text-base font-medium tracking-tight max-w-md">
+                    Map out your career trajectory, track your success journey, and analyze your performance.
+                </p>
             </div>
+            
         </div>
 
     </div>

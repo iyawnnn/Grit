@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Applications
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+        Route::get('/applications/board', App\Livewire\ApplicationBoard::class)->name('applications.board');
         Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
         Route::post('/applications', [ApplicationController::class, 'store'])
             ->name('applications.store')
