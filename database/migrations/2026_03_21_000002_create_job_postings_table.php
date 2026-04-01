@@ -13,9 +13,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->string('company');
-            $table->longText('description');
-            $table->string('source_url');
-            $table->string('status')->default('draft');
+            $table->longText('description')->nullable();
+            $table->string('source_url')->nullable();
+            // Default changed from 'draft' to 'saved'
+            $table->string('status')->default('saved'); 
             $table->timestamps();
         });
     }

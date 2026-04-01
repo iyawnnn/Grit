@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\JobPosting;
 use App\Models\User;
+use App\Enums\ApplicationStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class JobPostingFactory extends Factory
@@ -20,7 +21,7 @@ class JobPostingFactory extends Factory
             'company'     => fake()->company(),
             'description' => fake()->paragraphs(3, true),
             'source_url'  => fake()->url(),
-            'status'      => 'draft',
+            'status'      => ApplicationStatus::Saved->value,
         ];
     }
 }

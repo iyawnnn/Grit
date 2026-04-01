@@ -28,8 +28,9 @@ class CreateApplication extends Component
             'user_id' => auth()->id(),
             'title' => $this->title,
             'company' => $this->company,
-            'source_url' => $this->url, 
+            'source_url' => $this->url,
             'description' => $this->description,
+            'status' => \App\Enums\ApplicationStatus::Saved->value, 
         ]);
 
         session()->flash('success', 'Job posting saved successfully.');
