@@ -102,7 +102,7 @@
                     Resumes
                 </a>
 
-                <div class="text-[11px] font-semibold text-gray-600 mb-3 mt-8 px-3 tracking-wider uppercase pt-4 border-t border-gray-200/60">Analysis & Tracking</div>
+                <div class="text-[11px] font-semibold text-gray-600 mb-3 mt-16 px-3 tracking-wider uppercase">Analysis & Tracking</div>
 
                 <a href="{{ route('matches.index') }}" @click="sidebarOpen = false"
                     class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('matches.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">

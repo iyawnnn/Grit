@@ -16,6 +16,20 @@ class CreateMatchReport extends Component
     public $searchJob = '';
     public $searchResume = '';
 
+    public $preselectedJob = false;
+    public $isModal = false;
+
+    // This method automatically runs when the component is loaded.
+    // If a job ID is passed (like from the Application Show page), it configures the modal layout.
+    public function mount($jobPostingId = null)
+    {
+        if ($jobPostingId) {
+            $this->job_posting_id = $jobPostingId;
+            $this->preselectedJob = true;
+            $this->isModal = true;
+        }
+    }
+
     public function generate(MatchAnalysisService $matchService)
     {
         $this->validate([
@@ -40,10 +54,13 @@ class CreateMatchReport extends Component
 
     public function render()
     {
-        $jobs = JobPosting::query()
+        // Added user_id scope to prevent users from seeing other people's jobs
+        $jobs = JobPosting::where('user_id', auth()->id())
             ->when($this->searchJob, function ($q) {
-                $q->where('title', 'like', '%' . $this->searchJob . '%')
-                  ->orWhere('company', 'like', '%' . $this->searchJob . '%');
+                $q->where(function ($subQ) {
+                    $subQ->where('title', 'like', '%' . $this->searchJob . '%')
+                         ->orWhere('company', 'like', '%' . $this->searchJob . '%');
+                });
             })
             ->latest()
             ->get();
