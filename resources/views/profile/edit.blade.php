@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-gray-900 leading-tight tracking-tight font-['Instrument_Sans']">
+        <h2 class="font-semibold text-2xl text-brand-dark leading-tight tracking-tight">
             {{ __('Account Settings') }}
         </h2>
     </x-slot>
 
-    <div class="py-8 font-['Instrument_Sans']">
+    <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8 tracking-tight">
             
             <div class="p-6 sm:p-8 bg-white border border-gray-200 rounded-xl shadow-sm">

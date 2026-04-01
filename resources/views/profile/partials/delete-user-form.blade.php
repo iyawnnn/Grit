@@ -32,7 +32,7 @@
                         id="password"
                         name="password"
                         type="password"
-                        class="mt-1 block w-full border-gray-300 focus:border-[#e26a35] focus:ring-[#e26a35] rounded-md shadow-sm"
+                        class="mt-1 block w-full border-gray-300 focus:border-brand-orange focus:ring-brand-orange rounded-md shadow-sm"
                         placeholder="{{ __('Enter your password to confirm') }}"
                     />
                     <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
@@ -40,7 +40,7 @@
             @endif
 
             <div class="mt-6 flex justify-end gap-3">
-                <button type="button" x-on:click="$dispatch('close')" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-medium text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#e26a35] focus:ring-offset-2 transition ease-in-out duration-150">
+                <button type="button" x-on:click="$dispatch('close')" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-medium text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2 transition ease-in-out duration-150">
                     {{ __('Cancel') }}
                 </button>
 
