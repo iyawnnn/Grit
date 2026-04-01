@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('throttle:10,1');
 
         Route::get('/interviews', App\Livewire\InterviewIndex::class)->name('interviews.index');
+        Route::get('/matches/{matchReport}/interview', App\Livewire\InterviewPrep::class)->name('interviews.prep');
     });
 });
 

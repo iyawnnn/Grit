@@ -144,6 +144,47 @@
                         </div>
                     @endif
 
+                    {{-- NEW DEDICATED INTERVIEW PREP CALL TO ACTION --}}
+                    @if($matchReport->resume && $matchReport->jobPosting)
+                        @php
+                            $hasInterview = \App\Models\MockInterview::where('user_id', auth()->id())
+                                ->where('resume_id', $matchReport->resume->id)
+                                ->where('job_posting_id', $matchReport->jobPosting->id)
+                                ->exists();
+                        @endphp
+                        
+                        <div class="bg-gradient-to-br from-[#e26a35] to-[#c95b2b] rounded-2xl p-6 shadow-sm text-white relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+                            
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                    <x-heroicon-s-academic-cap class="w-5 h-5 text-white" />
+                                </div>
+                                <h2 class="text-lg font-extrabold tracking-tight">Interview Prep</h2>
+                            </div>
+                            
+                            @if($hasInterview)
+                                <p class="text-sm text-white/90 mb-5 font-medium leading-relaxed relative z-10">
+                                    You have already generated customized practice questions for this role.
+                                </p>
+                                <a href="{{ route('interviews.prep', $matchReport) }}"
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-[#e26a35] rounded-xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm relative z-10">
+                                    Review Mock Interview
+                                    <x-heroicon-o-arrow-right class="w-4 h-4" />
+                                </a>
+                            @else
+                                <p class="text-sm text-white/90 mb-5 font-medium leading-relaxed relative z-10">
+                                    Ready to practice? Generate customized mock interview questions based on this specific match.
+                                </p>
+                                <a href="{{ route('interviews.prep', $matchReport) }}"
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-[#e26a35] rounded-xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm relative z-10">
+                                    Start Practicing
+                                    <x-heroicon-o-arrow-right class="w-4 h-4" />
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+
                     <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
                         
                         <div>

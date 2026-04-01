@@ -1,6 +1,6 @@
 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative" 
-     x-data="{ showDeleteModal: false, showQuestionsModal: false, selectedQuestions: [], selectedRole: '' }" 
-     @keydown.window.escape="showDeleteModal = false; showQuestionsModal = false">
+     x-data="{ showDeleteModal: false }" 
+     @keydown.window.escape="showDeleteModal = false">
 
     <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-6 mb-10">
         <div class="flex flex-col items-center md:items-start w-full md:w-auto">
@@ -134,12 +134,22 @@
                             </div>
 
                             <div class="pt-5 border-t border-gray-100 flex items-center justify-between mt-auto shrink-0">
-                                <button type="button" 
-                                    @click="selectedQuestions = {{ json_encode($interview->questions) }}; selectedRole = '{{ addslashes($interview->jobPosting->title ?? 'Role') }}'; showQuestionsModal = true;" 
-                                    class="text-sm font-bold text-gray-600 hover:text-[#e26a35] transition-colors flex items-center gap-1.5 group/link">
-                                    View Questions
-                                    <x-heroicon-o-arrow-right class="w-4 h-4 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300" />
-                                </button>
+                                @php
+                                    $linkedReport = \App\Models\MatchReport::where('resume_id', $interview->resume_id)
+                                        ->where('job_id', $interview->job_posting_id)
+                                        ->where('user_id', auth()->id())
+                                        ->first();
+                                @endphp
+
+                                @if($linkedReport)
+                                    <a href="{{ route('interviews.prep', $linkedReport) }}" 
+                                        class="text-sm font-bold text-gray-600 hover:text-[#e26a35] transition-colors flex items-center gap-1.5 group/link">
+                                        View Questions
+                                        <x-heroicon-o-arrow-right class="w-4 h-4 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300" />
+                                    </a>
+                                @else
+                                    <span class="text-sm font-medium text-gray-400">Match Report Deleted</span>
+                                @endif
 
                                 <button type="button" @click="$wire.confirmDelete({{ $interview->id }}); showDeleteModal = true"
                                     class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -171,48 +181,6 @@
                     </a>
                 </div>
             @endif
-        </div>
-    </div>
-
-    <div x-show="showQuestionsModal" style="display: none;" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true" x-cloak>
-        <div x-show="showQuestionsModal" x-transition.opacity class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"></div>
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-                <div x-show="showQuestionsModal"
-                     x-transition:enter="ease-out duration-300"
-                     x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                     x-transition:leave="ease-in duration-200"
-                     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                     @click.away="showQuestionsModal = false"
-                     class="relative transform overflow-visible rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full sm:max-w-2xl border border-gray-100 flex flex-col">
-                    
-                    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 rounded-t-2xl shrink-0">
-                        <div class="flex items-center gap-3">
-                            <div class="p-1.5 bg-white rounded-lg shadow-sm border border-gray-200">
-                                <x-heroicon-o-academic-cap class="w-5 h-5 text-[#e26a35]" />
-                            </div>
-                            <h3 class="text-lg font-extrabold text-gray-900 tracking-tight" x-text="selectedRole + ' Questions'"></h3>
-                        </div>
-                        <button type="button" @click="showQuestionsModal = false" class="text-gray-400 hover:text-[#e26a35] hover:bg-[#fff5f0] rounded-lg p-1.5 transition-colors">
-                            <span class="sr-only">Close panel</span>
-                            <x-heroicon-o-x-mark class="h-6 w-6" />
-                        </button>
-                    </div>
-
-                    <div class="p-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                        <ul class="space-y-4">
-                            <template x-for="(question, index) in selectedQuestions" :key="index">
-                                <li class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                                    <span class="block text-xs font-bold text-[#e26a35] uppercase tracking-wider mb-1" x-text="'Question ' + (index + 1)"></span>
-                                    <span class="text-gray-800 font-medium leading-relaxed" x-text="question"></span>
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
