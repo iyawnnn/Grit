@@ -26,7 +26,7 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased text-gray-900 bg-gray-100">
+<body class="font-sans antialiased text-gray-900 bg-gray-100 overflow-hidden">
 
     <div x-data="{ sidebarOpen: false }" class="flex h-screen w-full overflow-hidden bg-gray-100">
 
@@ -68,7 +68,7 @@
                 </button>
             </div>
 
-<nav class="flex-1 px-4 py-2 space-y-1.5 overflow-y-auto mt-2 custom-scrollbar">
+            <nav class="flex-1 px-4 py-2 space-y-1.5 overflow-y-auto mt-2 custom-scrollbar">
                 <div class="text-[11px] font-semibold text-gray-600 mb-3 px-3 tracking-wider uppercase">Menu</div>
 
                 <a href="{{ route('dashboard') }}" @click="sidebarOpen = false"
@@ -102,8 +102,10 @@
                     Resumes
                 </a>
 
-                {{-- Restored the mt-16 right here! --}}
-                <div class="text-[11px] font-semibold text-gray-600 mb-3 mt-16 px-3 tracking-wider uppercase">Analysis & Tracking</div>
+                {{-- Replaced the massive mt-16 with a perfectly balanced pt-6 block --}}
+                <div class="pt-6 pb-2">
+                    <div class="text-[11px] font-semibold text-gray-600 px-3 tracking-wider uppercase">Analysis & Tracking</div>
+                </div>
 
                 <a href="{{ route('matches.index') }}" @click="sidebarOpen = false"
                     class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('matches.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">

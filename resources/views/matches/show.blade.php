@@ -1,6 +1,20 @@
 <x-app-layout>
     <x-slot:title>Match Report: {{ $matchReport->jobPosting->title ?? 'Role' }}</x-slot:title>
 
+    @php
+        // SMART HTML TRIMMER
+        $cleanDescription = $matchReport->jobPosting->description ?? '';
+        
+        // Replace 3 or more consecutive <br> tags with just two
+        $cleanDescription = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $cleanDescription);
+        
+        // Remove completely empty divs or paragraphs
+        $cleanDescription = preg_replace('/<(p|div)[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/(p|div)>/i', '', $cleanDescription);
+        
+        // Clean up excess whitespace
+        $cleanDescription = trim($cleanDescription);
+    @endphp
+
     @if($matchReport->status === 'processing')
         <script>
             setTimeout(function() {
@@ -92,8 +106,12 @@
                         
                         <div class="p-6 sm:p-8 bg-gray-50/50">
                             <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm max-h-[500px] overflow-y-auto custom-scrollbar">
-                                <div class="prose prose-sm prose-gray max-w-none">
-                                    {!! $matchReport->jobPosting->description ?? '<p class="text-gray-400 font-medium italic">No description provided.</p>' !!}
+                                <div class="text-gray-700 font-medium leading-relaxed break-words space-y-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul>li]:mb-1 [&>strong]:text-gray-900 [&>strong]:font-extrabold [&>h1]:text-lg [&>h1]:font-bold [&>h2]:text-base [&>h2]:font-bold">
+                                    @if($cleanDescription)
+                                        {!! $cleanDescription !!}
+                                    @else
+                                        <p class="text-gray-400 italic">No job description was provided.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -249,8 +267,12 @@
                         
                         <div class="p-6 bg-gray-50/50">
                             <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm max-h-[500px] overflow-y-auto custom-scrollbar">
-                                <div class="prose prose-sm prose-gray max-w-none">
-                                    {!! $matchReport->jobPosting->description ?? '<p class="text-gray-400 font-medium italic">No description provided.</p>' !!}
+                                <div class="text-gray-700 font-medium leading-relaxed break-words space-y-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul>li]:mb-1 [&>strong]:text-gray-900 [&>strong]:font-extrabold [&>h1]:text-lg [&>h1]:font-bold [&>h2]:text-base [&>h2]:font-bold">
+                                    @if($cleanDescription)
+                                        {!! $cleanDescription !!}
+                                    @else
+                                        <p class="text-gray-400 italic">No job description was provided.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>

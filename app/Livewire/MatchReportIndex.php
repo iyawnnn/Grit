@@ -5,14 +5,31 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\MatchReport;
+use Livewire\Attributes\Url;
 
 class MatchReportIndex extends Component
 {
     use WithPagination;
 
+    // We use the #[Url] attribute so these stay in the address bar when refreshed
+    #[Url]
     public $search = '';
+    
+    #[Url]
     public $sort = 'newest';
+    
     public $reportToDelete = null;
+    
+    // This variable controls if the modal is open
+    public $showCreateModal = false;
+
+    public function mount()
+    {
+        // If the URL has ?action=create, we open the modal automatically
+        if (request()->query('action') === 'create') {
+            $this->showCreateModal = true;
+        }
+    }
 
     public function updatingSearch()
     {
@@ -37,10 +54,7 @@ class MatchReportIndex extends Component
             
             $this->reportToDelete = null;
             
-            // Standard session flash
             session()->flash('success', 'Match report deleted successfully.');
-            
-            // Dispatch browser event to ensure toast components catch it immediately
             $this->dispatch('notify', message: 'Match report deleted successfully.');
         }
     }

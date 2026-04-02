@@ -19,8 +19,7 @@
     @livewireStyles
 </head>
 
-<body
-    class="font-sans text-brand-dark antialiased h-screen w-screen overflow-hidden bg-white selection:bg-brand-orange selection:text-white">
+<body class="font-sans text-brand-dark antialiased h-screen w-full overflow-hidden bg-white selection:bg-brand-orange selection:text-white">
     
     {{ $slot }}
 

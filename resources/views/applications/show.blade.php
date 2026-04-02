@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot:title>
+        {{ $application->title }} at {{ $application->company }}
+    </x-slot:title>
     <div x-data="{ showAnalysisModal: false }" class="max-w-[1200px] mx-auto py-8 px-4 sm:px-6 lg:px-8">
         
         <div class="mb-6">
