@@ -1,8 +1,0 @@
-# Backend and Security Rules
-- Apply Laravel 12 and PHP 8.4 standards. Use strict typing for all files.
-- Secure all API routes using Laravel Sanctum.
-- Manage Google OAuth logins using Laravel Socialite.
-- Use PascalCase for classes, camelCase for methods, and snake_case for database columns.
-- Keep controllers thin. Move all business logic into Service classes.
-- Keep code comments minimal and only explain complex logic.
-- Always recommend the best libraries for new features.
