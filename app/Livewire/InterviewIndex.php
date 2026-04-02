@@ -2,10 +2,14 @@
 
 namespace App\Livewire;
 
+namespace App\Livewire;
+
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\MockInterview;
 
+#[Title('Interview Prep')]
 class InterviewIndex extends Component
 {
     use WithPagination;

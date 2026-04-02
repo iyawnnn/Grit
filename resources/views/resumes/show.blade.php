@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot:title>
+        {{ $resume->label }}
+    </x-slot:title>
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col h-[calc(100vh-10rem)] min-h-[600px] gap-6">
 

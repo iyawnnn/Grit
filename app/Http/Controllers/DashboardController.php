@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $recentReports = MatchReport::with(['jobPosting', 'resume'])
             ->where('user_id', $user->id)
             ->latest()
-            ->take(4)
+            ->take(3)
             ->get();
 
         // 4. Fetch trend data for the chart (last 7 reports)
