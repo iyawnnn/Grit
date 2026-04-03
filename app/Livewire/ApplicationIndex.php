@@ -74,14 +74,16 @@ class ApplicationIndex extends Component
 
     public function render()
     {
-        $baseQuery = JobPosting::where('user_id', auth()->id());
+        $userId = auth()->id();
+        $baseQuery = JobPosting::where('user_id', $userId);
 
-        // Check if the user has ANY jobs in the database, ignoring current search filters
-        $hasAnyJobs = (clone $baseQuery)->exists();
-
-        $totalJobs = (clone $baseQuery)->count();
-        $interviewingCount = (clone $baseQuery)->where('status', 'interviewing')->count();
-        $offeredCount = (clone $baseQuery)->whereIn('status', ['offered', 'hired'])->count();
+        // PERFORMANCE BOOST: Calculate all stats in one database trip
+        $stats = JobPosting::where('user_id', $userId)
+            ->selectRaw("
+                count(*) as total_jobs,
+                sum(case when status = 'interviewing' then 1 else 0 end) as interviewing_count,
+                sum(case when status in ('offered', 'hired') then 1 else 0 end) as offered_count
+            ")->first();
 
         $jobs = (clone $baseQuery)
             ->when($this->search, function ($query) {
@@ -95,15 +97,14 @@ class ApplicationIndex extends Component
                 $query->where('status', $this->status);
             })
             ->latest()
-            // Updated pagination to 6 per page
             ->paginate(6);
 
         return view('livewire.application-index', [
             'jobs' => $jobs,
-            'totalJobs' => $totalJobs,
-            'interviewingCount' => $interviewingCount,
-            'offeredCount' => $offeredCount,
-            'hasAnyJobs' => $hasAnyJobs,
+            'totalJobs' => (int) ($stats->total_jobs ?? 0),
+            'interviewingCount' => (int) ($stats->interviewing_count ?? 0),
+            'offeredCount' => (int) ($stats->offered_count ?? 0),
+            'hasAnyJobs' => ($stats->total_jobs ?? 0) > 0,
         ]);
     }
 }
