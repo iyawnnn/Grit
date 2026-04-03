@@ -4,10 +4,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <title>Grit | Your Job Hunt, Automated</title>
+    <meta name="description" content="Upload your resume, track job applications, and generate AI mock interviews to land your next role faster.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Grit | Your Job Hunt, Automated">
+    <meta property="og:description" content="Upload your resume, track job applications, and generate AI mock interviews to land your next role faster.">
+    <meta property="og:image" content="{{ asset('images/landing/grit-social-share.jpg') }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Grit | Your Job Hunt, Automated">
+    <meta name="twitter:description" content="Upload your resume, track job applications, and generate AI mock interviews to land your next role faster.">
+    <meta name="twitter:image" content="{{ asset('images/landing/grit-social-share.jpg') }}">
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">

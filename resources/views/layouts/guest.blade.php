@@ -1,3 +1,9 @@
+@props([
+    'title' => 'Welcome',
+    'description' => 'Grit is an AI-powered career assistant that helps you track job applications and prepare for interviews.',
+    'image' => asset('images/landing/grit-social-share.jpg')
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -6,7 +12,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? 'Welcome' }} | {{ config('app.name', 'Grit') }}</title>
+    <title>{{ $title }} | {{ config('app.name', 'Grit') }}</title>
+    <meta name="description" content="{{ $description }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $title }} | {{ config('app.name', 'Grit') }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:image" content="{{ $image }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="{{ $title }} | {{ config('app.name', 'Grit') }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    <meta name="twitter:image" content="{{ $image }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
