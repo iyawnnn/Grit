@@ -13,37 +13,33 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // 1. Basic counts
         $totalResumes = Resume::where('user_id', $user->id)->count();
-        $totalReports = MatchReport::where('user_id', $user->id)->count();
 
-        // 2. Average match score
-        $averageScore = MatchReport::where('user_id', $user->id)->avg('score') ?? 0;
-        $averageScore = round($averageScore);
+        // Calculate total reports and average score in one database trip
+        $reportStats = MatchReport::where('user_id', $user->id)
+            ->selectRaw("
+                count(*) as total_reports,
+                avg(score) as average_score
+            ")->first();
 
-        // 3. Fetch recent reports for the list (Feed)
-        $recentReports = MatchReport::with(['jobPosting', 'resume'])
-            ->where('user_id', $user->id)
-            ->latest()
-            ->take(3)
-            ->get();
+        $totalReports = (int) ($reportStats->total_reports ?? 0);
+        $averageScore = round((float) ($reportStats->average_score ?? 0));
 
-        // 4. Fetch trend data for the chart (last 7 reports)
-        $trendReports = MatchReport::with(['jobPosting'])
+        // Fetch up to 7 reports once and reuse the data for both recent list and chart
+        $baseReports = MatchReport::with(['jobPosting', 'resume'])
             ->where('user_id', $user->id)
             ->latest()
             ->take(7)
-            ->get()
-            ->reverse()
-            ->values();
+            ->get();
+
+        $recentReports = $baseReports->take(3);
+        $trendReports = $baseReports->reverse()->values();
 
         $chartLabels = $trendReports->map(fn($r) => $r->created_at->format('M d'))->toArray();
         $chartData = $trendReports->pluck('score')->toArray();
         
-        // Truncate job titles for clean tooltips
         $chartTooltips = $trendReports->map(fn($r) => Str::limit($r->jobPosting->title ?? 'Unknown Job', 30))->toArray();
 
-        // 5. Intelligent Readiness Metric & Insights
         $readiness = 0;
         $readinessMessage = "";
         $readinessSubtext = "";
@@ -57,7 +53,6 @@ class DashboardController extends Controller
             $readinessMessage = "Baseline Established";
             $readinessSubtext = "Run your first match report to calibrate your true readiness score.";
         } else {
-            // Formula: 40 base points + up to 60 points based on their average score
             $readiness = 40 + ($averageScore * 0.6); 
             $readiness = min(100, round($readiness));
             

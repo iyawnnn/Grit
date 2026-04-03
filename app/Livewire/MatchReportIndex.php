@@ -68,9 +68,13 @@ class MatchReportIndex extends Component
     {
         $userId = auth()->id();
 
-        $totalReports = MatchReport::where('user_id', $userId)->count();
-        $processingCount = MatchReport::where('user_id', $userId)->where('status', 'processing')->count();
-        $highestScore = MatchReport::where('user_id', $userId)->where('status', '!=', 'processing')->max('score') ?? 0;
+        // PERFORMANCE BOOST: Consolidate total, processing count, and highest score
+        $stats = MatchReport::where('user_id', $userId)
+            ->selectRaw("
+                count(*) as total_reports,
+                sum(case when status = 'processing' then 1 else 0 end) as processing_count,
+                max(case when status != 'processing' then score else 0 end) as highest_score
+            ")->first();
 
         $matches = MatchReport::with(['resume', 'jobPosting'])
             ->where('user_id', $userId)
@@ -92,9 +96,9 @@ class MatchReportIndex extends Component
 
         return view('livewire.match-report-index', [
             'matches' => $matches,
-            'totalReports' => $totalReports,
-            'processingCount' => $processingCount,
-            'highestScore' => $highestScore,
+            'totalReports' => (int) ($stats->total_reports ?? 0),
+            'processingCount' => (int) ($stats->processing_count ?? 0),
+            'highestScore' => (int) ($stats->highest_score ?? 0),
         ]);
     }
 }
