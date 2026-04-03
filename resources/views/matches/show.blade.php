@@ -1,6 +1,20 @@
 <x-app-layout>
     <x-slot:title>Match Report: {{ $matchReport->jobPosting->title ?? 'Role' }}</x-slot:title>
 
+    @php
+        // SMART HTML TRIMMER
+        $cleanDescription = $matchReport->jobPosting->description ?? '';
+        
+        // Replace 3 or more consecutive <br> tags with just two
+        $cleanDescription = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $cleanDescription);
+        
+        // Remove completely empty divs or paragraphs
+        $cleanDescription = preg_replace('/<(p|div)[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/(p|div)>/i', '', $cleanDescription);
+        
+        // Clean up excess whitespace
+        $cleanDescription = trim($cleanDescription);
+    @endphp
+
     @if($matchReport->status === 'processing')
         <script>
             setTimeout(function() {
@@ -92,8 +106,12 @@
                         
                         <div class="p-6 sm:p-8 bg-gray-50/50">
                             <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm max-h-[500px] overflow-y-auto custom-scrollbar">
-                                <div class="prose prose-sm prose-gray max-w-none">
-                                    {!! $matchReport->jobPosting->description ?? '<p class="text-gray-400 font-medium italic">No description provided.</p>' !!}
+                                <div class="text-gray-700 font-medium leading-relaxed break-words space-y-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul>li]:mb-1 [&>strong]:text-gray-900 [&>strong]:font-extrabold [&>h1]:text-lg [&>h1]:font-bold [&>h2]:text-base [&>h2]:font-bold">
+                                    @if($cleanDescription)
+                                        {!! $cleanDescription !!}
+                                    @else
+                                        <p class="text-gray-400 italic">No job description was provided.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -141,6 +159,47 @@
                                     </span>
                                 @endforeach
                             </div>
+                        </div>
+                    @endif
+
+                    {{-- NEW DEDICATED INTERVIEW PREP CALL TO ACTION --}}
+                    @if($matchReport->resume && $matchReport->jobPosting)
+                        @php
+                            $hasInterview = \App\Models\MockInterview::where('user_id', auth()->id())
+                                ->where('resume_id', $matchReport->resume->id)
+                                ->where('job_posting_id', $matchReport->jobPosting->id)
+                                ->exists();
+                        @endphp
+                        
+                        <div class="bg-gradient-to-br from-[#e26a35] to-[#c95b2b] rounded-2xl p-6 shadow-sm text-white relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+                            
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                    <x-heroicon-s-academic-cap class="w-5 h-5 text-white" />
+                                </div>
+                                <h2 class="text-lg font-extrabold tracking-tight">Interview Prep</h2>
+                            </div>
+                            
+                            @if($hasInterview)
+                                <p class="text-sm text-white/90 mb-5 font-medium leading-relaxed relative z-10">
+                                    You have already generated customized practice questions for this role.
+                                </p>
+                                <a href="{{ route('interviews.prep', $matchReport) }}"
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-[#e26a35] rounded-xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm relative z-10">
+                                    Review Mock Interview
+                                    <x-heroicon-o-arrow-right class="w-4 h-4" />
+                                </a>
+                            @else
+                                <p class="text-sm text-white/90 mb-5 font-medium leading-relaxed relative z-10">
+                                    Ready to practice? Generate customized mock interview questions based on this specific match.
+                                </p>
+                                <a href="{{ route('interviews.prep', $matchReport) }}"
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-[#e26a35] rounded-xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm relative z-10">
+                                    Start Practicing
+                                    <x-heroicon-o-arrow-right class="w-4 h-4" />
+                                </a>
+                            @endif
                         </div>
                     @endif
 
@@ -208,8 +267,12 @@
                         
                         <div class="p-6 bg-gray-50/50">
                             <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm max-h-[500px] overflow-y-auto custom-scrollbar">
-                                <div class="prose prose-sm prose-gray max-w-none">
-                                    {!! $matchReport->jobPosting->description ?? '<p class="text-gray-400 font-medium italic">No description provided.</p>' !!}
+                                <div class="text-gray-700 font-medium leading-relaxed break-words space-y-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul>li]:mb-1 [&>strong]:text-gray-900 [&>strong]:font-extrabold [&>h1]:text-lg [&>h1]:font-bold [&>h2]:text-base [&>h2]:font-bold">
+                                    @if($cleanDescription)
+                                        {!! $cleanDescription !!}
+                                    @else
+                                        <p class="text-gray-400 italic">No job description was provided.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>

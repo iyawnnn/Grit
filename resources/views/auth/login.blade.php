@@ -1,4 +1,7 @@
 <x-guest-layout>
+    <x-slot:title>
+        Login
+    </x-slot:title>
     <div class="flex h-screen w-full bg-white overflow-hidden">
 
         <div class="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 xl:px-20 bg-white overflow-y-auto">
@@ -74,10 +77,10 @@
                         </label>
 
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}"
-                                class="text-xs text-brand-orange hover:text-[#e26a35] font-semibold transition-colors">
-                                Forgot password?
-                            </a>
+                        <a href="{{ route('password.request') }}"
+                            class="text-xs text-brand-orange hover:text-[#e26a35] font-semibold transition-colors">
+                            Forgot password?
+                        </a>
                         @endif
                     </div>
 
@@ -100,7 +103,7 @@
 
         <div class="hidden lg:flex lg:w-1/2 p-4 bg-white">
             <div class="relative w-full h-full rounded-3xl overflow-hidden bg-[#fff5f0] border border-brand-orange/10 shadow-lg">
-                
+
                 <img src="{{ asset('images/auth-visual-friendly.webp') }}"
                     alt="Illustration of career growth and path planning"
                     class="absolute inset-0 w-full h-full object-cover object-center mix-blend-multiply opacity-90">
@@ -113,7 +116,7 @@
                         Pick up right where you left off. Your next big career move is waiting.
                     </p>
                 </div>
-                
+
             </div>
         </div>
 

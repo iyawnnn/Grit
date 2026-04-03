@@ -1,4 +1,7 @@
 <x-guest-layout>
+    <x-slot:title>
+        Register
+    </x-slot:title>
     <div class="flex h-screen w-full bg-white overflow-hidden">
 
         <div class="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 xl:px-20 bg-white overflow-y-auto">
@@ -129,21 +132,23 @@
             </div>
         </div>
 
-        <div class="hidden lg:flex lg:w-1/2 relative bg-[#fff5f0] overflow-hidden">
-            
-            <img src="{{ asset('images/auth-visual-friendly.webp') }}"
-                alt="Illustration of career growth and path planning"
-                class="absolute inset-0 w-full h-full object-cover object-center mix-blend-multiply opacity-90">
+        <div class="hidden lg:flex lg:w-1/2 p-4 bg-white">
+            <div class="relative w-full h-full rounded-3xl overflow-hidden bg-[#fff5f0] border border-brand-orange/10 shadow-lg">
 
-            <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center text-center bg-gradient-to-t from-[#fff5f0] via-[#fff5f0]/95 to-transparent pt-32 pb-12 px-8 xl:pb-16 xl:px-12">
-                <h2 class="text-3xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-3 text-black">
-                    The best way to predict the <br>future is to create it.
-                </h2>
-                <p class="text-gray-800 text-base font-medium tracking-tight max-w-md">
-                    Map out your career trajectory, track your success journey, and analyze your performance.
-                </p>
+                <img src="{{ asset('images/auth-visual-friendly.webp') }}"
+                    alt="Illustration of career growth and path planning"
+                    class="absolute inset-0 w-full h-full object-cover object-center mix-blend-multiply opacity-90">
+
+                <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center text-center bg-gradient-to-t from-[#fff5f0] via-[#fff5f0]/95 to-transparent pt-32 pb-12 px-8 xl:pb-16 xl:px-12">
+                    <h2 class="text-3xl xl:text-4xl font-semibold tracking-tighter leading-tight mb-3 text-black">
+                        The best way to predict the <br>future is to create it.
+                    </h2>
+                    <p class="text-gray-800 text-base font-medium tracking-tight max-w-md">
+                        Map out your career trajectory, track your success journey, and analyze your performance.
+                    </p>
+                </div>
+
             </div>
-            
         </div>
 
     </div>

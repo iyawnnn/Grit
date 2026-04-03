@@ -3,32 +3,41 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class GroqMockInterviewService
 {
     public function generateQuestions(string $resumeContent, string $jobDescription): array
     {
-        $prompt = "You are an expert technical recruiter. Based on the following resume and job description, generate 5 interview questions. Include 3 technical questions and 2 behavioral questions. Return the output strictly as a JSON array of strings.";
+        $apiKey = config('services.groq.api_key');
 
-        $response = Http::withToken(config('services.groq.key'))
-            ->timeout(30)
+        if (empty($apiKey)) {
+            Log::error('Groq API Key is completely missing from configuration.');
+            throw new Exception('Groq API key is missing. Please check your .env file.');
+        }
+
+        $prompt = "You are an expert technical recruiter. Based on the following resume and job description, generate 5 interview questions. Include 3 technical questions and 2 behavioral questions. Return the output strictly as a JSON object with a single key 'questions' containing an array of strings.";
+
+        $response = Http::withToken($apiKey)
+            ->timeout(60)
             ->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama3-70b-8192',
+                'model' => 'llama-3.3-70b-versatile',
                 'messages' => [
                     ['role' => 'system', 'content' => $prompt],
-                    ['role' => 'user', 'content' => "Resume: " . $resumeContent . "\n\nJob: " . $jobDescription],
+                    ['role' => 'user', 'content' => "Resume: \n" . $resumeContent . "\n\nJob Description: \n" . $jobDescription],
                 ],
                 'response_format' => ['type' => 'json_object'],
             ]);
 
         if ($response->failed()) {
-            throw new Exception('Failed to connect to the Groq API.');
+            Log::error('Groq API Error: ' . $response->body());
+            throw new Exception('Groq API Error: ' . $response->status());
         }
 
         $content = $response->json('choices.0.message.content');
         $decoded = json_decode($content, true);
 
-        return $decoded['questions'] ?? $decoded; 
+        return $decoded['questions'] ?? []; 
     }
 }
