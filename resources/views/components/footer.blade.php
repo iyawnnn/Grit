@@ -73,7 +73,7 @@
             <span class="text-white/20 hidden sm:inline">|</span>
             <a href="{{ route('terms') }}" class="hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white rounded-sm">Terms of Service</a>
             <span class="text-white/20 hidden sm:inline">|</span>
-            <a href="#" class="hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white rounded-sm">Contact Support</a>
+            <a href="{{ route('contact.show') }}" class="hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white rounded-sm">Contact Support</a>
         </div>
     </div>
 

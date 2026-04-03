@@ -19,7 +19,7 @@
     @livewireStyles
 </head>
 
-<body class="relative font-sans text-brand-dark antialiased h-screen w-full overflow-hidden bg-white selection:bg-[#e26a35] selection:text-white">
+<body class="relative font-sans text-brand-dark antialiased min-h-screen w-full overflow-x-hidden bg-white selection:bg-[#e26a35] selection:text-white">
     
     <a href="{{ url('/') }}" class="absolute top-6 left-6 md:top-8 md:left-8 z-50 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-gray-500 bg-white/70 backdrop-blur-md border border-gray-200 rounded-full hover:bg-white hover:text-gray-900 hover:shadow-md hover:border-gray-300 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#e26a35] focus:ring-offset-2">
         <svg class="w-4 h-4 transform transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
