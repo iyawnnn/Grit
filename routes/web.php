@@ -11,6 +11,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/privacy-policy', 'privacy')->name('privacy');
+Route::view('/terms-of-service', 'terms')->name('terms');
+
 Route::middleware(['auth'])->group(function () {
 
     // Profile Routes

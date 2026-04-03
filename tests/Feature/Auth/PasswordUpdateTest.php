@@ -15,14 +15,11 @@ class PasswordUpdateTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->put('/dashboard/password', [
-                'current_password' => 'password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
-            ]);
+        $response = $this->actingAs($user)->from('/profile')->put('/password', [
+            'current_password' => 'password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ]);
 
         $response
             ->assertSessionHasNoErrors()
@@ -35,14 +32,11 @@ class PasswordUpdateTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->put('/dashboard/password', [
-                'current_password' => 'wrong-password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
-            ]);
+        $response = $this->actingAs($user)->from('/profile')->put('/password', [
+            'current_password' => 'wrong-password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ]);
 
         $response
             ->assertSessionHasErrorsIn('updatePassword', 'current_password')
