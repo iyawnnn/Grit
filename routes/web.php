@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\MatchReportController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,6 +14,11 @@ Route::get('/', function () {
 
 Route::view('/privacy-policy', 'privacy')->name('privacy');
 Route::view('/terms-of-service', 'terms')->name('terms');
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'submit'])
+    ->name('contact.submit')
+    ->middleware('throttle:5,1');
 
 Route::middleware(['auth'])->group(function () {
 
