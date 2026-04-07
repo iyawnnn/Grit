@@ -16,7 +16,8 @@ Route::middleware('guest')->group(function () {
         ->name('google.register');
 
     Route::get('auth/google/callback', [GoogleController::class, 'callback'])
-        ->name('google.callback');
+        ->name('google.callback')
+        ->middleware('throttle:6,1');
 
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
