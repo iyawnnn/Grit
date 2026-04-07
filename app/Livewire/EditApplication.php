@@ -3,37 +3,39 @@
 namespace App\Livewire;
 
 use App\Models\JobPosting;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class EditApplication extends Component
 {
     public JobPosting $jobPosting;
 
-    #[Validate('required|string|max:255')]
-    public $title = '';
-
-    #[Validate('required|string|max:255')]
-    public $company = '';
-
-    #[Validate('nullable|url|max:255')]
-    public $url = '';
-
-    #[Validate('required|string')]
-    public $description = '';
+    public string $title = '';
+    public string $company = '';
+    public ?string $url = null;
+    public string $description = '';
 
     public function mount(JobPosting $jobPosting)
     {
+        if ($jobPosting->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $this->jobPosting = $jobPosting;
-        $this->title = $jobPosting->title;
-        $this->company = $jobPosting->company;
-        $this->url = $jobPosting->source_url;
-        $this->description = $jobPosting->description;
+
+        $this->title = $this->jobPosting->title ?? '';
+        $this->company = $this->jobPosting->company ?? '';
+        $this->url = $this->jobPosting->source_url ?? '';
+        $this->description = $this->jobPosting->description ?? '';
     }
 
     public function update()
     {
-        $this->validate();
+        $this->validate([
+            'title' => 'required|string|max:255',
+            'company' => 'required|string|max:255',
+            'url' => 'nullable|url|max:255',
+            'description' => 'required|string',
+        ]);
 
         $this->jobPosting->update([
             'title' => $this->title,
@@ -42,7 +44,9 @@ class EditApplication extends Component
             'description' => $this->description,
         ]);
 
-        return redirect()->route('applications.index')->with('success', 'Job posting updated successfully.');
+        session()->flash('success', 'Job posting updated successfully.');
+        
+        return redirect()->route('applications.show', $this->jobPosting->id);
     }
 
     public function render()

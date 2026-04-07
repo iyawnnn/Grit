@@ -1,7 +1,5 @@
 <x-app-layout>
     <x-slot:title>Workspace Dashboard</x-slot:title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-10 flex flex-col gap-8 tracking-tight">
 

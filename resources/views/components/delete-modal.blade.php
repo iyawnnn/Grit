@@ -2,7 +2,8 @@
     'show',
     'title' => 'Delete Item',
     'description' => 'Are you sure you want to delete this? This action cannot be undone.',
-    'onConfirm',
+    'onConfirm' => null,
+    'action' => null,
     'onCancel' => null
 ])
 
@@ -39,10 +40,21 @@
                 class="flex-1 px-4 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors">
                 Cancel
             </button>
-            <button type="button" @click="{{ $show }} = false; $wire.{{ $onConfirm }}()"
-                class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-sm">
-                Yes, Delete
-            </button>
+            
+            @if($action)
+                <form method="POST" action="{{ $action }}" class="flex-1 flex">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-sm">
+                        Yes, Delete
+                    </button>
+                </form>
+            @else
+                <button type="button" @click="{{ $show }} = false; {{ $onConfirm ? '$wire.'.$onConfirm.'()' : '' }}"
+                    class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-sm">
+                    Yes, Delete
+                </button>
+            @endif
         </div>
     </div>
 </div>

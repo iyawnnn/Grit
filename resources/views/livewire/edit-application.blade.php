@@ -2,9 +2,9 @@
     <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
         <h3 class="text-lg font-extrabold text-gray-900 tracking-tight">Job Details</h3>
     </div>
-    
+
     <form wire:submit.prevent="update" class="p-4 sm:p-8 space-y-6 sm:space-y-8">
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="title" class="block text-sm font-extrabold text-gray-900 mb-2">Job Title</label>
@@ -28,13 +28,15 @@
             @error('url') <p class="mt-2 text-xs font-bold text-red-600">{{ $message }}</p> @enderror
         </div>
 
-        <div wire:ignore x-data="{ description: @entangle('description') }">
+        <div wire:ignore x-data="{ 
+    description: @entangle('description') 
+}" x-init="$nextTick(() => { $refs.trix.editor.loadHTML(description) })">
             <label for="description" class="block text-sm font-extrabold text-gray-900 mb-2">Job Description</label>
-            
-            <input id="description" type="hidden" value="{{ $description }}">
-            
+
+            <input id="description" type="hidden">
+
             <div class="rounded-xl border border-gray-300 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-[#e26a35]/50 focus-within:border-[#e26a35] transition-all group">
-                <trix-editor input="description"
+                <trix-editor x-ref="trix" input="description"
                     x-on:trix-change="description = $event.target.value"
                     class="trix-content border-none outline-none"></trix-editor>
             </div>
@@ -45,10 +47,10 @@
             <a href="{{ route('applications.show', $jobPosting->id) }}" class="w-full sm:w-auto px-6 py-3.5 bg-white border border-gray-200 text-gray-700 text-sm font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-sm text-center">
                 Cancel
             </a>
-            
+
             <button type="submit" wire:loading.attr="disabled"
                 class="w-full md:w-auto px-8 py-3.5 bg-[#e26a35] text-white rounded-xl text-sm font-bold tracking-tight hover:bg-[#cf5b29] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 shadow-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
-                
+
                 <span wire:loading.remove wire:target="update">Save Changes</span>
 
                 <span wire:loading.flex wire:target="update" class="items-center gap-2">
