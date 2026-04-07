@@ -3,34 +3,35 @@
 namespace App\Support\Csp;
 
 use Spatie\Csp\Directive;
-use Spatie\Csp\Policies\Basic;
+use Spatie\Csp\Keyword;
+use Spatie\Csp\Policy;
+use Spatie\Csp\Preset;
 
-class CustomPolicy extends Basic
+class CustomPolicy implements Preset
 {
-    public function configure()
+    public function configure(Policy $policy): void
     {
-        parent::configure();
-
-        $this
-            ->addDirective(Directive::IMG, [
-                'self',
+        $policy
+            ->add(Directive::IMG, [
+                Keyword::SELF,
                 'res.cloudinary.com',
-                '*.googleusercontent.com', // For Google OAuth avatars
-                'data:', // Often needed for inline SVGs or Livewire/Filament assets
+                '*.googleusercontent.com',
+                'data:',
             ])
-            ->addDirective(Directive::STYLE, [
-                'self',
-                'unsafe-inline', // Often required by Livewire and Filament
+            ->add(Directive::STYLE, [
+                Keyword::SELF,
+                Keyword::UNSAFE_INLINE,
                 'fonts.googleapis.com',
             ])
-            ->addDirective(Directive::FONT, [
-                'self',
+            ->add(Directive::FONT, [
+                Keyword::SELF,
                 'fonts.gstatic.com',
+                'data:', 
             ])
-            ->addDirective(Directive::SCRIPT, [
-                'self',
-                'unsafe-inline', // Required for Livewire/Alpine.js functionality
-                'unsafe-eval',   // Required by some frontend build tools/Livewire
+            ->add(Directive::SCRIPT, [
+                Keyword::SELF,
+                Keyword::UNSAFE_INLINE,
+                Keyword::UNSAFE_EVAL,
             ]);
     }
 }

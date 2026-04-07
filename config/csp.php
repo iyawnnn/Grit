@@ -7,6 +7,7 @@ return [
      * any class that implements `Spatie\Csp\Preset`
      */
     'presets' => [
+        Spatie\Csp\Presets\Basic::class,
         App\Support\Csp\CustomPolicy::class,
     ],
 
