@@ -8,7 +8,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResumeController;
 use App\Livewire\ApplicationBoard;
 use App\Livewire\InterviewIndex;
-use App\Livewire\CoverLetterGenerator;;
+use App\Livewire\CoverLetterIndex;
+use App\Livewire\CoverLetterEditor;
 use App\Livewire\InterviewPrep;
 use Illuminate\Support\Facades\Route;
 
@@ -78,8 +79,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/interviews', InterviewIndex::class)->name('interviews.index');
         Route::get('/matches/{matchReport}/interview', InterviewPrep::class)->name('interviews.prep');
 
-        Route::get('/cover-letters', CoverLetterGenerator::class)->name('cover-letters.index');
+        Route::get('/cover-letters', CoverLetterIndex::class)->name('cover-letters.index');
+        Route::get('/cover-letters/{jobPosting}', CoverLetterEditor::class)->name('cover-letters.edit');
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
