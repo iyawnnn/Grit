@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('job_posting_id')->constrained()->cascadeOnDelete();
             $table->foreignId('resume_id')->constrained()->cascadeOnDelete();
             // Both SQLite and PostgreSQL support JSON columns in Laravel
-            $table->json('questions'); 
+            $table->json('questions');
             $table->timestamps();
         });
     }

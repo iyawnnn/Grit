@@ -10,7 +10,7 @@ enum ApplicationStatus: string
     case Offered = 'offered';
     case Rejected = 'rejected';
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::Saved => 'Wishlist',
@@ -21,7 +21,7 @@ enum ApplicationStatus: string
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string
     {
         return match ($this) {
             self::Saved => 'gray',
@@ -32,7 +32,7 @@ enum ApplicationStatus: string
         };
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string
     {
         return match ($this) {
             self::Saved => 'heroicon-m-bookmark',

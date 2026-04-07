@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\MatchReport;
 use App\Services\MatchAnalysisService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class MatchReportController extends Controller
@@ -24,7 +24,7 @@ class MatchReportController extends Controller
     public function store(Request $request, MatchAnalysisService $matchService)
     {
         $request->validate([
-            'resume_id'      => 'required|exists:resumes,id',
+            'resume_id' => 'required|exists:resumes,id',
             'job_posting_id' => 'required|exists:job_postings,id',
         ]);
 

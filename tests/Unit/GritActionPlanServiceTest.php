@@ -15,9 +15,9 @@ class GritActionPlanServiceTest extends TestCase
 
     public function test_it_returns_success_message_when_no_keywords_missing(): void
     {
-        $service = new GritActionPlanService();
+        $service = new GritActionPlanService;
         $report = MatchReport::factory()->create([
-            'missing_keywords' => []
+            'missing_keywords' => [],
         ]);
 
         $result = $service->generatePlan($report);
@@ -34,16 +34,16 @@ class GritActionPlanServiceTest extends TestCase
                 'choices' => [
                     [
                         'message' => [
-                            'content' => '{"steps": [{"title": "Step 1", "actions": ["Learn PHP"]}]}'
-                        ]
-                    ]
-                ]
-            ], 200)
+                            'content' => '{"steps": [{"title": "Step 1", "actions": ["Learn PHP"]}]}',
+                        ],
+                    ],
+                ],
+            ], 200),
         ]);
 
-        $service = new GritActionPlanService();
+        $service = new GritActionPlanService;
         $report = MatchReport::factory()->create([
-            'missing_keywords' => ['PHP', 'Laravel']
+            'missing_keywords' => ['PHP', 'Laravel'],
         ]);
 
         $result = $service->generatePlan($report);
@@ -55,12 +55,12 @@ class GritActionPlanServiceTest extends TestCase
     public function test_it_throws_exception_on_api_failure(): void
     {
         Http::fake([
-            'api.groq.com/*' => Http::response([], 500)
+            'api.groq.com/*' => Http::response([], 500),
         ]);
 
-        $service = new GritActionPlanService();
+        $service = new GritActionPlanService;
         $report = MatchReport::factory()->create([
-            'missing_keywords' => ['React']
+            'missing_keywords' => ['React'],
         ]);
 
         $this->expectException(Exception::class);

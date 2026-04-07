@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\JobPosting;
 use App\Enums\ApplicationStatus;
+use App\Models\JobPosting;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 #[Title('Application Board')]
@@ -20,10 +20,10 @@ class ApplicationBoard extends Component
 
         if ($job) {
             $validStatuses = array_column(ApplicationStatus::cases(), 'value');
-            
+
             if (in_array($newStatus, $validStatuses)) {
                 $job->update(['status' => $newStatus]);
-                
+
                 $statusEnum = ApplicationStatus::tryFrom($newStatus);
                 $this->dispatch('notify', message: "Moved to {$statusEnum->getLabel()}");
             }
@@ -36,7 +36,7 @@ class ApplicationBoard extends Component
         $jobs = JobPosting::select('id', 'title', 'company', 'status', 'updated_at')
             ->where('user_id', auth()->id())
             ->when($this->search, function ($query) {
-                $searchTerm = '%' . trim($this->search) . '%';
+                $searchTerm = '%'.trim($this->search).'%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('company', 'like', $searchTerm)
                         ->orWhere('title', 'like', $searchTerm);
@@ -47,7 +47,7 @@ class ApplicationBoard extends Component
 
         return view('livewire.application-board', [
             'jobs' => $jobs,
-            'statuses' => ApplicationStatus::cases()
+            'statuses' => ApplicationStatus::cases(),
         ]);
     }
 }

@@ -13,14 +13,12 @@ class MatchReportUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public MatchReport $matchReport)
-    {
-    }
+    public function __construct(public MatchReport $matchReport) {}
 
     public function broadcastOn(): array
     {
         return [
-            new Channel('match-reports.' . $this->matchReport->user_id),
+            new Channel('match-reports.'.$this->matchReport->user_id),
         ];
     }
 }

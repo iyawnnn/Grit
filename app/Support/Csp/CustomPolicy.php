@@ -26,7 +26,7 @@ class CustomPolicy implements Preset
             ->add(Directive::FONT, [
                 Keyword::SELF,
                 'fonts.gstatic.com',
-                'data:', 
+                'data:',
             ])
             ->add(Directive::SCRIPT, [
                 Keyword::SELF,
