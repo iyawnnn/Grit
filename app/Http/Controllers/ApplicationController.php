@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\JobPosting;
+use Illuminate\Http\Request;
 
 class ApplicationController extends Controller
 {
@@ -41,7 +41,7 @@ class ApplicationController extends Controller
     {
         // FIX: Pass the $jobPosting model to the view as 'application'
         return view('applications.show', [
-            'application' => $jobPosting
+            'application' => $jobPosting,
         ]);
     }
 

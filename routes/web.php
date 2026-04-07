@@ -1,11 +1,14 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\MatchReportController;
-use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MatchReportController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResumeController;
+use App\Livewire\ApplicationBoard;
+use App\Livewire\InterviewIndex;
+use App\Livewire\InterviewPrep;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,7 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Applications
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
-        Route::get('/applications/board', App\Livewire\ApplicationBoard::class)->name('applications.board');
+        Route::get('/applications/board', ApplicationBoard::class)->name('applications.board');
         Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
         Route::post('/applications', [ApplicationController::class, 'store'])
             ->name('applications.store')
@@ -71,9 +74,9 @@ Route::middleware(['auth'])->group(function () {
             ->name('resumes.destroy')
             ->middleware('throttle:10,1');
 
-        Route::get('/interviews', App\Livewire\InterviewIndex::class)->name('interviews.index');
-        Route::get('/matches/{matchReport}/interview', App\Livewire\InterviewPrep::class)->name('interviews.prep');
+        Route::get('/interviews', InterviewIndex::class)->name('interviews.index');
+        Route::get('/matches/{matchReport}/interview', InterviewPrep::class)->name('interviews.prep');
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

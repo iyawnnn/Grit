@@ -20,13 +20,14 @@ class ResumeParserService
     public function parse(string $filePath): ?string
     {
         try {
-            $pdfParser = $this->parser ?? new Parser();
+            $pdfParser = $this->parser ?? new Parser;
             $pdf = $pdfParser->parseFile($filePath);
             $rawText = $pdf->getText();
 
             return trim(mb_convert_encoding($rawText, 'UTF-8', 'UTF-8'));
         } catch (Exception $e) {
-            Log::error('Resume standard parsing failed: ' . $e->getMessage());
+            Log::error('Resume standard parsing failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -53,7 +54,7 @@ class ResumeParserService
         }
 
         return [
-            'file_url'    => $cloudinaryResponse['secure_url'],
+            'file_url' => $cloudinaryResponse['secure_url'],
             'content_raw' => $rawText,
         ];
     }

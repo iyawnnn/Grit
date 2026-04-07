@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Models\Resume;
+use App\Services\ResumeParserService;
+use Livewire\Attributes\Url;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Resume;
-use App\Services\ResumeParserService;
-use Livewire\Attributes\Validate;
-use Livewire\Attributes\Url;
 
 class ResumeIndex extends Component
 {
@@ -45,15 +45,15 @@ class ResumeIndex extends Component
         $uploadResult = $parser->processUpload($this->file);
 
         Resume::create([
-            'user_id'     => auth()->id(),
-            'label'       => $this->label,
-            'file_url'    => $uploadResult['file_url'],
+            'user_id' => auth()->id(),
+            'label' => $this->label,
+            'file_url' => $uploadResult['file_url'],
             'content_raw' => $uploadResult['content_raw'],
-            'is_primary'  => false,
+            'is_primary' => false,
         ]);
 
         $this->reset(['label', 'file']);
-        
+
         $this->dispatch('close-slide-over');
         $this->dispatch('notify', message: 'Resume uploaded and parsed successfully.');
     }
@@ -64,10 +64,10 @@ class ResumeIndex extends Component
 
         if ($resume) {
             $wasPrimary = $resume->is_primary;
-            
+
             Resume::where('user_id', auth()->id())->update(['is_primary' => false]);
-            
-            if (!$wasPrimary) {
+
+            if (! $wasPrimary) {
                 $resume->update(['is_primary' => true]);
                 $this->dispatch('notify', message: 'Primary resume set.');
             } else {
@@ -101,7 +101,7 @@ class ResumeIndex extends Component
 
         $resumes = (clone $baseQuery)
             ->when($this->search, function ($query) {
-                $searchTerm = '%' . trim($this->search) . '%';
+                $searchTerm = '%'.trim($this->search).'%';
                 $query->where('label', 'like', $searchTerm);
             })
             ->when($this->sort === 'newest', fn ($q) => $q->latest())

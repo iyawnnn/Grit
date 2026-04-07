@@ -6,8 +6,8 @@ use App\Services\ResumeParserService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Mockery;
-use Smalot\PdfParser\Parser;
 use Smalot\PdfParser\Document;
+use Smalot\PdfParser\Parser;
 use Tests\TestCase;
 
 class ResumeParserServiceTest extends TestCase
@@ -15,7 +15,7 @@ class ResumeParserServiceTest extends TestCase
     public function test_parse_returns_extracted_text_from_pdf()
     {
         $documentMock = Mockery::mock(Document::class);
-        $documentMock->shouldReceive('getText')->andReturn("Extracted Resume Text");
+        $documentMock->shouldReceive('getText')->andReturn('Extracted Resume Text');
 
         $parserMock = Mockery::mock(Parser::class);
         $parserMock->shouldReceive('parseFile')->with('dummy_path.pdf')->andReturn($documentMock);
@@ -23,7 +23,7 @@ class ResumeParserServiceTest extends TestCase
         $service = new ResumeParserService($parserMock);
         $result = $service->parse('dummy_path.pdf');
 
-        $this->assertEquals("Extracted Resume Text", $result);
+        $this->assertEquals('Extracted Resume Text', $result);
     }
 
     public function test_parse_returns_null_on_failure()
@@ -44,8 +44,8 @@ class ResumeParserServiceTest extends TestCase
 
     public function test_parse_handles_utf8_encoding()
     {
-        $dirtyText = "Extracted" . chr(0x92) . " Text"; 
-        
+        $dirtyText = 'Extracted'.chr(0x92).' Text';
+
         $documentMock = Mockery::mock(Document::class);
         $documentMock->shouldReceive('getText')->andReturn($dirtyText);
 

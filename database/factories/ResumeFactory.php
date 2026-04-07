@@ -15,11 +15,11 @@ class ResumeFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'     => User::factory(),
-            'label'       => fake()->sentence(3),
-            'file_url'    => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/' . fake()->uuid() . '.pdf',
+            'user_id' => User::factory(),
+            'label' => fake()->sentence(3),
+            'file_url' => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/'.fake()->uuid().'.pdf',
             'content_raw' => fake()->paragraphs(3, true),
-            'is_active'   => true,
+            'is_active' => true,
         ];
     }
 }

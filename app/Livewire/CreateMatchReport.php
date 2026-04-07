@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\Resume;
 use App\Models\JobPosting;
+use App\Models\Resume;
 use App\Services\MatchAnalysisService;
+use Livewire\Component;
 
 class CreateMatchReport extends Component
 {
     public $resume_id = '';
+
     public $job_posting_id = '';
+
     public $searchJob = '';
+
     public $searchResume = '';
 
     public $preselectedJob = false;
+
     public $isModal = false;
 
     // This method automatically runs when the component is loaded.
@@ -33,7 +37,7 @@ class CreateMatchReport extends Component
     public function generate(MatchAnalysisService $matchService)
     {
         $this->validate([
-            'resume_id'      => 'required|exists:resumes,id',
+            'resume_id' => 'required|exists:resumes,id',
             'job_posting_id' => 'required|exists:job_postings,id',
         ]);
 
@@ -48,7 +52,7 @@ class CreateMatchReport extends Component
             : 'Match report successfully generated.';
 
         session()->flash('success', $message);
-        
+
         return redirect()->route('matches.show', $result['report']);
     }
 
@@ -58,8 +62,8 @@ class CreateMatchReport extends Component
         $jobs = JobPosting::where('user_id', auth()->id())
             ->when($this->searchJob, function ($q) {
                 $q->where(function ($subQ) {
-                    $subQ->where('title', 'like', '%' . $this->searchJob . '%')
-                         ->orWhere('company', 'like', '%' . $this->searchJob . '%');
+                    $subQ->where('title', 'like', '%'.$this->searchJob.'%')
+                        ->orWhere('company', 'like', '%'.$this->searchJob.'%');
                 });
             })
             ->latest()
@@ -67,7 +71,7 @@ class CreateMatchReport extends Component
 
         $resumes = Resume::where('user_id', auth()->id())
             ->when($this->searchResume, function ($q) {
-                $q->where('label', 'like', '%' . $this->searchResume . '%');
+                $q->where('label', 'like', '%'.$this->searchResume.'%');
             })
             ->orderByDesc('is_primary') // Puts Primary Resume at the very top
             ->latest()
@@ -75,7 +79,7 @@ class CreateMatchReport extends Component
 
         return view('livewire.create-match-report', [
             'resumes' => $resumes,
-            'jobs'    => $jobs,
+            'jobs' => $jobs,
         ]);
     }
 }

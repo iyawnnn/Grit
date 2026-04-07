@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\Attributes\Validate;
 use App\Models\JobPosting;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class EditApplication extends Component
 {

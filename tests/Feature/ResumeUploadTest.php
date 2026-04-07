@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Models\Resume;
 use App\Services\ResumeParserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -23,7 +22,7 @@ class ResumeUploadTest extends TestCase
         $mockParser->shouldReceive('processUpload')
             ->once()
             ->andReturn([
-                'file_url'    => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/mock-resume.pdf',
+                'file_url' => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/mock-resume.pdf',
                 'content_raw' => 'Experienced Laravel developer with PHP and MySQL skills.',
             ]);
 
@@ -32,18 +31,18 @@ class ResumeUploadTest extends TestCase
         $response = $this->actingAs($user)
             ->post(route('resumes.store'), [
                 'label' => 'My Test Resume',
-                'file'  => $file,
+                'file' => $file,
             ]);
 
         $response->assertRedirect(route('resumes.index'));
         $response->assertSessionHas('success');
 
         $this->assertDatabaseHas('resumes', [
-            'user_id'     => $user->id,
-            'label'       => 'My Test Resume',
-            'file_url'    => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/mock-resume.pdf',
+            'user_id' => $user->id,
+            'label' => 'My Test Resume',
+            'file_url' => 'https://res.cloudinary.com/test/upload/v1/grit_uploads/mock-resume.pdf',
             'content_raw' => 'Experienced Laravel developer with PHP and MySQL skills.',
-            'is_primary'  => false,
+            'is_primary' => false,
         ]);
     }
 
@@ -80,7 +79,7 @@ class ResumeUploadTest extends TestCase
         $response = $this->actingAs($user)
             ->post(route('resumes.store'), [
                 'label' => 'My Resume',
-                'file'  => $file,
+                'file' => $file,
             ]);
 
         $response->assertSessionHasErrors('file');

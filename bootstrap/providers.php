@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
+    AppServiceProvider::class,
+    CloudinaryServiceProvider::class,
 ];

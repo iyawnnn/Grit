@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Models\Resume;
 use App\Models\JobPosting;
+use App\Models\Resume;
 use App\Models\User;
 use App\Services\MatchAnalysisService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,9 +27,9 @@ class MatchAnalysisServiceTest extends TestCase
 
         $groqResponseContent = json_encode([
             'extracted_requirements' => ['PHP', 'Laravel', 'Docker'],
-            'missing_keywords'       => ['Docker'],
-            'score'                  => 90,
-            'reasoning'              => 'The candidate matches 90 percent of the requirements. Docker experience is missing from the resume.',
+            'missing_keywords' => ['Docker'],
+            'score' => 90,
+            'reasoning' => 'The candidate matches 90 percent of the requirements. Docker experience is missing from the resume.',
         ]);
 
         Http::fake([
@@ -44,7 +44,7 @@ class MatchAnalysisServiceTest extends TestCase
             ], 200),
         ]);
 
-        $service = new MatchAnalysisService();
+        $service = new MatchAnalysisService;
         $result = $service->analyze($resume, $jobPosting);
 
         $this->assertIsArray($result);
@@ -59,11 +59,11 @@ class MatchAnalysisServiceTest extends TestCase
 
         $user = User::factory()->create();
         $resume = Resume::factory()->create([
-            'user_id'     => $user->id,
+            'user_id' => $user->id,
             'content_raw' => 'experienced software developer with python django testing deployment',
         ]);
         $jobPosting = JobPosting::factory()->create([
-            'user_id'     => $user->id,
+            'user_id' => $user->id,
             'description' => 'We need a software developer experienced with python django kubernetes',
         ]);
 
@@ -71,7 +71,7 @@ class MatchAnalysisServiceTest extends TestCase
             'api.groq.com/*' => Http::response('Internal Server Error', 500),
         ]);
 
-        $service = new MatchAnalysisService();
+        $service = new MatchAnalysisService;
         $result = $service->analyze($resume, $jobPosting);
 
         $this->assertIsArray($result);
@@ -91,9 +91,9 @@ class MatchAnalysisServiceTest extends TestCase
 
         $groqResponseContent = json_encode([
             'extracted_requirements' => ['PHP'],
-            'missing_keywords'       => [],
-            'score'                  => 100,
-            'reasoning'              => 'Perfect match.',
+            'missing_keywords' => [],
+            'score' => 100,
+            'reasoning' => 'Perfect match.',
         ]);
 
         Http::fake([
@@ -104,7 +104,7 @@ class MatchAnalysisServiceTest extends TestCase
             ], 200),
         ]);
 
-        $service = new MatchAnalysisService();
+        $service = new MatchAnalysisService;
 
         $firstResult = $service->analyze($resume, $jobPosting);
         $secondResult = $service->analyze($resume, $jobPosting);

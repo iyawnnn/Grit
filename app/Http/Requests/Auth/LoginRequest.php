@@ -4,7 +4,6 @@ namespace App\Http\Requests\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +34,7 @@ class LoginRequest extends FormRequest
         $user = User::where('email', $this->input('email'))->first();
 
         // Intercept OAuth-provisioned accounts to prevent password fallback bypass
-        if ($user && !empty($user->google_id)) {
+        if ($user && ! empty($user->google_id)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -44,10 +43,10 @@ class LoginRequest extends FormRequest
         }
 
         // Seamlessly upgrade legacy Bcrypt hashes to Argon2id
-        if ($user && !empty($user->password) && str_starts_with($user->password, '$2y$')) {
+        if ($user && ! empty($user->password) && str_starts_with($user->password, '$2y$')) {
             if (password_verify($this->input('password'), $user->password)) {
                 $user->update([
-                    'password' => Hash::make($this->input('password'))
+                    'password' => Hash::make($this->input('password')),
                 ]);
             } else {
                 RateLimiter::hit($this->throttleKey());
