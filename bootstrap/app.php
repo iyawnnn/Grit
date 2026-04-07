@@ -11,8 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // This line is CRITICAL for Render to allow file uploads
         $middleware->trustProxies(at: '*');
+        $middleware->append(\Spatie\Csp\AddCspHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
