@@ -27,10 +27,13 @@ class GoogleController extends Controller
     public function callback(Request $request)
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            // Using stateless() prevents the InvalidStateException caused by 
+            // dropped cookies when routing through tunnels like Expose or Ngrok.
+            $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
+            \Log::error('Google Auth Failed: ' . $e->getMessage());
             return redirect()->route('login')->withErrors([
-                'email' => 'Google authentication was cancelled or failed. Please try again.',
+                'email' => 'Google authentication failed. Please try again.',
             ]);
         }
 
@@ -40,24 +43,22 @@ class GoogleController extends Controller
             ->orWhere('email', $googleUser->getEmail())
             ->first();
 
-        if ($intent === 'register') {
-            if ($existingUser) {
-                return redirect()->route('login')->withErrors([
-                    'email' => 'An account with this email already exists. Please log in instead.',
+        if ($intent === 'login') {
+            if (!$existingUser) {
+                return redirect()->route('register')->withErrors([
+                    'email' => 'No account found with this Google account. Please register first.',
                 ]);
             }
 
-            $newUser = User::create([
-                'name' => $googleUser->getName(),
-                'email' => $googleUser->getEmail(),
+            $existingUser->update([
                 'google_id' => $googleUser->getId(),
                 'avatar' => $googleUser->getAvatar(),
-                'password' => Hash::make(Str::random(32)),
             ]);
 
-            Auth::login($newUser, true);
+            Auth::login($existingUser, true);
+            $request->session()->regenerate(); // CRITICAL: Persists the session state
             
-            return redirect()->route('dashboard');
+            return redirect()->intended(route('dashboard'));
         }
 
         if ($intent === 'register') {
@@ -73,12 +74,12 @@ class GoogleController extends Controller
                 'google_id' => $googleUser->getId(),
                 'avatar' => $googleUser->getAvatar(),
                 'password' => Hash::make(Str::random(32)),
-                'api_token' => Str::random(60),
             ]);
 
             Auth::login($newUser, true);
+            $request->session()->regenerate(); // CRITICAL: Persists the session state
             
-            return redirect()->route('dashboard');
+            return redirect()->intended(route('dashboard'));
         }
 
         return redirect()->route('login');
