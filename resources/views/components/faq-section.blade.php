@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <script nonce="{{ app('csp-nonce') }}">
+    <script nonce="{{ app()->bound('csp-nonce') ? app('csp-nonce') : '' }}">
         document.addEventListener('DOMContentLoaded', () => {
             const toggles = document.querySelectorAll('.faq-toggle');
 

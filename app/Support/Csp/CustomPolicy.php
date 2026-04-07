@@ -22,16 +22,29 @@ class CustomPolicy implements Preset
                 Keyword::SELF,
                 Keyword::UNSAFE_INLINE,
                 'fonts.googleapis.com',
+                'fonts.bunny.net',
+                'unpkg.com', // Added for Trix Editor CSS
             ])
             ->add(Directive::FONT, [
                 Keyword::SELF,
                 'fonts.gstatic.com',
+                'fonts.bunny.net', 
                 'data:',
             ])
             ->add(Directive::SCRIPT, [
                 Keyword::SELF,
                 Keyword::UNSAFE_INLINE,
                 Keyword::UNSAFE_EVAL,
+                'unpkg.com', // Added for Trix Editor JS
+                // 'cdn.jsdelivr.net', // Uncomment if your chart uses jsdelivr
+            ])
+            ->add(Directive::FRAME, [
+                Keyword::SELF,
+                'res.cloudinary.com',
+            ])
+            ->add(Directive::OBJECT, [
+                Keyword::SELF,
+                'res.cloudinary.com',
             ]);
     }
 }
