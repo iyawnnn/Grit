@@ -76,9 +76,20 @@ class ResumeIndex extends Component
         }
     }
 
-    public function executeDelete($id)
+    public $resumeToDeleteId = null;
+
+    public function confirmDelete($id)
     {
-        $resume = Resume::where('user_id', auth()->id())->find($id);
+        $this->resumeToDeleteId = $id;
+    }
+
+    public function executeDelete()
+    {
+        if (!$this->resumeToDeleteId) {
+            return;
+        }
+
+        $resume = Resume::where('user_id', auth()->id())->find($this->resumeToDeleteId);
 
         if ($resume) {
             if (preg_match('/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z]+$/', $resume->file_url, $matches)) {
@@ -88,6 +99,8 @@ class ResumeIndex extends Component
             $resume->delete();
             $this->dispatch('notify', message: 'Resume permanently removed.');
         }
+
+        $this->resumeToDeleteId = null;
     }
 
     public function render()
@@ -117,4 +130,6 @@ class ResumeIndex extends Component
             'latestResume' => $latestResume,
         ]);
     }
+
+    
 }
