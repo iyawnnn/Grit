@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\GoogleProvider;
 
 class GoogleController extends Controller
 {
@@ -29,7 +30,7 @@ class GoogleController extends Controller
     public function callback(Request $request)
     {
         try {
-            /** @var \Laravel\Socialite\Two\GoogleProvider $driver */
+            /** @var GoogleProvider $driver */
             $driver = Socialite::driver('google');
             $googleUser = $driver->stateless()->user();
         } catch (\Exception $e) {

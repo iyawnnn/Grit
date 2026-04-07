@@ -12,8 +12,8 @@ class GritActionPlanService
     public function generatePlan(MatchReport $matchReport): ?string
     {
         // Handle both Laravel array casts and raw JSON strings
-        $keywords = is_string($matchReport->missing_keywords) 
-            ? json_decode($matchReport->missing_keywords, true) 
+        $keywords = is_string($matchReport->missing_keywords)
+            ? json_decode($matchReport->missing_keywords, true)
             : ($matchReport->missing_keywords ?? []);
 
         if (empty($keywords)) {
