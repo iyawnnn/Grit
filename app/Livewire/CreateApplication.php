@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\Attributes\Validate;
+use App\Enums\ApplicationStatus;
 use App\Models\JobPosting;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class CreateApplication extends Component
 {
@@ -30,7 +31,7 @@ class CreateApplication extends Component
             'company' => $this->company,
             'source_url' => $this->url,
             'description' => $this->description,
-            'status' => \App\Enums\ApplicationStatus::Saved->value, 
+            'status' => ApplicationStatus::Saved->value,
         ]);
 
         session()->flash('success', 'Job posting saved successfully.');

@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\JobPosting;
 use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class ApplicationIndex extends Component
 {
@@ -44,7 +44,7 @@ class ApplicationIndex extends Component
 
         if ($job) {
             $job->update(['status' => $newStatus]);
-            $this->dispatch('notify', message: 'Status updated to ' . ucfirst($newStatus) . '.');
+            $this->dispatch('notify', message: 'Status updated to '.ucfirst($newStatus).'.');
         }
     }
 
@@ -87,7 +87,7 @@ class ApplicationIndex extends Component
 
         $jobs = (clone $baseQuery)
             ->when($this->search, function ($query) {
-                $searchTerm = '%' . trim($this->search) . '%';
+                $searchTerm = '%'.trim($this->search).'%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('company', 'like', $searchTerm)
                         ->orWhere('title', 'like', $searchTerm);

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->string('source_url')->nullable();
             // Default changed from 'draft' to 'saved'
-            $table->string('status')->default('saved'); 
+            $table->string('status')->default('saved');
             $table->timestamps();
         });
     }

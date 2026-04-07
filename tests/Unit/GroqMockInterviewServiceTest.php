@@ -14,7 +14,7 @@ class GroqMockInterviewServiceTest extends TestCase
     {
         Config::set('services.groq.api_key', null);
 
-        $service = new GroqMockInterviewService();
+        $service = new GroqMockInterviewService;
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Groq API key is missing. Please check your .env file.');
@@ -32,14 +32,14 @@ class GroqMockInterviewServiceTest extends TestCase
                 'choices' => [
                     [
                         'message' => [
-                            'content' => '{"questions": ["What is PHP?", "How does Laravel work?"]}'
-                        ]
-                    ]
-                ]
-            ], 200)
+                            'content' => '{"questions": ["What is PHP?", "How does Laravel work?"]}',
+                        ],
+                    ],
+                ],
+            ], 200),
         ]);
 
-        $service = new GroqMockInterviewService();
+        $service = new GroqMockInterviewService;
         $questions = $service->generateQuestions('Sample Resume Data', 'Sample Job Data');
 
         $this->assertCount(2, $questions);
@@ -51,10 +51,10 @@ class GroqMockInterviewServiceTest extends TestCase
         Config::set('services.groq.api_key', 'test-fake-key');
 
         Http::fake([
-            'api.groq.com/*' => Http::response([], 500)
+            'api.groq.com/*' => Http::response([], 500),
         ]);
 
-        $service = new GroqMockInterviewService();
+        $service = new GroqMockInterviewService;
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Groq API Error: 500');

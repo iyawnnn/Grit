@@ -43,8 +43,6 @@ class ProfileTest extends TestCase
         $this->assertSame($originalEmail, $user->email); // Verify the email did not change
     }
 
-
-
     public function test_user_can_delete_their_account(): void
     {
         $user = User::factory()->create();

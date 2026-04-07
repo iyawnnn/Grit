@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class GroqMockInterviewService
 {
@@ -25,19 +25,19 @@ class GroqMockInterviewService
                 'model' => 'llama-3.3-70b-versatile',
                 'messages' => [
                     ['role' => 'system', 'content' => $prompt],
-                    ['role' => 'user', 'content' => "Resume: \n" . $resumeContent . "\n\nJob Description: \n" . $jobDescription],
+                    ['role' => 'user', 'content' => "Resume: \n".$resumeContent."\n\nJob Description: \n".$jobDescription],
                 ],
                 'response_format' => ['type' => 'json_object'],
             ]);
 
         if ($response->failed()) {
-            Log::error('Groq API Error: ' . $response->body());
-            throw new Exception('Groq API Error: ' . $response->status());
+            Log::error('Groq API Error: '.$response->body());
+            throw new Exception('Groq API Error: '.$response->status());
         }
 
         $content = $response->json('choices.0.message.content');
         $decoded = json_decode($content, true);
 
-        return $decoded['questions'] ?? []; 
+        return $decoded['questions'] ?? [];
     }
 }

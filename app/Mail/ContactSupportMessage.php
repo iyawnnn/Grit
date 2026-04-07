@@ -4,10 +4,10 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
 
 class ContactSupportMessage extends Mailable
 {
@@ -27,7 +27,7 @@ class ContactSupportMessage extends Mailable
             replyTo: [
                 new Address($this->data['email'], $this->data['name']),
             ],
-            subject: 'Grit Support Request: ' . $this->data['name'],
+            subject: 'Grit Support Request: '.$this->data['name'],
         );
     }
 

@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 namespace App\Livewire;
 
+use App\Models\MockInterview;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\MockInterview;
 
 #[Title('Interview Prep')]
 class InterviewIndex extends Component
@@ -15,7 +15,9 @@ class InterviewIndex extends Component
     use WithPagination;
 
     public $search = '';
+
     public $sort = 'newest';
+
     public $interviewToDelete = null;
 
     public function updatingSearch()
@@ -47,8 +49,8 @@ class InterviewIndex extends Component
 
         if ($this->search) {
             $query->whereHas('jobPosting', function ($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('company', 'like', '%' . $this->search . '%');
+                $q->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('company', 'like', '%'.$this->search.'%');
             });
         }
 

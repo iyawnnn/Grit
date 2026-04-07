@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Resume;
 use App\Services\ResumeParserService;
+use Illuminate\Http\Request;
 
 class ResumeController extends Controller
 {
@@ -19,17 +19,17 @@ class ResumeController extends Controller
     {
         $request->validate([
             'label' => 'required|string|max:255',
-            'file'  => 'required|file|mimes:pdf|max:5120',
+            'file' => 'required|file|mimes:pdf|max:5120',
         ]);
 
         $uploadResult = $parser->processUpload($request->file('file'));
 
         Resume::create([
-            'user_id'     => auth()->id(),
-            'label'       => $request->label,
-            'file_url'    => $uploadResult['file_url'],
+            'user_id' => auth()->id(),
+            'label' => $request->label,
+            'file_url' => $uploadResult['file_url'],
             'content_raw' => $uploadResult['content_raw'],
-            'is_active'   => true,
+            'is_active' => true,
         ]);
 
         return redirect()->route('resumes.index')->with('success', 'Resume uploaded and parsed successfully.');

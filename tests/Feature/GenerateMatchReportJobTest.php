@@ -37,7 +37,7 @@ class GenerateMatchReportJobTest extends TestCase
                 ->andReturn([
                     'score' => 95,
                     'missing_keywords' => ['Laravel', 'Vue'],
-                    'reasoning' => 'This is a mocked AI response.'
+                    'reasoning' => 'This is a mocked AI response.',
                 ]);
         });
 
