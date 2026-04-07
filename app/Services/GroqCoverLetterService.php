@@ -17,7 +17,8 @@ class GroqCoverLetterService
             throw new Exception('Groq API key is missing. Please check your configuration.');
         }
 
-        $prompt = config('services.groq.cover_letter_prompt', 'You are an expert career coach. Based on the provided resume and job context, write a concise, professional cover letter. Return the output strictly as a JSON object with a single key "cover_letter" containing the text.');
+        // Enforce strict paragraph formatting in the prompt
+        $prompt = config('services.groq.cover_letter_prompt', 'You are an expert career coach. Based on the provided resume and job context, write a highly professional cover letter. IMPORTANT: Output ONLY plain text. NO Markdown. You MUST structure the letter with clear paragraphs separated by double line breaks (\n\n). Return the output strictly as a JSON object with a single key "cover_letter" containing the text.');
 
         $response = Http::withToken($apiKey)
             ->timeout(60)
