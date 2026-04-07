@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\JobPosting;
+use App\Services\GroqCoverLetterService;
 use Livewire\Component;
+use Exception;
 
 class EditApplication extends Component
 {
@@ -13,6 +15,8 @@ class EditApplication extends Component
     public string $company = '';
     public ?string $url = null;
     public string $description = '';
+    public string $generatedCoverLetter = '';
+    public bool $isGenerating = false;
 
     public function mount(JobPosting $jobPosting)
     {
@@ -26,6 +30,41 @@ class EditApplication extends Component
         $this->company = $this->jobPosting->company ?? '';
         $this->url = $this->jobPosting->source_url ?? '';
         $this->description = $this->jobPosting->description ?? '';
+        $this->generatedCoverLetter = $this->jobPosting->cover_letter ?? '';
+    }
+
+    public function generateCoverLetter(GroqCoverLetterService $service)
+    {
+        $this->isGenerating = true;
+
+        try {
+            
+            $primaryResume = auth()->user()->resumes()->where('is_primary', true)->first();
+            
+            $resumeContent = $primaryResume->content_raw ?? '';
+            $jobDescription = $this->description;
+
+            if (empty($resumeContent)) {
+                throw new Exception('No primary resume found. Please upload or set a primary resume first.');
+            }
+
+            if (empty($jobDescription)) {
+                throw new Exception('Job description is required to generate a cover letter.');
+            }
+
+            $this->generatedCoverLetter = $service->generate($resumeContent, $jobDescription);
+            
+            $this->jobPosting->update([
+                'cover_letter' => $this->generatedCoverLetter
+            ]);
+
+            session()->flash('success', 'Cover letter generated successfully.');
+
+        } catch (Exception $e) {
+            session()->flash('error', $e->getMessage());
+        } finally {
+            $this->isGenerating = false;
+        }
     }
 
     public function update()
@@ -35,6 +74,7 @@ class EditApplication extends Component
             'company' => 'required|string|max:255',
             'url' => 'nullable|url|max:255',
             'description' => 'required|string',
+            'generatedCoverLetter' => 'nullable|string',
         ]);
 
         $this->jobPosting->update([
@@ -42,6 +82,7 @@ class EditApplication extends Component
             'company' => $this->company,
             'source_url' => $this->url,
             'description' => $this->description,
+            'cover_letter' => $this->generatedCoverLetter,
         ]);
 
         session()->flash('success', 'Job posting updated successfully.');
