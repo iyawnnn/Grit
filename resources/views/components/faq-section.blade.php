@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="{{ app('csp-nonce') }}">
         document.addEventListener('DOMContentLoaded', () => {
             const toggles = document.querySelectorAll('.faq-toggle');
 
@@ -116,7 +116,7 @@
                     const icon = toggle.querySelector('.faq-icon');
                     const arrow = toggle.querySelector('.faq-arrow');
                     const title = toggle.querySelector('.faq-title');
-                    
+
                     const isOpen = answer.classList.contains('grid-rows-[1fr]');
 
                     // Close all active accordions
