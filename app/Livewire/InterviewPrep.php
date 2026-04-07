@@ -25,7 +25,7 @@ class InterviewPrep extends Component
         // MatchReport uses 'job_id', while MockInterview uses 'job_posting_id'
         $existingInterview = MockInterview::where('user_id', auth()->id())
             ->where('resume_id', $this->matchReport->resume_id)
-            ->where('job_posting_id', $this->matchReport->job_id) 
+            ->where('job_posting_id', $this->matchReport->job_id)
             ->first();
 
         if ($existingInterview) {
