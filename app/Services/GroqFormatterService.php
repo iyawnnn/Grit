@@ -15,15 +15,20 @@ class GroqFormatterService
             throw new Exception('GROQ_API_KEY is not configured.');
         }
 
-        $systemPrompt = "You are an expert data formatting assistant. Your task is to take messy, unformatted text from a job posting and format it into clean, semantic HTML. "
-            . "You must strictly use only <p>, <ul>, <li>, <strong>, and <br> tags. "
-            . "Ensure headings are bolded. Ensure lists are properly formatted using <ul> and <li>. "
-            . "Correct any obvious spacing or line-break issues. "
-            . "CRITICAL INSTRUCTION: You must return ONLY the raw HTML string. Do not use markdown blocks, do not wrap the output in ```html, and do not include any conversational text like 'Here is the formatted text'.";
+        $systemPrompt = "You are an expert data formatting assistant. Your task is to clean and structure messy job posting text into semantic HTML. "
+            . "CRITICAL FORMATTING RULES: "
+            . "1. STRICTLY use ONLY these tags: <p>, <ul>, <li>, and <strong>. DO NOT use <br> tags under any circumstances. "
+            . "2. ELIMINATE ALL excessive whitespace. Do not output empty tags like <p></p> or multiple consecutive line breaks. "
+            . "3. Aggressively identify lists (lines starting with dashes, asterisks, bullets, or short consecutive requirements) and format them properly using <ul> and <li> tags. "
+            . "4. Identify section headers (e.g., 'Responsibilities', 'Requirements', 'Qualifications') and format them strictly as <p><strong>Header Name</strong></p>. "
+            . "5. You must return ONLY the raw HTML string. Do not use markdown blocks, do not wrap the output in ```html, and do not include any conversational text.";
+
+        // Breaking the URL into pieces so your clipboard/editor cannot auto-format it into a markdown link
+        $endpoint = 'https://' . 'api.groq.com' . '/openai/v1/chat/completions';
 
         $response = Http::withToken($apiKey)
             ->timeout(30)
-            ->post('[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)', [
+            ->post($endpoint, [
                 'model' => 'llama-3.1-8b-instant',
                 'messages' => [
                     ['role' => 'system', 'content' => $systemPrompt],
