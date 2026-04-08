@@ -43,6 +43,7 @@ return [
 
     'groq' => [
         'api_key' => env('GROQ_API_KEY'),
+        'daily_limit' => env('GROQ_DAILY_LIMIT', 5),
     ],
 
 ];
