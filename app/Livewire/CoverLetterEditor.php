@@ -19,6 +19,10 @@ class CoverLetterEditor extends Component
     public string $errorMessage = '';
     public bool $showDeleteModal = false;
 
+    // SaaS Configuration
+    public int $dailyLimit = 5; // Reduced to 5 for Free Tier
+    private int $burstLimit = 2;  // Max generations per minute per user
+
     public function mount(JobPosting $jobPosting)
     {
         if ($jobPosting->user_id !== auth()->id()) {
@@ -32,24 +36,36 @@ class CoverLetterEditor extends Component
     private function formatLetterText(string $text): string
     {
         if (empty($text)) return '';
-
         $text = trim(str_replace(['**', '##', '#', '*'], '', $text));
-
         if (strpos($text, "\n\n") === false && strpos($text, "\n") !== false) {
             $text = str_replace("\n", "\n\n", $text);
         }
-
         return $text;
+    }
+
+    public function getCreditsRemainingProperty(): int
+    {
+        $dailyKey = 'cv-gen-daily:' . auth()->id();
+        $attempts = RateLimiter::attempts($dailyKey);
+        return max(0, $this->dailyLimit - $attempts);
     }
 
     public function generate(GroqCoverLetterService $service)
     {
-        $rateLimitKey = 'generate-cover-letter:' . auth()->id() . ':' . $this->jobPosting->id;
+        $userId = auth()->id();
+        $minuteKey = 'cv-gen-min:' . $userId;
+        $dailyKey = 'cv-gen-daily:' . $userId;
 
-        if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
-            $seconds = RateLimiter::availableIn($rateLimitKey);
-            $this->errorMessage = "Please wait {$seconds} seconds before regenerating.";
-            $this->dispatch('notify', message: 'Rate limit exceeded.', type: 'error');
+        if (RateLimiter::tooManyAttempts($dailyKey, $this->dailyLimit)) {
+            $this->errorMessage = "You have exhausted your {$this->dailyLimit} daily AI generations. Please try again tomorrow.";
+            $this->dispatch('toast', message: 'Daily limit reached.', type: 'error');
+            return;
+        }
+
+        if (RateLimiter::tooManyAttempts($minuteKey, $this->burstLimit)) {
+            $seconds = RateLimiter::availableIn($minuteKey);
+            $this->errorMessage = "System cooling down. Please wait {$seconds} seconds to ensure high-quality generation.";
+            $this->dispatch('toast', message: 'Generating too fast.', type: 'error');
             return;
         }
 
@@ -68,7 +84,7 @@ class CoverLetterEditor extends Component
 
             if ($latestMatch && $latestMatch->resume && !empty($latestMatch->resume->content_raw)) {
                 $resumeContent = $latestMatch->resume->content_raw;
-                $resumeSource = 'Targeted Resume';
+                $resumeSource = 'Targeted Match Resume';
             } else {
                 $primaryResume = auth()->user()->resumes()->where('is_primary', true)->first();
                 if ($primaryResume && !empty($primaryResume->content_raw)) {
@@ -78,11 +94,11 @@ class CoverLetterEditor extends Component
             }
 
             if (empty($resumeContent)) {
-                throw new Exception('No resume found. Please generate a Match Report or set a Primary Resume.');
+                throw new Exception('No resume found. Please set a Primary Resume.');
             }
 
             if (empty($this->jobPosting->description)) {
-                throw new Exception('Job description is missing. The AI needs this context.');
+                throw new Exception('Job description is missing. AI needs context.');
             }
 
             $strictContext = "Company: {$this->jobPosting->company}\nJob Title: {$this->jobPosting->title}\nDescription: {$this->jobPosting->description}\n\nCRITICAL AI INSTRUCTION: Output PLAIN TEXT ONLY. You MUST use double newlines (\\n\\n) between paragraphs to format it as a business letter.";
@@ -90,14 +106,15 @@ class CoverLetterEditor extends Component
             $generatedText = $service->generate($resumeContent, $strictContext);
             $this->content = $this->formatLetterText($generatedText);
 
-            // Successfully notify the user asynchronously 
-            $this->dispatch('notify', message: "Draft generated using {$resumeSource}!", type: 'success');
-            RateLimiter::hit($rateLimitKey, 60);
+            RateLimiter::hit($minuteKey, 60);
+            RateLimiter::hit($dailyKey, 86400);
+
+            $this->dispatch('toast', message: "Draft generated using {$resumeSource}!", type: 'success');
 
         } catch (Exception $e) {
             Log::error('Cover Letter Gen Error: ' . $e->getMessage());
             $this->errorMessage = $e->getMessage();
-            $this->dispatch('notify', message: 'Generation failed.', type: 'error');
+            $this->dispatch('toast', message: 'Generation failed.', type: 'error');
         } finally {
             $this->isGenerating = false;
         }
@@ -105,22 +122,15 @@ class CoverLetterEditor extends Component
 
     public function save()
     {
-        $this->validate([
-            'content' => 'required|string',
-        ]);
-
-        $this->jobPosting->update([
-            'cover_letter' => $this->content
-        ]);
-
-        // Triggers the application's global toast listener without refreshing
-        $this->dispatch('notify', message: 'Cover letter saved successfully.', type: 'success');
+        $this->validate(['content' => 'required|string']);
+        $this->jobPosting->update(['cover_letter' => $this->content]);
+        $this->dispatch('toast', message: 'Cover letter saved securely!', type: 'success');
     }
 
     public function executeDelete()
     {
         $this->jobPosting->update(['cover_letter' => null]);
-        session()->flash('success', 'Cover letter draft deleted successfully.');
+        session()->flash('success', 'Cover letter draft discarded.');
         return redirect()->route('cover-letters.index');
     }
 

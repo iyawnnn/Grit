@@ -24,15 +24,11 @@
                 View Job
             </a>
             
-            <button wire:click="save" wire:loading.attr="disabled" class="flex-1 xl:flex-none flex justify-center items-center px-6 py-2.5 bg-[#e26a35] border border-transparent rounded-xl text-sm font-bold text-white hover:bg-[#cf5b29] hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-[#e26a35]/50 disabled:opacity-70 disabled:cursor-wait">
-                <span wire:loading.remove wire:target="save" class="flex items-center gap-1.5">
-                    <x-heroicon-o-check class="w-4 h-4" />
-                    Save Letter
-                </span>
-                <span wire:loading.flex wire:target="save" class="items-center gap-1.5">
-                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    Saving...
-                </span>
+            <button wire:click="save" wire:loading.attr="disabled" class="flex-1 xl:flex-none flex items-center justify-center gap-1.5 px-6 py-2.5 bg-[#e26a35] border border-transparent rounded-xl text-sm font-bold text-white hover:bg-[#cf5b29] hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-[#e26a35]/50 disabled:opacity-70 disabled:cursor-wait">
+                <x-heroicon-o-check wire:loading.remove wire:target="save" class="w-4 h-4" />
+                <svg wire:loading wire:target="save" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span wire:loading.remove wire:target="save">Save Letter</span>
+                <span wire:loading wire:target="save">Saving...</span>
             </button>
         </div>
     </div>
@@ -85,50 +81,71 @@
                         </div>
                     @endif
 
-                    <button wire:click="generate" wire:loading.attr="disabled" class="w-full flex justify-center py-3.5 px-4 bg-[#e26a35] hover:bg-[#cf5b29] text-white text-sm font-bold rounded-xl shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#e26a35]/50 disabled:opacity-80 disabled:cursor-wait">
-                        <span wire:loading.remove wire:target="generate" class="flex items-center gap-2">
-                            <x-heroicon-s-pencil-square class="w-4 h-4 text-white/90" />
-                            {{ $content ? 'Regenerate with AI' : 'Draft with AI' }}
-                        </span>
-                        <span wire:loading.flex wire:target="generate" class="items-center gap-2">
-                            <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                            <span>Analyzing Data...</span>
-                        </span>
+                    <button 
+                        wire:click="generate" 
+                        wire:loading.attr="disabled" 
+                        @if($this->creditsRemaining <= 0) disabled @endif
+                        class="w-full flex justify-center items-center gap-1.5 py-3.5 px-4 bg-[#e26a35] hover:bg-[#cf5b29] text-white text-sm font-bold rounded-xl shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#e26a35]/50 disabled:opacity-70 disabled:cursor-not-allowed">
+                        <x-heroicon-s-pencil-square wire:loading.remove wire:target="generate" class="w-4 h-4 text-white/90" />
+                        <svg wire:loading wire:target="generate" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        
+                        <span wire:loading.remove wire:target="generate">{{ $content ? 'Regenerate Draft' : 'Draft with AI' }}</span>
+                        <span wire:loading wire:target="generate">Analyzing Data...</span>
                     </button>
+
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-widest">Daily Limit</span>
+                        <span class="text-xs font-bold {{ $this->creditsRemaining > 0 ? 'text-gray-700' : 'text-red-600' }}">
+                            {{ $this->creditsRemaining }} / {{ $this->dailyLimit }} remaining
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="xl:col-span-2 order-1 xl:order-2">
-            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm flex flex-col h-[600px] xl:h-[calc(100vh-12rem)] relative overflow-hidden">
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm flex flex-col h-[600px] xl:h-[calc(100vh-10rem)] relative overflow-hidden">
                 
                 <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 shrink-0">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full {{ $content ? 'bg-green-500' : 'bg-gray-300' }}"></div>
+                    <div class="flex items-center">
                         <span class="text-xs font-bold text-gray-600 uppercase tracking-widest">Document Text</span>
                     </div>
                     @if($content)
                         <button type="button" 
-                            x-data="{ copied: false }"
-                            @click="
-                                navigator.clipboard.writeText(document.getElementById('content-editor').value);
-                                copied = true;
-                                $dispatch('notify', { message: 'Copied to clipboard!', type: 'success' });
-                                setTimeout(() => copied = false, 2500);
-                            " 
-                            class="inline-flex items-center gap-1.5 text-xs font-bold transition-all px-3 py-1.5 rounded-lg border"
+                            x-data="{ 
+                                copied: false,
+                                copyText() {
+                                    const editor = document.getElementById('content-editor');
+                                    if (navigator.clipboard && window.isSecureContext) {
+                                        navigator.clipboard.writeText(editor.value);
+                                    } else {
+                                        editor.focus();
+                                        editor.select();
+                                        try {
+                                            document.execCommand('copy');
+                                        } catch (err) {
+                                            console.error('Fallback copy failed', err);
+                                        }
+                                        window.getSelection().removeAllRanges();
+                                    }
+                                    this.copied = true;
+                                    setTimeout(() => this.copied = false, 3000);
+                                }
+                            }"
+                            @click="copyText()" 
+                            class="inline-flex items-center justify-center gap-1.5 text-xs font-bold transition-all px-3 py-1.5 rounded-lg border min-w-[100px]"
                             :class="copied ? 'bg-green-50 text-green-700 border-green-200' : 'bg-[#fff5f0] text-[#e26a35] hover:text-[#cf5b29] border-[#e26a35]/20'"
                         >
                             <x-heroicon-o-clipboard-document x-show="!copied" class="w-4 h-4" />
                             <x-heroicon-s-check-circle x-show="copied" x-cloak class="w-4 h-4" />
-                            <span x-text="copied ? 'Copied!' : 'Copy Text'"></span>
+                            <span x-text="copied ? 'Copied to clipboard!' : 'Copy Text'"></span>
                         </button>
                     @endif
                 </div>
 
-                <div class="flex-1 flex flex-col relative bg-white h-full">
+                <div class="flex-1 flex flex-col relative bg-white min-h-0">
                     
-                    <div wire:loading wire:target="generate" class="absolute inset-0 z-20 bg-white p-8 sm:p-12 flex flex-col pointer-events-none">
+                    <div wire:loading wire:target="generate" class="absolute inset-0 z-20 bg-white/90 backdrop-blur-sm p-8 sm:p-12 flex flex-col pointer-events-none">
                         <div class="flex items-center gap-3 mb-8">
                             <svg class="animate-spin h-5 w-5 text-[#e26a35]" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             <span class="text-sm font-extrabold text-[#e26a35] uppercase tracking-widest animate-pulse">Drafting Document...</span>
@@ -149,7 +166,7 @@
                     <textarea 
                         id="content-editor"
                         wire:model="content" 
-                        class="flex-1 w-full h-full min-h-[600px] xl:min-h-full resize-none border-0 focus:ring-0 p-6 sm:p-10 text-gray-900 text-[15px] sm:text-base leading-[1.8] whitespace-pre-wrap font-sans bg-transparent outline-none custom-scrollbar placeholder-gray-400"
+                        class="flex-1 w-full resize-none border-0 focus:ring-0 p-6 sm:p-10 text-gray-900 text-[15px] sm:text-base leading-[1.8] whitespace-pre-wrap font-sans bg-transparent outline-none overflow-y-auto custom-scrollbar placeholder-gray-400"
                         placeholder="Use the Grit Co-Pilot to write your first draft, or start typing your cover letter here..."
                         spellcheck="false"
                     ></textarea>
