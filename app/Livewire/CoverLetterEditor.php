@@ -19,9 +19,7 @@ class CoverLetterEditor extends Component
     public string $errorMessage = '';
     public bool $showDeleteModal = false;
 
-    // SaaS Configuration
-    public int $dailyLimit = 5; // Reduced to 5 for Free Tier
-    private int $burstLimit = 2;  // Max generations per minute per user
+    private int $burstLimit = 2;
 
     public function mount(JobPosting $jobPosting)
     {
@@ -41,6 +39,12 @@ class CoverLetterEditor extends Component
             $text = str_replace("\n", "\n\n", $text);
         }
         return $text;
+    }
+
+    // This exposes $this->dailyLimit to your Blade view dynamically
+    public function getDailyLimitProperty(): int
+    {
+        return config('services.groq.daily_limit', 5);
     }
 
     public function getCreditsRemainingProperty(): int

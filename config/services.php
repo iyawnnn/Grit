@@ -43,7 +43,7 @@ return [
 
     'groq' => [
         'api_key' => env('GROQ_API_KEY'),
-        'cover_letter_prompt' => env('GROQ_COVER_LETTER_PROMPT', 'You are an expert career coach. Based on the provided resume and job description, extract the top three overlapping skills and generate a concise, professional cover letter. Return the output strictly as a JSON object with a single key "cover_letter" containing the text.'),
+        'daily_limit' => env('GROQ_DAILY_LIMIT', 5),
     ],
 
 ];

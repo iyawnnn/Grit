@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\JobPosting;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Title;
@@ -13,22 +14,17 @@ class CoverLetterIndex extends Component
     use WithPagination;
 
     public string $search = '';
-    public string $status = '';
     public $coverLetterToDelete = null;
+    public $selectedJobForNewLetter = '';
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function updatingStatus()
-    {
-        $this->resetPage();
-    }
-
     public function resetFilters()
     {
-        $this->reset(['search', 'status']);
+        $this->reset('search');
         $this->resetPage();
     }
 
@@ -56,9 +52,26 @@ class CoverLetterIndex extends Component
         $this->coverLetterToDelete = null;
     }
 
+    public function startWorkspace()
+    {
+        $this->validate([
+            'selectedJobForNewLetter' => 'required|exists:job_postings,id'
+        ]);
+
+        return redirect()->route('cover-letters.edit', $this->selectedJobForNewLetter);
+    }
+
+    public function getCreditsRemainingProperty(): int
+    {
+        $dailyLimit = config('services.groq.daily_limit', 5);
+        $dailyKey = 'cv-gen-daily:' . auth()->id();
+        $attempts = RateLimiter::attempts($dailyKey);
+        return max(0, $dailyLimit - $attempts);
+    }
+
     public function render()
     {
-        $query = auth()->user()->jobPostings();
+        $query = auth()->user()->jobPostings()->whereNotNull('cover_letter');
 
         if (!empty($this->search)) {
             $query->where(function ($q) {
@@ -67,20 +80,19 @@ class CoverLetterIndex extends Component
             });
         }
 
-        if ($this->status === 'drafted') {
-            $query->whereNotNull('cover_letter');
-        } elseif ($this->status === 'pending') {
-            $query->whereNull('cover_letter');
-        }
-
         $jobs = $query->latest()->paginate(12);
+        
+        $availableJobsForCreation = auth()->user()->jobPostings()
+            ->whereNull('cover_letter')
+            ->latest()
+            ->get();
 
         return view('livewire.cover-letter-index', [
             'jobs' => $jobs,
-            'totalJobs' => auth()->user()->jobPostings()->count(),
-            'draftedCount' => auth()->user()->jobPostings()->whereNotNull('cover_letter')->count(),
-            'pendingCount' => auth()->user()->jobPostings()->whereNull('cover_letter')->count(),
-            'hasAnyJobs' => auth()->user()->jobPostings()->exists(),
+            'totalDrafts' => auth()->user()->jobPostings()->whereNotNull('cover_letter')->count(),
+            'availableJobs' => $availableJobsForCreation,
+            'creditsRemaining' => $this->creditsRemaining,
+            'dailyLimit' => config('services.groq.daily_limit', 5),
         ]);
     }
 }
