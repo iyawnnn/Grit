@@ -18,6 +18,7 @@ class JobPosting extends Model
         'description',
         'source_url',
         'status',
+        'cover_letter', 
     ];
 
     protected $casts = [

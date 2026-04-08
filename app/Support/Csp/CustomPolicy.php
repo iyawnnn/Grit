@@ -36,7 +36,10 @@ class CustomPolicy implements Preset
                 Keyword::UNSAFE_INLINE,
                 Keyword::UNSAFE_EVAL,
                 'unpkg.com', // Added for Trix Editor JS
-                // 'cdn.jsdelivr.net', // Uncomment if your chart uses jsdelivr
+            ])
+            ->add(Directive::CONNECT, [
+                Keyword::SELF,
+                'unpkg.com', // Added for Trix Editor source maps
             ])
             ->add(Directive::FRAME, [
                 Keyword::SELF,

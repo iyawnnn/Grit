@@ -68,11 +68,11 @@
                 </button>
             </div>
 
-            <nav class="flex-1 px-4 py-2 space-y-1.5 overflow-y-auto mt-2 custom-scrollbar">
-                <div class="text-[11px] font-semibold text-gray-600 mb-3 px-3 tracking-wider uppercase">Menu</div>
+            <nav class="flex-1 min-h-0 px-4 py-2 space-y-1 overflow-y-auto mt-1 custom-scrollbar">
+                <div class="text-[11px] font-semibold text-gray-600 mb-2 px-3 tracking-wider uppercase">Menu</div>
 
                 <a href="{{ route('dashboard') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('dashboard') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
                         fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -82,7 +82,7 @@
                 </a>
 
                 <a href="{{ route('applications.index') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.index', 'applications.create', 'applications.show', 'applications.edit') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.index', 'applications.create', 'applications.show', 'applications.edit') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('applications.index', 'applications.create', 'applications.show', 'applications.edit') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
                         fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -92,7 +92,7 @@
                 </a>
 
                 <a href="{{ route('resumes.index') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('resumes.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('resumes.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('resumes.*') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
                         aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -102,13 +102,21 @@
                     Resumes
                 </a>
 
-                {{-- Replaced the massive mt-16 with a perfectly balanced pt-6 block --}}
-                <div class="pt-6 pb-2">
+                <a href="{{ route('cover-letters.index') }}" @click="sidebarOpen = false"
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('cover-letters.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('cover-letters.*') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
+                        aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    Cover Letters
+                </a>
+
+                <div class="pt-4 pb-1">
                     <div class="text-[11px] font-semibold text-gray-600 px-3 tracking-wider uppercase">Analysis & Tracking</div>
                 </div>
 
                 <a href="{{ route('matches.index') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('matches.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('matches.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('matches.*') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
                         aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
@@ -118,7 +126,7 @@
                 </a>
 
                 <a href="{{ route('applications.board') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.board') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('applications.board') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('applications.board') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
                         aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h12A2.25 2.25 0 0120.25 6v12A2.25 2.25 0 0118 20.25H6A2.25 2.25 0 013.75 18V6z" />
@@ -128,7 +136,7 @@
                 </a>
 
                 <a href="{{ route('interviews.index') }}" @click="sidebarOpen = false"
-                    class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('interviews.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('interviews.*') ? 'bg-[#e26a35]/10 text-[#e26a35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('interviews.*') ? 'text-[#e26a35]' : 'text-gray-500 group-hover:text-gray-700' }} transition-colors"
                         aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
@@ -140,7 +148,7 @@
             <div class="mt-auto px-4 pb-5 pt-2">
                 <div class="space-y-1 mb-4">
                     <a href="{{ route('profile.edit') }}" @click="sidebarOpen = false"
-                        class="group flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl text-sm font-medium transition-colors">
+                        class="group flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl text-sm font-medium transition-colors">
                         <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors"
                             aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -155,7 +163,7 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-red-50 hover:text-red-700 rounded-xl text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50">
+                            class="group w-full flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-red-50 hover:text-red-700 rounded-xl text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50">
                             <svg class="w-5 h-5 text-gray-500 group-hover:text-red-600 transition-colors"
                                 aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 stroke-width="1.5">
